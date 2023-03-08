@@ -1,0 +1,162 @@
+{
+  "type": "TemplateLayout",
+  "template": "<v-app><v-app-bar app><v-toolbar-title>{{translate('Vuetify JsonForms Demo', 'Vuetify JsonForms Demo')}}</v-toolbar-title><v-spacer expand></v-spacer><slot name='0'></slot></v-app-bar><slot name='1'></slot></v-app>",
+  "elements": [
+    {
+      "type": "TemplateLayout",
+      "template": "<v-toolbar-items><v-row dense align='center'><v-col><slot name='0'></slot></v-col><v-col><slot name='1'></slot></v-col></v-row></v-toolbar-items>",
+      "elements": [
+        {
+          "type": "Button",
+          "label": "EN",
+          "action": "changeLang",
+          "params": {
+            "lang": "en"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        },
+        {
+          "type": "Button",
+          "label": "БГ",
+          "action": "changeLang",
+          "params": {
+            "lang": "bg"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "TemplateLayout",
+      "template": "<v-card><v-card-title>Example</v-card-title><v-card-text><slot name='0'></slot></v-card-text><v-card-text><slot name='1'></slot></v-card-text><v-card-text><slot name='2'></slot></v-card-text><v-card-text><slot name='3'></slot></v-card-text></v-card>",
+      "elements": [
+        {
+          "type": "VerticalLayout",
+          "elements": [
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/firstName"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/lastName"
+                }
+              ]
+            },
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/gender"
+                }
+              ]
+            },
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/address"
+                }
+              ]
+            },
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/home_address"
+                }
+              ]
+            },
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/shipping_address"
+                }
+              ]
+            },
+            {
+              "type": "HorizontalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/billing_address"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Button",
+              "label": "Show *",
+              "action": "showRequiredAsterisk",
+              "color": "red"
+            },
+            {
+              "type": "Button",
+              "label": "Hide *",
+              "action": "hideRequiredAsterisk"
+            },
+            {
+              "type": "Button",
+              "label": "Show Data",
+              "script": "const root = this.$el.getRootNode(); const el = root.querySelector('#data'); if (el) el.style.display = 'block';"
+            },
+            {
+              "type": "Button",
+              "label": "Hide Data",
+              "action": "hideData"
+            },
+            {
+              "type": "Button",
+              "label": "Save Data (imitate REST call)",
+              "action": "saveData"
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-textarea readonly :value='JSON.stringify(data, null, 2)' id='data'></v-textarea>"
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-dialog id='dialog' v-model='context.uidata.errorDialog.show' width='500'><v-card><v-card-title>{{ context.uidata.errorDialog.title }}</v-card-title><v-card-text>{{ context.uidata.errorDialog.text }}</v-card-text><v-divider></v-divider><v-card-actions><v-spacer></v-spacer><v-btn color='primary' text @click='context.uidata.errorDialog.show = false'> OK </v-btn></v-card-actions></v-card></v-dialog>"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

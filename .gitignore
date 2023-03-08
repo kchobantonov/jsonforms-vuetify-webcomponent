@@ -1,0 +1,6 @@
+.DS_Store
+node_modules
+packages/*/node_modules
+packages/*/lib
+packages/*/dist
+packages/*/stats.html

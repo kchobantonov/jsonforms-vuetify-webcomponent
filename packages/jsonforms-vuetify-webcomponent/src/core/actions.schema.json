@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "propertyNames": {
+    "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+  },
+  "patternProperties": {
+    "^[A-Za-z_][A-Za-z0-9_]*$": { "type": "string" }
+  },
+  "additionalProperties": false
+}

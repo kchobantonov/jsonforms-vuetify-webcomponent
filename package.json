@@ -1,0 +1,27 @@
+{
+  "name": "jsonforms-vuetify-webcomponent",
+  "private": true,
+  "scripts": {
+    "init": "lerna bootstrap --hoist",
+    "clean": "lerna run clean",
+    "lint": "lerna run lint",
+    "lint:fix": "lerna run lint:fix",
+    "test": "lerna run test",
+    "build": "lerna run build",
+    "snapshot-version": "lerna version --no-git-tag-version --no-push --yes",
+    "example:serve": "lerna run --scope=@kchobantonov/example serve --stream",
+    "example:build": "lerna run --scope=@kchobantonov/example build",
+    "renderers:build": "lerna run --scope=@kchobantonov/jsonforms-vuetify-renderers build",
+    "renderers:watch": "lerna run --scope=@kchobantonov/jsonforms-vuetify-renderers watch --stream",
+    "renderers:test": "lerna run --scope=@kchobantonov/jsonforms-vuetify-renderers test",
+    "wc:build": "lerna run --scope=@kchobantonov/jsonforms-vuetify-webcomponent build",
+    "wc:serve": "lerna run --scope=@kchobantonov/jsonforms-vuetify-webcomponent serve --stream",
+    "wc:test": "lerna run --scope=@kchobantonov/jsonforms-vuetify-webcomponent test",
+    "tooling:build": "lerna run --scope=jsonforms-vuetify-tooling build",
+    "tooling:vsix": "lerna run --scope=jsonforms-vuetify-tooling vsix",
+    "tooling:package": "lerna run --scope=jsonforms-vuetify-tooling package"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
