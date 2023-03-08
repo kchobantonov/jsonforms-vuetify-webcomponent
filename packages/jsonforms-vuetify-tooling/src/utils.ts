@@ -1,5 +1,5 @@
 import { readFile } from "fs";
-import Ajv from "ajv";
+import * as Ajv from "ajv";
 import { promisify } from "util";
 
 export const readFileWithPromise = promisify(readFile);
@@ -11,7 +11,9 @@ export enum MessageType {
 }
 
 const ajv = new Ajv();
-export const validateSchema = ajv.getSchema("http://json-schema.org/draft-07/schema#")!;
+export const validateSchema = ajv.getSchema(
+  "http://json-schema.org/draft-07/schema#"
+)!;
 
 /**
  * Show message within the editor
