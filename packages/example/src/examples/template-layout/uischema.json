@@ -68,13 +68,13 @@
       "elements": [
         {
           "type": "TemplateLayout",
-          "template": "<v-container fluid><v-row><v-col><monaco-editor :theme='$vuetify.theme.dark ? \"vs-dark\" : \"vs\"' height='200' language='json' :options='{ readOnly: true, automaticLayout: true, autoIndent: true, formatOnPaste: true, formatOnType: true, minimap: { enabled: false } }' :value='context.getMonacoDataModel()'></monaco-editor></v-col></v-row></v-container>"
+          "template": "<v-container fluid><v-row><v-col><monaco-editor v-if='typeof context.getMonacoDataModel === \"function\"' :theme='$vuetify.theme.dark ? \"vs-dark\" : \"vs\"' height='200' language='json' :options='{ readOnly: true, automaticLayout: true, autoIndent: true, formatOnPaste: true, formatOnType: true, minimap: { enabled: false } }' :value='context.getMonacoDataModel()'></monaco-editor><pre v-else>{{JSON.stringify(data, null, 2)}}</pre></v-col></v-row></v-container>"
         }
       ]
     },
     {
       "type": "TemplateLayout",
-      "template": "<v-card-text><v-card-title>Note:</v-card-title>This example will not work in webcomponent mode because the example app injects the <bold>getMonacoDataModel</bold> into the template context and that is not supported at the moment in webcomponent mode</v-card-text>"
+      "template": "<v-card-text><v-card-title>Note:</v-card-title>WebComponent does not pack the monaco editor inside so instead of using monaco editor in webcomponent mode you will see the JSON Data as text</v-card-text>"
     }
   ]
 }
