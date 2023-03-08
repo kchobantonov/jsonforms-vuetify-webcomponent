@@ -16,7 +16,7 @@ See the [README](https://github.com/eclipsesource/jsonforms-vuetify-renderers/bl
 
 ## Developer documentation
 
-Use Node 12+
+Use Node 14.x
 
 ### Initial setup
 
@@ -39,6 +39,10 @@ Recommendations:
 - For webcomponent development use `npm run renderers:watch` combined with `npm run wc:serve`.
 - To test production use `npm run build` combined with `npm run example:build`.
   Then serve the built application from `example/dist` with a web server of your choice, e.g. `npx http-server example/dist`.
+
+### VS Code Extension
+
+The webcomponent is used in the VS Code extension project and it is available for preview from the [VisualStudio Marketplace](https://marketplace.visualstudio.com/items?itemName=kchobantonov.jsonforms-vuetify-tooling)
 
 ### Docker
 
