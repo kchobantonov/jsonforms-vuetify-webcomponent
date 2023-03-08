@@ -1,15 +1,65 @@
 import { watch } from "chokidar";
-import { existsSync, readFile } from "fs";
+import { existsSync } from "fs";
 import { join } from "path";
-import { promisify } from "util";
-
-export const readFileWithPromise = promisify(readFile);
+import {
+  MessageType,
+  readFileWithPromise,
+  showMessage,
+  validateSchema,
+} from "./utils";
 
 export const showPreview = async (
   editorInstance: any,
   schemaPath: any,
   extensionPath: string
 ) => {
+  if (!existsSync(schemaPath)) {
+    try {
+      const fileUri = await editorInstance.window.showOpenDialog(
+        (editorInstance.OpenDialogOptions = {
+          canSelectMany: false,
+          canSelectFolders: false,
+          canSelectFiles: true,
+          openLabel: "Select schema",
+          filters: {
+            "Json Files": ["json"],
+          },
+        })
+      );
+
+      if (fileUri && fileUri[0]) {
+        schemaPath = fileUri[0].fsPath;
+      } else {
+        return;
+      }
+
+    } catch (err) {
+      showMessage(
+        editorInstance,
+        "Please select a schema file",
+        MessageType.Error
+      );
+      return;
+    }
+  }
+
+  try {
+    const schemaContent = await readFileWithPromise(schemaPath, "utf8");
+    const parsedSchemaContent = JSON.parse(schemaContent);
+    const validSchema = await validateSchema(parsedSchemaContent);
+    if (!validSchema) {
+      showMessage(
+        editorInstance,
+        "Select valid JSON schema draft-07 file",
+        MessageType.Error
+      );
+      return;
+    }
+  } catch (err: any) {
+    showMessage(editorInstance, err.message, MessageType.Error);
+    return;
+  }
+
   showWebview(
     editorInstance,
     "preview",
@@ -26,31 +76,6 @@ const showWebview = async (
   extensionPath: string,
   schemaPath: string
 ) => {
-  const schemaExists = !schemaPath || existsSync(schemaPath);
-  if (!schemaExists) {
-    try {
-      const path = await editorInstance.window.showOpenDialog(
-        (editorInstance.OpenDialogOptions = {
-          canSelectMany: false,
-          canSelectFolders: false,
-          canSelectFiles: true,
-          openLabel: "Select schema",
-          filters: {
-            "Json Files": ["json"],
-          },
-        })
-      );
-      schemaPath = path.fsPath;
-    } catch (err) {
-      showMessage(
-        editorInstance,
-        "Please select a schema file",
-        MessageType.Error
-      );
-      return;
-    }
-  }
-
   const webView = editorInstance.window.createWebviewPanel(
     "view-" + id,
     name,
@@ -72,9 +97,9 @@ const showWebview = async (
     dataPath?: string;
   } = {
     schemaPath: schemaPath,
-    uischemaPath: !uischemaPath || existsSync(uischemaPath) ? uischemaPath : "",
-    i18nPath: !i18nPath || existsSync(i18nPath) ? i18nPath : "",
-    dataPath: !dataPath || existsSync(dataPath) ? dataPath : "",
+    uischemaPath: existsSync(uischemaPath) ? uischemaPath : "",
+    i18nPath: existsSync(i18nPath) ? i18nPath : "",
+    dataPath: existsSync(dataPath) ? dataPath : "",
   };
 
   let html = await preparePreview(
@@ -91,41 +116,14 @@ const showWebview = async (
     console.log("Data inside " + path + " changed");
     paths = {
       schemaPath: schemaPath,
-      uischemaPath:
-        !uischemaPath || existsSync(uischemaPath) ? uischemaPath : "",
-      i18nPath: !i18nPath || existsSync(i18nPath) ? i18nPath : "",
-      dataPath: !dataPath || existsSync(dataPath) ? dataPath : "",
+      uischemaPath: existsSync(uischemaPath) ? uischemaPath : "",
+      i18nPath: existsSync(i18nPath) ? i18nPath : "",
+      dataPath: existsSync(dataPath) ? dataPath : "",
     };
 
     html = await preparePreview(webView, editorInstance, extensionPath, paths);
     webView.webview.html = html;
   });
-};
-
-export enum MessageType {
-  Error = "err",
-  Warning = "war",
-  Information = "info",
-}
-
-export const showMessage = async (
-  editorInstance: any,
-  message: string,
-  type?: string
-) => {
-  let result = null;
-  switch (type) {
-    case MessageType.Error:
-      result = editorInstance.window.showErrorMessage(message);
-      break;
-    case MessageType.Warning:
-      result = editorInstance.window.showWarningMessage(message);
-      break;
-    default:
-      result = editorInstance.window.showInformationMessage(message);
-      break;
-  }
-  return result;
 };
 
 const preparePreview = async (
