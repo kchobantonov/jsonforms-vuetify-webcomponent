@@ -32,7 +32,6 @@ export const showPreview = async (
       } else {
         return;
       }
-
     } catch (err) {
       showMessage(
         editorInstance,
@@ -83,12 +82,15 @@ const showWebview = async (
     { enableScripts: true }
   );
 
-  const pathPrefix = schemaPath.endsWith(".schema.json")
-    ? schemaPath.substring(0, schemaPath.length - ".schema.json".length)
-    : schemaPath.substring(0, schemaPath.length - ".json".length);
-  const uischemaPath = pathPrefix + ".uischema.json";
-  const i18nPath = pathPrefix + ".i18n.json";
-  const dataPath = pathPrefix + ".data.json";
+  const pathPrefix = schemaPath.endsWith("/schema.json") // no prefix if the file is called schema.json
+    ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
+    : schemaPath.endsWith(".schema.json")
+    ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
+    : schemaPath.substring(0, schemaPath.length - "json".length);
+
+  const uischemaPath = pathPrefix + "uischema.json";
+  const i18nPath = pathPrefix + "i18n.json";
+  const dataPath = pathPrefix + "data.json";
 
   let paths: {
     schemaPath: string;
