@@ -1,5 +1,5 @@
 import { readFile } from "fs";
-import * as Ajv from "ajv";
+import Ajv from "ajv";
 import { promisify } from "util";
 
 export const readFileWithPromise = promisify(readFile);

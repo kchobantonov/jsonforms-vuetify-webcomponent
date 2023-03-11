@@ -24,10 +24,10 @@ import { rendererProps, RendererProps } from '@jsonforms/vue2';
 import { useTranslator } from '@jsonforms/vue2-vuetify';
 import isFunction from 'lodash/isFunction';
 import { defineComponent, inject, ref, unref } from 'vue';
+import { EmitFn } from 'vue/types/v3-setup-context';
 import { VBtn, VIcon } from 'vuetify/lib';
 import {
   ActionEvent,
-  Actions,
   FormContext,
   AsyncFunction,
   TemplateFormContext,
@@ -47,12 +47,6 @@ const buttonRenderer = defineComponent({
     const t = useTranslator();
     const button = useVuetifyButton(useJsonFormsButton(props));
 
-    const actions = inject<Actions>('actions');
-    if (!actions) {
-      throw new Error(
-        "'actions' couldn't be injected. Are you within JSON Forms?"
-      );
-    }
     const jsonforms = inject<JsonFormsSubStates>('jsonforms');
     if (!jsonforms) {
       throw new Error(
@@ -61,12 +55,16 @@ const buttonRenderer = defineComponent({
     }
 
     const formContext = inject<FormContext>('formContext');
-
     if (!formContext) {
       throw new Error(
         "'formContext' couldn't be injected. Are you within JsonForms?"
       );
     }
+
+    const handleActionEmitter = inject<EmitFn | undefined>(
+      'handleActionEmitter',
+      undefined
+    );
 
     const scopeData = inject<any>('scopeData', null);
 
@@ -75,11 +73,11 @@ const buttonRenderer = defineComponent({
     return {
       ...button,
       t,
-      actions,
       jsonforms,
       formContext,
       scopeData,
       loading,
+      handleActionEmitter,
     };
   },
   computed: {
@@ -104,6 +102,7 @@ const buttonRenderer = defineComponent({
       this.loading = true;
 
       const source: ActionEvent = {
+        action: this.button.action,
         jsonforms: this.jsonforms,
         context: this.context,
         // the action parameters passes from the UI schema
@@ -112,11 +111,16 @@ const buttonRenderer = defineComponent({
       };
       try {
         if (this.button.action) {
-          const action = this.actions[this.button.action];
-          if (isFunction(action)) {
-            await action(source);
+          if (this.handleActionEmitter) {
+            this.handleActionEmitter('handle-action', source);
           } else {
-            console.log('action [' + this.button.action + '] is missing');
+            this.$root.$emit('handle-action', source);
+          }
+
+          if (isFunction(source.callback)) {
+            await source.callback(source);
+          } else {
+            console.log('action [' + this.button.action + '] is not handled');
           }
         } else if (this.button.script) {
           await new AsyncFunction(this.button.script).call(source);

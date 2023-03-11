@@ -52,16 +52,25 @@ const changeLang = (event) => {
   form.setAttribute('locale', event.params.lang);
 };
 
-export let actions = {
-  hideRequiredAsterisk: hideRequiredAsterisk,
-  showRequiredAsterisk: showRequiredAsterisk,
-  showData: showData,
-  hideData: hideData,
-  saveData: saveData,
-  changeLang: changeLang,
+const onChange = (customEvent) => {
+  let [event] = customEvent.detail;
+  console.log('Form state data:' + JSON.stringify(event.data));
+  console.log('Form state errors:' + JSON.stringify(event.errors));
 };
 
-export const onChange = (event) => {
-  let [data] = event.detail;
-  console.log('Form state changed:' + JSON.stringify(data));
+const onHandleAction = (customEvent) => {
+  let [event] = customEvent.detail;
+  if (event.action === 'showRequiredAsterisk') {
+    event.callback = showRequiredAsterisk;
+  } else if (event.action == 'hideRequiredAsterisk') {
+    event.callback = hideRequiredAsterisk;
+  } else if (event.action == 'showData') {
+    event.callback = showData;
+  } else if (event.action == 'hideData') {
+    event.callback = hideData;
+  } else if (event.action == 'saveData') {
+    event.callback = saveData;
+  } else if (event.action == 'changeLang') {
+    event.callback = changeLang;
+  }
 };

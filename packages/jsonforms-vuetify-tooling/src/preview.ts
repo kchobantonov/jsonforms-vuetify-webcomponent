@@ -8,6 +8,19 @@ import {
   validateSchema,
 } from "./utils";
 
+type Files = {
+  schema: { path: string; data?: string };
+  uischema: { path?: string; data?: string };
+  uischemas: { path?: string; data?: string };
+  data: { path?: string; data?: string };
+  config: { path?: string; data?: string };
+  i18n: { path?: string; data?: string };
+  style: { path?: string; data?: string };
+  uidata: { path?: string; data?: string };
+  preset: { path?: string; data?: string };
+  actions: { path?: string; data?: string };
+};
+
 export const showPreview = async (
   editorInstance: any,
   schemaPath: any,
@@ -89,41 +102,55 @@ const showWebview = async (
     : schemaPath.substring(0, schemaPath.length - "json".length);
 
   const uischemaPath = pathPrefix + "uischema.json";
-  const i18nPath = pathPrefix + "i18n.json";
+  const uischemasPath = pathPrefix + "uischemas.json";
   const dataPath = pathPrefix + "data.json";
+  const configPath = pathPrefix + "config.json";
+  const i18nPath = pathPrefix + "i18n.json";
+  const stylePath = pathPrefix + "style.css";
+  const uidataPath = pathPrefix + "uidata.json";
+  const presetPath = pathPrefix + "preset.json";
+  const actionsPath = pathPrefix + "actions.js";
 
-  let paths: {
-    schemaPath: string;
-    uischemaPath?: string;
-    i18nPath?: string;
-    dataPath?: string;
-  } = {
-    schemaPath: schemaPath,
-    uischemaPath: existsSync(uischemaPath) ? uischemaPath : "",
-    i18nPath: existsSync(i18nPath) ? i18nPath : "",
-    dataPath: existsSync(dataPath) ? dataPath : "",
+  let files: Files = {
+    schema: { path: schemaPath },
+    uischema: { path: existsSync(uischemaPath) ? uischemaPath : "" },
+    uischemas: { path: existsSync(uischemasPath) ? uischemasPath : "" },
+    data: { path: existsSync(dataPath) ? dataPath : "" },
+    config: { path: existsSync(configPath) ? configPath : "" },
+    i18n: { path: existsSync(i18nPath) ? i18nPath : "" },
+    style: { path: existsSync(stylePath) ? stylePath : "" },
+    uidata: { path: existsSync(uidataPath) ? uidataPath : "" },
+    preset: { path: existsSync(presetPath) ? presetPath : "" },
+    actions: { path: existsSync(actionsPath) ? actionsPath : "" },
   };
 
   let html = await preparePreview(
     webView,
     editorInstance,
     extensionPath,
-    paths
+    files
   );
   webView.webview.html = html;
 
-  const watchPaths = Object.values(paths).filter((path) => path);
+  const watchPaths = Object.values(files)
+    .filter((file) => file.path)
+    .map((file) => file.path!);
 
   watch(watchPaths).on("change", async (path: any, stats: any) => {
-    console.log("Data inside " + path + " changed");
-    paths = {
-      schemaPath: schemaPath,
-      uischemaPath: existsSync(uischemaPath) ? uischemaPath : "",
-      i18nPath: existsSync(i18nPath) ? i18nPath : "",
-      dataPath: existsSync(dataPath) ? dataPath : "",
+    files = {
+      schema: { path: schemaPath },
+      uischema: { path: existsSync(uischemaPath) ? uischemaPath : "" },
+      uischemas: { path: existsSync(uischemasPath) ? uischemasPath : "" },
+      data: { path: existsSync(dataPath) ? dataPath : "" },
+      config: { path: existsSync(configPath) ? configPath : "" },
+      i18n: { path: existsSync(i18nPath) ? i18nPath : "" },
+      style: { path: existsSync(stylePath) ? stylePath : "" },
+      uidata: { path: existsSync(uidataPath) ? uidataPath : "" },
+      preset: { path: existsSync(presetPath) ? presetPath : "" },
+      actions: { path: existsSync(actionsPath) ? actionsPath : "" },
     };
 
-    html = await preparePreview(webView, editorInstance, extensionPath, paths);
+    html = await preparePreview(webView, editorInstance, extensionPath, files);
     webView.webview.html = html;
   });
 };
@@ -132,52 +159,21 @@ const preparePreview = async (
   webView: any,
   editorInstance: any,
   extensionPath: string,
-  paths: {
-    schemaPath: string;
-    uischemaPath?: string;
-    i18nPath?: string;
-    dataPath?: string;
-  }
+  files: Files
 ) => {
   // Read json files and load html for webview
-  let schema = "";
-  try {
-    schema = await readFileWithPromise(paths.schemaPath, "utf8");
-  } catch (err: any) {
-    showMessage(editorInstance, err.message, MessageType.Error);
-    return;
-  }
-
-  let uiSchema = "";
-  if (paths.uischemaPath) {
+  let file: keyof Files;
+  for (file in files) {
     try {
-      uiSchema = await readFileWithPromise(paths.uischemaPath, "utf8");
+      const path = files[file].path;
+      if (path) {
+        files[file].data = await readFileWithPromise(path, "utf8");
+      }
     } catch (err: any) {
       showMessage(editorInstance, err.message, MessageType.Error);
       return;
     }
   }
-
-  let i18n = "";
-  if (paths.i18nPath) {
-    try {
-      i18n = await readFileWithPromise(paths.i18nPath, "utf8");
-    } catch (err: any) {
-      showMessage(editorInstance, err.message, MessageType.Error);
-      return;
-    }
-  }
-
-  let data = "";
-  if (paths.dataPath) {
-    try {
-      data = await readFileWithPromise(paths.dataPath, "utf8");
-    } catch (err: any) {
-      showMessage(editorInstance, err.message, MessageType.Error);
-      return;
-    }
-  }
-
   const previewFolder = join(extensionPath, "dist", "js");
   const scriptPathOnDisk = editorInstance.Uri.file(
     join(previewFolder, "vuetify-json-forms.min.js")
@@ -185,23 +181,33 @@ const preparePreview = async (
 
   const webcomponentScriptPath = webView.webview.asWebviewUri(scriptPathOnDisk);
 
-  const html = getPreviewHTML(
-    webcomponentScriptPath,
-    schema,
-    uiSchema,
-    i18n,
-    data
+  const showPreviewConfig = editorInstance.workspace.getConfiguration(
+    "jsonforms-vuetify-tooling.showPreview"
   );
+  if (
+    !files.config.data &&
+    showPreviewConfig &&
+    showPreviewConfig.config &&
+    typeof showPreviewConfig.config === "object"
+  ) {
+    files.config = {};
+    files.config.data = JSON.stringify(showPreviewConfig.config);
+  }
+  if (
+    !files.preset.data &&
+    showPreviewConfig &&
+    showPreviewConfig.preset &&
+    typeof showPreviewConfig.preset === "object"
+  ) {
+    files.preset = {};
+    files.preset.data = JSON.stringify(showPreviewConfig.preset);
+  }
+
+  const html = getPreviewHTML(webcomponentScriptPath, files);
   return html;
 };
 
-const getPreviewHTML = (
-  webcomponentScriptPath: any,
-  schema: string,
-  uischema: string,
-  i18n: string,
-  data: string
-) => {
+const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -283,42 +289,84 @@ const getPreviewHTML = (
   </vuetify-json-forms>
 
   <script type="text/javascript">
-    var schema = ${schema ? JSON.stringify(schema) : "''"};
-    var uischema = ${uischema ? JSON.stringify(uischema) : "''"};
-    var i18n = ${i18n ? JSON.stringify(i18n) : "''"};
-    var data = ${data ? JSON.stringify(data) : "''"};
-
-    var onChange = function(event) {
-      var [data] = event.detail;
-      console.log('Form state changed:' + JSON.stringify(data));
+    var style = ${
+      files.style && files.style.data ? JSON.stringify(files.style.data) : "''"
     };
+    var data = ${
+      files.data && files.data.data ? JSON.stringify(files.data.data) : "''"
+    };
+    var schema = ${
+      files.schema && files.schema.data
+        ? JSON.stringify(files.schema.data)
+        : "''"
+    };
+    var uischema = ${
+      files.uischema && files.uischema.data
+        ? JSON.stringify(files.uischema.data)
+        : "''"
+    };
+    var uischemas = ${
+      files.uischemas && files.uischemas.data
+        ? JSON.stringify(files.uischemas.data)
+        : "''"
+    };
+    var uidata = ${
+      files.uidata && files.uidata.data
+        ? JSON.stringify(files.uidata.data)
+        : "''"
+    };
+    var config = ${
+      files.config && files.config.data
+        ? JSON.stringify(files.config.data)
+        : "''"
+    };
+    var i18n = ${
+      files.i18n && files.i18n.data ? JSON.stringify(files.i18n.data) : "''"
+    };
+    var preset = ${
+      files.preset && files.preset.data
+        ? JSON.stringify(files.preset.data)
+        : "''"
+    };
+    ${
+      files.actions && files.actions.data ? files.actions.data : "// no actions"
+    };
+
     
     let form = document.getElementById('vuetify-json-forms');
+    if (style) {
+      form.setAttribute('custom-style', style);
+    }
+    if (data) {
+      form.setAttribute('data', data);
+    }
     if (schema) {
       form.setAttribute('schema', schema);
     }
     if (uischema) {
       form.setAttribute('uischema', uischema);
     }
+    if (uischemas) {
+      form.setAttribute('uischemas', uischemas);
+    }
+    if (uidata) {
+      form.setAttribute('uidata', uidata);
+    }
+    if (config) {
+      form.setAttribute('config', config);
+    }
     if (i18n) {
       form.setAttribute('translations', i18n);
     }
-    if (data) {
-      form.setAttribute('data', data);
+    if (preset) {
+      form.setAttribute('default-preset', preset);
     }
-
-    //form.setAttribute('custom-style', style);
-    //form.setAttribute('data', JSON.stringify(data));
-    //form.setAttribute('schema', JSON.stringify(schema));
-    //form.setAttribute('uischema', JSON.stringify(uischema));
-    //form.setAttribute('uischemas', JSON.stringify(uischemas));        
-    //form.setAttribute('uidata', JSON.stringify(uidata));
-    //form.setAttribute('config', JSON.stringify(config));
-    //form.setAttribute('translations', JSON.stringify(i18n));
-    //form.setAttribute('default-preset', JSON.stringify(preset));
-    //form.setAttribute('actions', JSON.stringify(actionsAsString));
-
-    form.addEventListener('change', onChange);
+    if (onChange) {
+      form.addEventListener('change', onChange);
+    }
+    if (onHandleAction) {
+      form.addEventListener('handle-action', onHandleAction);
+    }
 
   </script>
 </body>

@@ -4,7 +4,7 @@
   "author": "Krasimir Chobantonov",
   "publisher": "kchobantonov",
   "description": "VSCode extension for JSON Forms tooling using Vue2 Vuetify renderer set",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "preview": true,
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
@@ -48,13 +48,55 @@
       }
     ],
     "menus": {
+      "editor/title": [
+        {
+          "when": "editorLangId == json",
+          "command": "jsonforms-vuetify-tooling.showPreview",
+          "group": "jsonforms"
+        }
+      ],
       "explorer/context": [
         {
           "when": "resourceExtname == .json",
           "command": "jsonforms-vuetify-tooling.showPreview",
           "group": "jsonforms"
         }
+      ],
+      "editor/title/context": [
+        {
+          "when": "resourceLangId == json",
+          "command": "jsonforms-vuetify-tooling.showPreview",
+          "group": "jsonforms"
+        }
       ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "JSONForms Vuetify Tooling",
+      "order": 20,
+      "properties": {
+        "jsonforms-vuetify-tooling.showPreview.config": {
+          "type": "object",
+          "default": {
+            "restrict": true,
+            "trim": false,
+            "showUnfocusedDescription": false,
+            "hideRequiredAsterisk": true
+          },
+          "description": "JSONForms config object. Used when config.json file is not next to the schema.json file",
+          "scope": "resource"
+        },
+        "jsonforms-vuetify-tooling.showPreview.preset": {
+          "type": "object",
+          "default": {
+            "theme": {
+              "dark": false
+            }
+          },
+          "description": "JSONForms Vuetify Default Preset object. Used when preset.json file is not next to the schema.json file",
+          "scope": "resource"
+        }
+      }
     }
   },
   "scripts": {
@@ -76,6 +118,7 @@
     "@types/vscode": "^1.76.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
+    "@kchobantonov/jsonforms-vuetify-webcomponent": "3.1.0-alpha.0",
     "@vscode/test-electron": "^2.2.3",
     "@vscode/vsce": "^2.18.0",
     "copy-webpack-plugin": "^6.4.1",
@@ -88,7 +131,6 @@
     "webpack-cli": "^4.0.0"
   },
   "dependencies": {
-    "@kchobantonov/jsonforms-vuetify-webcomponent": "3.1.0-alpha.0",
     "chokidar": "^3.5.3",
     "util": "^0.12.5"
   }

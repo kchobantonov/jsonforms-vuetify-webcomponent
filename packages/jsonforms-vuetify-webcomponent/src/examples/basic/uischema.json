@@ -1,6 +1,6 @@
 {
   "type": "TemplateLayout",
-  "template": "<v-app><v-app-bar app><v-toolbar-title>{{translate('Vuetify JsonForms Demo', 'Vuetify JsonForms Demo')}}</v-toolbar-title><v-spacer expand></v-spacer><slot name='0'></slot></v-app-bar><slot name='1'></slot></v-app>",
+  "template": "<v-app><v-app-bar app><v-toolbar-title>{{translate('Vuetify JSON Forms Demo', 'Vuetify JSON Forms Demo')}}</v-toolbar-title><v-spacer expand></v-spacer><slot name='0'></slot></v-app-bar><slot name='1'></slot></v-app>",
   "elements": [
     {
       "type": "TemplateLayout",

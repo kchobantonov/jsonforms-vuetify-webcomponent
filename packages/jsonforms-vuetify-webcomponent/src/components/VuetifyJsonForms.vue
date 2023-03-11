@@ -32,7 +32,6 @@
           :validationMode="validationModeToUse"
           :i18n="i18nToUse"
           :additionalErrors="additionalErrorsToUse"
-          :actions="actionsToUse"
           @change="onChange"
         ></resolved-json-forms>
       </v-sheet>
@@ -52,16 +51,16 @@ import {
 } from '@jsonforms/core';
 import { JsonFormsChangeEvent } from '@jsonforms/vue2';
 import {
-  ActionEvent,
-  Actions,
-  vuetifyRenderers,
   createTranslator,
   FormContext,
   ResolvedJsonForms,
+  vuetifyRenderers,
 } from '@kchobantonov/jsonforms-vuetify-renderers';
 import { ErrorObject } from 'ajv';
-import { isArray, isPlainObject, merge } from 'lodash';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import isPlainObject from 'lodash/isPlainObject';
+import merge from 'lodash/merge';
 import * as shadyCss from 'shady-css-parser';
 import Vue, { defineComponent, PropType, Ref, ref, toRef } from 'vue';
 import LoadScript from 'vue-plugin-load-script';
@@ -232,7 +231,6 @@ import {
   VWindowItem,
 } from 'vuetify/lib';
 import { VuetifyPreset } from 'vuetify/types/services/presets';
-import { isActionsParams, validateActions } from '../core';
 import vuetify, { preset as defaultPreset } from '../plugins/vuetify';
 
 Vue.use(LoadScript);
@@ -283,36 +281,6 @@ const transformUISchemas = (
       return null;
     })
     .filter((x) => !!x) as JsonFormsUISchemaRegistryEntry[];
-};
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-const transformActions = (
-  actionsString?: string
-): Record<string, (event: ActionEvent) => void> => {
-  const actionsData: {
-    [id: string]: string;
-  } =
-    typeof actionsString === 'string'
-      ? validateActions(JSON.parse(actionsString))
-      : {};
-  const actions: Actions = {};
-
-  Object.keys(actionsData).forEach((key) => {
-    const action = async (event: ActionEvent) => {
-      try {
-        const fn = Function(
-          'event',
-          `const fn = ${actionsData[key]};\n return fn(event);`
-        );
-        return fn(event);
-      } catch (e) {
-        console.log(`Error at action[${key}]: ${e}`);
-      }
-    };
-    actions[key] = action;
-  });
-
-  return actions;
 };
 
 const vuetifyFormWc = defineComponent({
@@ -487,18 +455,6 @@ const vuetifyFormWc = defineComponent({
         }
       },
     },
-    actions: {
-      required: false,
-      type: String,
-      default: () => {
-        return {};
-      },
-      validator: function (value) {
-        const actions = typeof value == 'string' ? JSON.parse(value) : {};
-
-        return isActionsParams(actions);
-      },
-    },
   },
   setup(props) {
     let error: any = undefined;
@@ -516,12 +472,9 @@ const vuetifyFormWc = defineComponent({
     let translationsToUse: Record<string, any> = {};
     let localeToUse = 'en';
 
-    let dataDefaultPreset =
-      typeof props.defaultPreset == 'string'
-        ? merge({}, defaultPreset, JSON.parse(props.defaultPreset))
-        : defaultPreset;
-    let actionsToUse: Record<string, (event: ActionEvent) => void> = {};
     let uidataToUse: Record<string, any> = {};
+    let defaultPresetToUse = defaultPreset;
+
     try {
       try {
         dataToUse =
@@ -589,7 +542,7 @@ const vuetifyFormWc = defineComponent({
       };
 
       try {
-        dataDefaultPreset =
+        defaultPresetToUse =
           typeof props.defaultPreset == 'string'
             ? merge({}, defaultPreset, JSON.parse(props.defaultPreset))
             : defaultPreset;
@@ -612,15 +565,6 @@ const vuetifyFormWc = defineComponent({
             : undefined;
       } catch (e) {
         error = `Additional Errors Error: ${e}`;
-        console.log(e);
-      }
-
-      try {
-        if (typeof props.actions === 'string') {
-          actionsToUse = transformActions(props.actions);
-        }
-      } catch (e) {
-        error = `Actions Error: ${e}`;
         console.log(e);
       }
 
@@ -664,11 +608,10 @@ const vuetifyFormWc = defineComponent({
       translationsToUse,
       localeToUse,
       additionalErrorsToUse,
-      dataDefaultPreset,
+      defaultPresetToUse,
       vuetifyTheme: ref<{ generatedStyles: string } & VuetifyPreset['theme']>(
         vuetify.framework.theme as any
       ),
-      actionsToUse,
       uidataToUse,
       context,
     };
@@ -970,20 +913,12 @@ const vuetifyFormWc = defineComponent({
     defaultPreset: {
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
-          this.dataDefaultPreset =
+          this.defaultPresetToUse =
             typeof value === 'string'
               ? merge({}, defaultPreset, JSON.parse(value))
               : undefined;
 
           this.applyTheme();
-          this.$forceUpdate();
-        }
-      },
-    },
-    actions: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.actionsToUse = transformActions(value);
           this.$forceUpdate();
         }
       },
@@ -1091,14 +1026,14 @@ const vuetifyFormWc = defineComponent({
         this.$vuetify.theme,
         preset && preset.theme
           ? preset.theme
-          : this.dataDefaultPreset?.theme || {}
+          : this.defaultPresetToUse?.theme || {}
       );
 
       this.$vuetify.icons = merge(
         this.$vuetify.icons,
         preset && preset.icons
           ? preset.icons
-          : this.dataDefaultPreset?.icons || {}
+          : this.defaultPresetToUse?.icons || {}
       );
     },
     onChange(event: JsonFormsChangeEvent): void {

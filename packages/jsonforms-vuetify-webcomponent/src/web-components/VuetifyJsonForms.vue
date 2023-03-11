@@ -14,7 +14,6 @@
     :additionalErrors="additionalErrors"
     :defaultPreset="defaultPreset"
     :uidata="uidata"
-    :actions="actions"
     @change="onChange"
   ></vuetify-json-forms>
 </template>
@@ -23,23 +22,17 @@
 import { ValidationMode } from '@jsonforms/core';
 import { JsonFormsChangeEvent } from '@jsonforms/vue2';
 const isArray = () =>
-  import('lodash').then((module) => {
-    const { isArray } = module;
-    return isArray;
+  import('lodash/isArray').then((module) => {
+    return module;
   });
 import { defineComponent, PropType } from 'vue';
-const isActionsParams = () =>
-  import('../core').then((module) => {
-    const { isActionsParams } = module;
-    return isActionsParams;
-  });
 const VuetifyJsonForms = () => import('../components/VuetifyJsonForms.vue');
 
 const vuetifyFormWc = defineComponent({
   components: {
     VuetifyJsonForms,
   },
-  emits: ['change'],
+  emits: ['change', 'handle-action'],
   props: {
     data: {
       required: false,
@@ -129,7 +122,7 @@ const vuetifyFormWc = defineComponent({
         return (
           value === 'ValidateAndShow' ||
           value === 'ValidateAndHide' ||
-          value == 'NoValidation'
+          value === 'NoValidation'
         );
       },
     },
@@ -205,19 +198,12 @@ const vuetifyFormWc = defineComponent({
         }
       },
     },
-    actions: {
-      required: false,
-      type: String,
-      default: () => {
-        return {};
-      },
-      validator: async function (value) {
-        const actions = typeof value == 'string' ? JSON.parse(value) : {};
-
-        const validate = await isActionsParams();
-        return validate(actions);
-      },
-    },
+  },
+  provide() {
+    return {
+      // provide the this.$emit to be used as handleActionEmitter since this emitter is connected to the native web component
+      handleActionEmitter: this.$emit,
+    };
   },
   methods: {
     onChange(event: JsonFormsChangeEvent): void {

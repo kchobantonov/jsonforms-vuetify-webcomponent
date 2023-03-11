@@ -69,7 +69,7 @@ import { normalizeId } from 'ajv/dist/compile/resolve';
 import _get from 'lodash/get';
 import { defineComponent, inject, PropType, Ref, ref } from 'vue';
 import { VAlert, VCol, VContainer, VProgressLinear, VRow } from 'vuetify/lib';
-import { ActionEvent, createAjv, FormContext, resolveRefs } from '../core';
+import { createAjv, FormContext, resolveRefs } from '../core';
 import { vuetifyRenderers } from '../renderers/index';
 
 const resolvedJsonForms = defineComponent({
@@ -150,11 +150,6 @@ const resolvedJsonForms = defineComponent({
       type: Array as PropType<ErrorObject[]>,
       default: () => [],
     },
-    actions: {
-      required: false,
-      type: [Object] as PropType<Record<string, (event: ActionEvent) => void>>,
-      default: () => {},
-    },
   },
   setup(props) {
     const resolved = ref(false);
@@ -162,7 +157,6 @@ const resolvedJsonForms = defineComponent({
     let context: Ref<FormContext> | undefined = undefined;
 
     const schemaToUse = ref<JsonSchema | undefined>(undefined);
-    const actionsToUse = props.actions ?? {};
 
     const parentContext = inject<FormContext | undefined>(
       'formContext',
@@ -173,13 +167,9 @@ const resolvedJsonForms = defineComponent({
       if (!context.value.schemaUrl && props.schemaUrl) {
         context.value.schemaUrl = props.schemaUrl;
       }
-      if (!context.value.actions && props.actions) {
-        context.value.actions = props.actions;
-      }
     } else {
       context = ref({
         schemaUrl: props.schemaUrl,
-        actions: props.actions,
       });
     }
 
@@ -187,7 +177,6 @@ const resolvedJsonForms = defineComponent({
       resolved,
       error,
       schemaToUse,
-      actionsToUse,
       context,
     };
   },
@@ -197,7 +186,6 @@ const resolvedJsonForms = defineComponent({
   provide() {
     return {
       formContext: this.context,
-      actions: this.actionsToUse,
     };
   },
   watch: {
@@ -206,9 +194,6 @@ const resolvedJsonForms = defineComponent({
     },
     async schemaUrl(newSchemaUrl) {
       this.resolveSchema(this.schema, newSchemaUrl);
-    },
-    actions(newActions) {
-      this.actionsToUse = newActions;
     },
   },
   methods: {

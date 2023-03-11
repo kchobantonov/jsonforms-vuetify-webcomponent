@@ -1,6 +1,6 @@
 import templateFn from 'lodash/template';
 import merge from 'lodash/merge';
-import { TemplateExecutor, TemplateOptions } from 'lodash';
+import type { TemplateExecutor, TemplateOptions } from 'lodash';
 
 const interpolate = /{{([\s\S]+?)}}/g;
 

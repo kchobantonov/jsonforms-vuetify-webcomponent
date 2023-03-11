@@ -19,7 +19,6 @@ export type ResolvedSchema = {
 
 export interface FormContext {
   schemaUrl?: string;
-  actions?: Record<string, (event: ActionEvent) => void>;
 }
 
 export interface TemplateFormContext extends FormContext {
@@ -35,11 +34,10 @@ export interface TemplateFormContext extends FormContext {
   errors?: ErrorObject[];
   additionalErrors?: ErrorObject[];
 }
-export interface Actions {
-  [id: string]: (event: ActionEvent) => void;
-}
 
 export type ActionEvent = {
+  action: string;
+  callback?: (event: ActionEvent) => void;
   jsonforms: JsonFormsSubStates;
   context: TemplateFormContext;
   // the action parameters passes from the UI schema
