@@ -61,7 +61,7 @@ import {
   ValidationMode,
 } from '@jsonforms/core';
 import { JsonForms, JsonFormsChangeEvent } from '@jsonforms/vue2';
-import { Ajv } from 'ajv';
+import type Ajv from 'ajv';
 import JsonRefs from 'json-refs';
 import _get from 'lodash/get';
 import { PropType } from 'vue';
