@@ -453,7 +453,7 @@ export default {
       return this.$route.query?.view === 'form-only';
     },
   },
-  mounted() {
+  mounted(): void {
     this.setExample(
       find(this.examples, (example) => example.id === this.$route.params.id)
     );
