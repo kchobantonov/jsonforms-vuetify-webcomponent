@@ -120,6 +120,7 @@
     }
   ],
   "options": {
+    "vertical": false,
     "variant": "stepper",
     "showNavButtons": true
   }
