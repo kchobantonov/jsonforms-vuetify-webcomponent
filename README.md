@@ -60,7 +60,7 @@ Open <http://localhost:8080/demo.html>
 
 ```bash
 rm -f package-lock.json packages/jsonforms-vuetify-tooling/package-lock.json
-docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app node:14.21.3 npm install && npm run init && cd packages/jsonforms-vuetify-tooling && npm install
+docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app node:14.21.3 sh -c "npm install && npm run init && cd packages/jsonforms-vuetify-tooling && npm install"
 ```
 
 ### Continuous Integration
