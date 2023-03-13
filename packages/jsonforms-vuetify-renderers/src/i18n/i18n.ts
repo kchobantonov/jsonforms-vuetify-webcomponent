@@ -20,7 +20,9 @@ export const createTranslator = (
     defaultMessage: string | undefined,
     values?: any
   ): string | undefined => {
-    if (!localeTranslations) return defaultMessage;
+    const message = localeTranslations
+      ? get(localeTranslations, id)
+      : defaultMessage;
 
     const message = get(localeTranslations, id);
     if (message && values) {
