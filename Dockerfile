@@ -1,8 +1,8 @@
-FROM node:14.17.5 as builder
+FROM node:14.21.3 as builder
 WORKDIR /usr/local/src/
 COPY . .
 
-RUN npm i && npm run init && npm run build
+RUN npm ci && npm run init && npm run build
 
 FROM nginx:latest
 

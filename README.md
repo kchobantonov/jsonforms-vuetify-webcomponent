@@ -56,6 +56,13 @@ docker run --rm -p 8080:80 jsonforms-vuetify-webcomponent:latest
 
 Open <http://localhost:8080/demo.html>
 
+### Rebuild package-lock.json
+
+```bash
+rm -f package-lock.json packages/jsonforms-vuetify-tooling/package-lock.json
+docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app node:14.21.3 npm install && npm run init && cd packages/jsonforms-vuetify-tooling && npm install
+```
+
 ### Continuous Integration
 
 The JSON Forms Vuetify WebComponent project is built and tested via Github actions on Linux.

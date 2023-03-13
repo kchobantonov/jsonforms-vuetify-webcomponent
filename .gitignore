@@ -5,3 +5,4 @@ packages/*/lib
 packages/*/dist
 packages/*/out
 packages/*/stats.html
+packages/jsonforms-vuetify-tooling/.vscode-test
