@@ -24,7 +24,6 @@ export const createTranslator = (
       ? get(localeTranslations, id)
       : defaultMessage;
 
-    const message = get(localeTranslations, id);
     if (message && values) {
       return translateWithParams(message, values) ?? defaultMessage;
     }

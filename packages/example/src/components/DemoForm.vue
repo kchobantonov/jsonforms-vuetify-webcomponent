@@ -61,11 +61,11 @@ import {
   ValidationMode,
 } from '@jsonforms/core';
 import { JsonForms, JsonFormsChangeEvent } from '@jsonforms/vue2';
+import { createTranslator } from '@kchobantonov/jsonforms-vuetify-renderers';
 import type Ajv from 'ajv';
 import JsonRefs from 'json-refs';
 import _get from 'lodash/get';
 import { PropType } from 'vue';
-import { createTranslator } from '../i18n';
 
 export default {
   name: 'demo-form',
