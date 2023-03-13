@@ -55,3 +55,9 @@ docker run --rm -p 8080:80 jsonforms-vuetify-webcomponent:latest
 ```
 
 Open <http://localhost:8080/demo.html>
+
+### Continuous Integration
+
+The JSON Forms Vuetify WebComponent project is built and tested via Github actions on Linux.
+
+Current status: ![Build status](https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/actions/workflows/ci.yml/badge.svg?branch=master)

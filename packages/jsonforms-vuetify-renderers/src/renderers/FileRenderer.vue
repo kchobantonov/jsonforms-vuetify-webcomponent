@@ -255,7 +255,7 @@ const fileRenderer = defineComponent({
   },
   computed: {
     accept(): string | undefined {
-      // note that we cast to any since JsonSchema7 JSONFomrs core type does not yet define contentMediaType although contentMediaType is part of JSON schema draft-07
+      // note that we cast to any since JsonSchema7 JSONForms core type does not yet define contentMediaType although contentMediaType is part of JSON schema draft-07
       return (this.control.schema as any).contentMediaType;
     },
     errorMessages(): string | undefined {

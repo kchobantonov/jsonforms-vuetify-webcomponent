@@ -49,6 +49,7 @@ import { input as templateLayout } from './template-layout';
 import { input as templateSlot } from './template-slot';
 import { input as timeExample } from './time';
 import { input as verticalLayout } from './vertical-layout';
+import { input as file } from './file';
 
 export const examples: JsonExample[] = [
   {
@@ -70,6 +71,11 @@ export const examples: JsonExample[] = [
     id: 'control-options',
     title: 'Control Options',
     input: controlOptions,
+  },
+  {
+    id: 'file',
+    title: 'File',
+    input: file,
   },
   {
     id: 'datetime',

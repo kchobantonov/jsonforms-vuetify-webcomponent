@@ -136,7 +136,7 @@ const showWebview = async (
     .filter((file) => file.path)
     .map((file) => file.path!);
 
-  watch(watchPaths).on("change", async (path: any, stats: any) => {
+  watch(watchPaths).on("change", async (_path: any, _stats: any) => {
     files = {
       schema: { path: schemaPath },
       uischema: { path: existsSync(uischemaPath) ? uischemaPath : "" },

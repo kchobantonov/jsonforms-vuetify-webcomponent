@@ -1,9 +1,9 @@
 {
   "name": "jsonforms-vuetify-tooling",
-  "displayName": "JSONForms Vuetify Tooling",
+  "displayName": "JSON Forms Vuetify Tooling",
   "author": "Krasimir Chobantonov",
   "publisher": "kchobantonov",
-  "description": "VSCode extension for JSON Forms tooling using Vue2 Vuetify renderer set",
+  "description": "%jsonforms-vuetify-tooling.description%",
   "version": "0.0.2",
   "preview": true,
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
@@ -36,6 +36,7 @@
     "Other"
   ],
   "activationEvents": [],
+  "icon": "icon.png",
   "main": "./dist/extension.js",
   "files": [
     "dist"
@@ -44,7 +45,7 @@
     "commands": [
       {
         "command": "jsonforms-vuetify-tooling.showPreview",
-        "title": "JSONForms Vuetify: Show Preview"
+        "title": "%jsonforms-vuetify-tooling.showPreview.title%"
       }
     ],
     "menus": {
@@ -72,7 +73,7 @@
     },
     "configuration": {
       "type": "object",
-      "title": "JSONForms Vuetify Tooling",
+      "title": "%jsonforms-vuetify-tooling.config.description%",
       "order": 20,
       "properties": {
         "jsonforms-vuetify-tooling.showPreview.config": {
@@ -83,7 +84,7 @@
             "showUnfocusedDescription": false,
             "hideRequiredAsterisk": true
           },
-          "description": "JSONForms config object. Used when config.json file is not next to the schema.json file",
+          "description": "%jsonforms-vuetify-tooling.showPreview.config.description%",
           "scope": "resource"
         },
         "jsonforms-vuetify-tooling.showPreview.preset": {
@@ -93,7 +94,7 @@
               "dark": false
             }
           },
-          "description": "JSONForms Vuetify Default Preset object. Used when preset.json file is not next to the schema.json file",
+          "description": "%jsonforms-vuetify-tooling.showPreview.preset.description%",
           "scope": "resource"
         }
       }
@@ -106,7 +107,7 @@
     "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "pretest": "npm run compile-tests && npm run build && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "vsix": "npm i && vsce package"
