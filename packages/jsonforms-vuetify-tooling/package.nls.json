@@ -1,7 +1,7 @@
 {
-  "jsonforms-vuetify-tooling.description": "VSCode extension for JSON Forms tooling using Vue2 Vuetify renderer set",
-  "jsonforms-vuetify-tooling.showPreview.title": "JSON Forms Vuetify: Show Preview",
-  "jsonforms-vuetify-tooling.config.description": "JSON Forms Vuetify Tooling",
-  "jsonforms-vuetify-tooling.showPreview.config.description": "JSON Forms config object. Used when config.json file is not next to the schema.json file",
-  "jsonforms-vuetify-tooling.showPreview.preset.description": "JSON Forms Vuetify Default Preset object. Used when preset.json file is not next to the schema.json file"
+  "jsonforms-vuetify-tooling.description": "VSCode extension for JSONForms tooling using Vue2 Vuetify renderer set",
+  "jsonforms-vuetify-tooling.showPreview.title": "JSONForms Vuetify: Show Preview",
+  "jsonforms-vuetify-tooling.config.description": "JSONForms Vuetify Tooling",
+  "jsonforms-vuetify-tooling.showPreview.config.description": "JSONForms config object. Used when config.json file is not next to the schema.json file",
+  "jsonforms-vuetify-tooling.showPreview.preset.description": "JSONForms Vuetify Default Preset object. Used when preset.json file is not next to the schema.json file"
 }

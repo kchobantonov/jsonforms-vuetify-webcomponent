@@ -1,10 +1,10 @@
 {
   "name": "jsonforms-vuetify-tooling",
-  "displayName": "JSON Forms Vuetify Tooling",
+  "displayName": "JSONForms Vuetify Tooling",
   "author": "Krasimir Chobantonov",
   "publisher": "kchobantonov",
   "description": "%jsonforms-vuetify-tooling.description%",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "preview": true,
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
@@ -33,6 +33,7 @@
     "template"
   ],
   "categories": [
+    "Visualization",
     "Other"
   ],
   "activationEvents": [],
