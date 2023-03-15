@@ -33,4 +33,4 @@ The preview tool expects the form change notification function to be named `onCh
 
 ## JSON Forms Preview Demo
 
-![JSON Forms Preview Demo](assets/demo.gif)
+![JSON Forms Preview Demo](https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/blob/master/packages/jsonforms-vuetify-tooling/assets/demo.gif?raw=true)
