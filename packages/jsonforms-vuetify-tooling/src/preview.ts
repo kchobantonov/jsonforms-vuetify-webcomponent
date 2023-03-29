@@ -215,7 +215,6 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
   <script src="${webcomponentScriptPath}"></script>
   <style>
     body {
-      background: #fff;
       padding: 0;
     }
     #root {
