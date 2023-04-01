@@ -25,7 +25,7 @@
     "customization",
     "template"
   ],
-"scripts": {
+  "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
@@ -33,7 +33,7 @@
     "fix-vuetify-query-selector": "node ./patch-vuetify.js",
     "prebuild": "npm run clean && npm run wc-use-contenthash && npm run fix-vuetify-query-selector",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target wc-async --inline-vue 'src/web-components/*.vue'",
+    "build": "vue-cli-service build --target wc-async --inline-vue src/web-components/*.vue",
     "lerna-publish": "npm publish"
   },
   "files": [
