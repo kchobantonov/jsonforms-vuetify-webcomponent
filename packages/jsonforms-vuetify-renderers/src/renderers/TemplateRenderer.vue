@@ -29,9 +29,8 @@ import {
 } from '@jsonforms/vue2';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
-import { computed, defineComponent, inject, unref } from 'vue';
+import { computed, defineComponent, inject, unref, provide } from 'vue';
 import { useVuetifyLayout } from '@jsonforms/vue2-vuetify';
-import { provide } from 'vue';
 
 const templateRenderer = defineComponent({
   name: 'template-renderer',
