@@ -12,7 +12,8 @@ type DeepPartial<T> = T extends any[]
 export default new VuexPersistence({
   key: 'jsonforms-vuetify-webcomponent', // The key to store the state on in the storage provider.
   storage: window.localStorage,
-  strictMode: process.env.NODE_ENV !== 'production',
+  //strictMode: process.env.NODE_ENV !== 'production',
+  strictMode: true,
   reducer: (state: RootState): DeepPartial<RootState> => ({
     app: {
       vuetify: {
