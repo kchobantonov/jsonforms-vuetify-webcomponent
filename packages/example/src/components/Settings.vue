@@ -39,7 +39,7 @@
         <v-row>
           <v-col>
             <v-btn-toggle
-              v-model="$vuetify.theme.dark"
+              v-model="dark"
               borderless
               mandatory
               group
@@ -271,6 +271,7 @@ import { sync } from 'vuex-pathify';
 export default {
   name: 'Settings',
   computed: {
+    dark: sync('app/vuetify@theme.dark'),
     validationMode: sync('app/jsonforms@validationMode'),
     hideRequiredAsterisk: sync('app/jsonforms@config.hideRequiredAsterisk'),
     showUnfocusedDescription: sync(

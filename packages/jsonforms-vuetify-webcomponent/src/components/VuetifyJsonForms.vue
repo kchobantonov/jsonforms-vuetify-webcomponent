@@ -55,6 +55,7 @@ import {
   FormContext,
   ResolvedJsonForms,
   vuetifyRenderers,
+  MonacoEditor,
 } from '@kchobantonov/jsonforms-vuetify-renderers';
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
@@ -784,6 +785,7 @@ const vuetifyFormWc = defineComponent({
         VVirtualTable,
         VWindow,
         VWindowItem,
+        MonacoEditor,
       },
       templateLayoutRendererContext: toRef(this, 'context'),
       formContext: toRef(this, 'context'),
@@ -1066,4 +1068,5 @@ export default vuetifyFormWc;
 @import '~@mdi/font/css/materialdesignicons.min.css';
 @import '~vuetify/dist/vuetify.min.css';
 @import '~@jsonforms/vue2-vuetify/lib/jsonforms-vue2-vuetify.esm.css';
+@import '~@kchobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.esm.css';
 </style>

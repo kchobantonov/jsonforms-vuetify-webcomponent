@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   base: process.env.BASE_URL,
   scrollBehavior: (to, _, savedPosition) => {
     if (to.hash) return { selector: to.hash };
@@ -30,3 +30,5 @@ export default new Router({
     },
   ],
 });
+
+export default router;

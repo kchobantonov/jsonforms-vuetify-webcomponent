@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "javascript": {
+      "type": "string",
+      "description": "Please type some JavaScript"
+    },
+    "html": {
+      "type": "string",
+      "description": "Please type some HTML"
+    }
+  },
+  "required": ["javascript"]
+}

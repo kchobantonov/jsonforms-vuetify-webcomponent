@@ -27,6 +27,7 @@ import { input as listWithDetailsAndReorder } from './list-with-details-and-reor
 import { input as listWithDetailsRestrict } from './list-with-details-restrict';
 import { input as login } from './login';
 import { input as main } from './main';
+import { input as monacoEditor } from './monaco-editor';
 import { input as multiEnum } from './multi-enum';
 import { input as nestedArray } from './nested-array';
 import { input as nestedArrayRestrict } from './nested-array-restrict';
@@ -71,6 +72,11 @@ export const examples: JsonExample[] = [
     id: 'control-options',
     title: 'Control Options',
     input: controlOptions,
+  },
+  {
+    id: 'monaco-editor',
+    title: 'Monaco Editor',
+    input: monacoEditor,
   },
   {
     id: 'file',

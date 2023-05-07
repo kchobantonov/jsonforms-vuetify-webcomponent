@@ -51,6 +51,9 @@
     },
     "home_address": { "$ref": "#/definitions/address" },
     "shipping_address": { "$ref": "#/definitions/address" },
-    "billing_address": { "$ref": "#/definitions/address" }
+    "billing_address": { "$ref": "#/definitions/address" },
+    "json": {
+      "type": "string"
+    }
   }
 }

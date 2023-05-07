@@ -8,6 +8,11 @@ import Ajv from 'ajv';
 // declare your own store states
 export interface AppState {
   drawer: boolean | null;
+  vuetify: {
+    theme: {
+      dark: boolean;
+    };
+  };
   jsonforms: {
     readonly: boolean;
     validationMode: 'ValidateAndShow' | 'ValidateAndHide' | 'NoValidation';

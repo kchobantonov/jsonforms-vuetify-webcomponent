@@ -1,3 +1,5 @@
+import { AppState } from './modules';
+
 export interface RootState {
-  version: string;
+  app: AppState;
 }

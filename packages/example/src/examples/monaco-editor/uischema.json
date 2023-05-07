@@ -1,0 +1,44 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "JavaScript",
+      "scope": "#/properties/javascript",
+      "options": {
+        "format": "code",
+        "language": "javascript",
+        "vuetify": {
+          "v-monaco-editor": {
+            "prepend-icon": "mdi-script-text",
+            "options": {
+              "minimap": { "enabled": false }
+            },
+            "initActions": ["editor.action.formatDocument"]
+          }
+        }
+      }
+    },
+    {
+      "type": "Control",
+      "label": "HTML",
+      "scope": "#/properties/html",
+      "options": {
+        "multi": true,
+        "format": "code1",
+        "language": "html",
+        "vuetify": {
+          "v-textarea": {
+            "prepend-icon": "mdi-script-text"
+          },
+          "v-monaco-editor": {
+            "options": {
+              "minimap": { "enabled": false }
+            },
+            "initActions": ["editor.action.formatDocument"]
+          }
+        }
+      }
+    }
+  ]
+}

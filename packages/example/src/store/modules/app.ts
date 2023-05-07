@@ -11,6 +11,11 @@ const ajv = createAjv({ useDefaults: true });
 // Data
 const state: AppState = {
   drawer: null,
+  vuetify: {
+    theme: {
+      dark: false,
+    },
+  },
   jsonforms: {
     readonly: false,
     validationMode: 'ValidateAndShow',
