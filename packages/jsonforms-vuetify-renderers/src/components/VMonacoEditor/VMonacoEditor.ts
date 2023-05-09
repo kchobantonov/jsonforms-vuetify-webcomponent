@@ -1,4 +1,4 @@
-import { PropType } from 'vue';
+import { PropType, shallowRef } from 'vue';
 import { VProgressCircular, VTextarea } from 'vuetify/lib';
 import debounce from 'lodash/debounce';
 
@@ -28,8 +28,8 @@ export default VTextarea.extend({
 
   data() {
     return {
-      editor: null as any,
-      monaco: null as any,
+      editor: shallowRef<any>(null),
+      monaco: shallowRef<any>(null),
       isMonacoLoading: true,
       hasMonacoLoadingError: false,
       isResizing: false,
