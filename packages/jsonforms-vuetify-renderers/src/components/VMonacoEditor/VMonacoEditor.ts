@@ -109,7 +109,7 @@ export default VTextarea.extend({
       // a second time. See https://github.com/microsoft/monaco-editor/issues/2027
       delete options.model;
 
-      const useShadowDOM = this.$el.getRootNode() instanceof ShadowRoot;
+      const useShadowDOM = true;
 
       return {
         value,
