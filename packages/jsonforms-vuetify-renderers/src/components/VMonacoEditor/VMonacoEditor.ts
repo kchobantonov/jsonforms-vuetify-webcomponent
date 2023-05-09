@@ -1,5 +1,6 @@
 import { PropType } from 'vue';
 import { VProgressCircular, VTextarea } from 'vuetify/lib';
+import debounce from 'lodash/debounce';
 
 // Styles
 import './VMonacoEditor.sass';
@@ -33,7 +34,7 @@ export default VTextarea.extend({
       hasMonacoLoadingError: false,
       isResizing: false,
       lastY: 0,
-      editorTextArea: null as HTMLDivElement | null,
+      debouncedLayout: null as (() => void) | null,
     };
   },
 
@@ -55,8 +56,8 @@ export default VTextarea.extend({
   watch: {
     options: {
       deep: true,
-      handler(options) {
-        this.editor?.updateOptions(this.appliedOptions(options));
+      handler() {
+        this.editor?.updateOptions(this.appliedOptions());
       },
     },
     internalValue(newValue) {
@@ -64,74 +65,61 @@ export default VTextarea.extend({
         this.editor?.setValue(newValue ?? '');
       }
     },
-    language(newVal) {
-      this.editor?.updateOptions(this.appliedOptions({ language: newVal }));
+    language() {
+      this.editor?.updateOptions(this.appliedOptions());
     },
-    isDark(isDark) {
-      this.editor?.updateOptions(
-        this.appliedOptions({ theme: isDark ? 'vs-dark' : 'vs' })
-      );
+    isDark() {
+      this.editor?.updateOptions(this.appliedOptions());
     },
-    disabled(val) {
-      this.editor?.updateOptions(this.appliedOptions({ readOnly: val }));
+    disabled() {
+      this.editor?.updateOptions(this.appliedOptions());
     },
     style() {
       const { editor } = this;
-      editor &&
-        this.$nextTick(() => {
-          editor.layout();
-        });
+      editor && this.$nextTick(this.debouncedLayout!);
     },
   },
 
   async mounted() {
+    this.debouncedLayout = debounce(this.editorLayout, 200);
+    document.addEventListener('mouseup', this.onMouseUp);
     await this.loadMonaco();
   },
-
+  beforeDestroy() {
+    this.editor?.dispose();
+    this.editor = null;
+    document.removeEventListener('mouseup', this.onMouseUp);
+  },
   methods: {
-    appliedOptions(options: Record<string, any>) {
+    appliedOptions() {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const value = this.internalValue;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const theme = this.isDark ? 'vs-dark' : 'vs';
+      const language = this.language;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const readOnly = this.disabled;
+      const options = this.options ?? {};
+      const useShadowDOM = this.$el.getRootNode() instanceof ShadowRoot;
+
       return {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        value: this.internalValue,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        theme: this.isDark ? 'vs-dark' : 'vs',
-        language: this.language,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        readOnly: this.disabled,
-        //automaticLayout: true,
-        useShadowDOM: this.$el.getRootNode() instanceof ShadowRoot,
+        value,
+        theme,
+        language,
+        readOnly,
+        useShadowDOM,
         ...options,
       };
     },
     genDefaultSlot() {
-      return this.isMonacoLoading
-        ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          this.$createElement(VProgressCircular, {
-            props: {
-              size: 16,
-              width: 2,
-              indeterminate: true,
-            },
-          })
-        : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          VTextarea.options.methods.genDefaultSlot.call(this);
-    },
-    genInput() {
-      if (this.hasMonacoLoadingError) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        return VTextarea.options.methods.genInput.call(this);
-      }
-
-      const input = this.$createElement(
+      return this.$createElement(
         'div',
         {
           staticClass: 'v-monaco-editor__textarea',
+          ref: 'editorTextArea',
           on: {
             mousedown: this.onEditorWrapperMouseDown,
             mouseup: this.onEditorWrapperMouseUp,
@@ -145,16 +133,31 @@ export default VTextarea.extend({
           ],
         },
         [
-          this.$createElement('div', {
-            staticClass: 'v-monaco-editor__container',
-          }),
+          this.$createElement(
+            'div',
+            {
+              ref: 'editorContainer',
+              staticClass: 'v-monaco-editor__container',
+            },
+            this.isMonacoLoading
+              ? [
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  //@ts-ignore
+                  this.$createElement(VProgressCircular, {
+                    props: {
+                      size: 16,
+                      width: 2,
+                      indeterminate: true,
+                    },
+                  }),
+                ]
+              : []
+          ),
         ]
       );
-
-      return input;
     },
     onEditorWrapperMouseDown(e: MouseEvent) {
-      if (e.target === this.editorTextArea) {
+      if (e.target === this.$refs.editorTextArea) {
         e.preventDefault();
         this.lastY = e.clientY;
         this.isResizing = true;
@@ -166,22 +169,28 @@ export default VTextarea.extend({
       }
     },
     onEditorWrapperResize(e: MouseEvent) {
-      if (this.isResizing && this.editorTextArea) {
+      if (this.isResizing && this.$refs.editorTextArea instanceof HTMLElement) {
         const delta = e.clientY - this.lastY;
-        const height = this.editorTextArea.clientHeight;
-        this.editorTextArea.style.height = `${height + delta}px`;
+        const height = this.$refs.editorTextArea.clientHeight;
+        this.$refs.editorTextArea.style.height = `${height + delta}px`;
         this.lastY = e.clientY;
-        this.editor?.layout();
-        this.$emit('onResize');
+
+        this.debouncedLayout?.();
       }
     },
-    onEditorWrapperMouseUp(_e: MouseEvent) {
-      this.isResizing = false;
+    editorLayout() {
+      this.editor?.layout();
+    },
+    onEditorWrapperMouseUp() {
+      this.onMouseUp();
       document.removeEventListener(
         'mousemove',
         this.onEditorWrapperResize,
         false
       );
+    },
+    onMouseUp() {
+      this.isResizing = false;
     },
     onClick() {
       if (this.editor) {
@@ -200,7 +209,7 @@ export default VTextarea.extend({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       VTextarea.options.methods.onResize.call(this);
-      this.editor?.layout();
+      this.debouncedLayout?.();
     },
     onFocus(e?: Event) {
       if (this.editor) {
@@ -225,15 +234,16 @@ export default VTextarea.extend({
       }
     },
     calculateInputHeight() {
-      if (this.editorTextArea) {
-        this.editorTextArea.style.height = '0';
-        const height = this.editorTextArea.scrollHeight;
+      if (this.$refs.editorTextArea instanceof HTMLElement) {
+        this.$refs.editorTextArea.style.height = '0';
+        const height = this.$refs.editorTextArea.scrollHeight;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         const minHeight = parseInt(this.rows, 10) * parseFloat(this.rowHeight);
         // This has to be done ASAP, waiting for Vue
         // to update the DOM causes ugly layout jumping
-        this.editorTextArea.style.height = Math.max(minHeight, height) + 'px';
+        this.$refs.editorTextArea.style.height =
+          Math.max(minHeight, height) + 'px';
       } else {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
@@ -259,47 +269,41 @@ export default VTextarea.extend({
       this.isMonacoLoading = false;
       this.hasMonacoLoadingError = false;
 
-      this.$nextTick(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      this.monaco = window.monaco;
+
+      this.editor = this.monaco.editor.create(
+        this.$refs.editorContainer,
+        this.appliedOptions()
+      );
+
+      this.$emit('editorDidMount', this.editor);
+      this.editor.onDidChangeModelContent((_event: Event) => {
+        const value = this.editor.getValue();
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
-        this.monaco = window.monaco;
-        this.editorTextArea = this.$el.querySelector(
-          '.v-monaco-editor__textarea'
-        );
-        const domElement = this.$el.querySelector(
-          '.v-monaco-editor__container'
-        );
-
-        const options = this.appliedOptions(this.options);
-        this.editor = this.monaco.editor.create(domElement, options);
-
-        this.$emit('editorDidMount', this.editor);
-        this.editor.onDidChangeModelContent((_event: Event) => {
-          const value = this.editor.getValue();
+        if (this.internalValue !== value) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore
-          if (this.internalValue !== value) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            this.internalValue = value;
+          this.internalValue = value;
+        }
+      });
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      this.editor.onDidBlurEditorText(this.onBlur.bind(this));
+      this.editor.onDidFocusEditorText(this.onFocus.bind(this));
+
+      if (this.initActions && this.initActions.length > 0) {
+        const actions = this.initActions;
+        this.$nextTick(() => {
+          for (const action of actions) {
+            this.editor?.getAction(action)?.run();
           }
         });
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        this.editor.onDidBlurEditorText(this.onBlur.bind(this));
-        this.editor.onDidFocusEditorText(this.onFocus.bind(this));
-
-        if (this.initActions && this.initActions.length > 0) {
-          const actions = this.initActions;
-          this.$nextTick(() => {
-            for (const action of actions) {
-              this.editor?.getAction(action)?.run();
-            }
-          });
-        }
-        this.calculateInputHeight();
-        this.editor.layout();
-      });
+      }
+      this.calculateInputHeight();
+      this.editorLayout();
     },
     async loadMonaco() {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

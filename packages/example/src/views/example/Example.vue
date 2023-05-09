@@ -104,6 +104,9 @@
                           ? JSON.stringify(example.input.uischemas)
                           : undefined
                       "
+                      :default-preset="
+                        JSON.stringify({ theme: { dark: $vuetify.theme.dark } })
+                      "
                       :config="config ? JSON.stringify(config) : undefined"
                       :validationMode="validationMode"
                       :readonly="readonly"
@@ -364,6 +367,9 @@
           example.input.uischemas
             ? JSON.stringify(example.input.uischemas)
             : undefined
+        "
+        :default-preset="
+          JSON.stringify({ theme: { dark: $vuetify.theme.dark } })
         "
         :config="config ? JSON.stringify(config) : undefined"
         :validationMode="validationMode"
