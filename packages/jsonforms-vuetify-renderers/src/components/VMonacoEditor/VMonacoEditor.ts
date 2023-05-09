@@ -56,8 +56,10 @@ export default VTextarea.extend({
   watch: {
     options: {
       deep: true,
-      handler() {
-        this.editor?.updateOptions(this.appliedOptions());
+      handler(options: any, prevOptions: any) {
+        if (this.editor && options !== prevOptions) {
+          this.editor?.updateOptions(this.appliedOptions());
+        }
       },
     },
     internalValue(newValue) {
@@ -103,6 +105,10 @@ export default VTextarea.extend({
       //@ts-ignore
       const readOnly = this.disabled;
       const options = this.options ?? {};
+      // Don't pass in the model on update because monaco crashes if we pass the model
+      // a second time. See https://github.com/microsoft/monaco-editor/issues/2027
+      delete options.model;
+
       const useShadowDOM = this.$el.getRootNode() instanceof ShadowRoot;
 
       return {
