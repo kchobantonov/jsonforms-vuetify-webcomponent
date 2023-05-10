@@ -5,7 +5,7 @@
     :isFocused="isFocused"
     :appliedOptions="appliedOptions"
   >
-    <monaco-editor
+    <v-monaco-editor
       v-disabled-icon-focus
       :id="control.id + '-input'"
       :class="styles.control.input"
@@ -23,7 +23,7 @@
       @input="onChange"
       @focus="isFocused = true"
       @blur="isFocused = false"
-    ></monaco-editor>
+    ></v-monaco-editor>
   </control-wrapper>
 </template>
 
@@ -34,11 +34,14 @@ import { VCard, VCardSubtitle, VHover } from 'vuetify/lib';
 import {
   ControlElement,
   JsonFormsRendererRegistryEntry,
+  JsonFormsSubStates,
+  Resolve,
   Tester,
   UISchemaElement,
   and,
   isStringControl,
   optionIs,
+  or,
   rankWith,
 } from '@jsonforms/core';
 import {
@@ -48,17 +51,17 @@ import {
 } from '@jsonforms/vue2';
 import {
   ControlWrapper,
-  useVuetifyControl,
   DisabledIconFocus,
+  useVuetifyControl,
 } from '@jsonforms/vue2-vuetify';
-import { defineComponent } from 'vue';
-import MonacoEditor from '../components/VMonacoEditor/VMonacoEditor';
+import { defineComponent, inject } from 'vue';
+import VMonacoEditor from '../components/VMonacoEditor/VMonacoEditor';
 
 const controlRenderer = defineComponent({
   name: 'monaco-control-renderer',
   components: {
     ControlWrapper,
-    MonacoEditor,
+    VMonacoEditor,
     VCard,
     VHover,
     VCardSubtitle,
@@ -70,21 +73,29 @@ const controlRenderer = defineComponent({
     ...rendererProps<ControlElement>(),
   },
   setup(props: RendererProps<ControlElement>) {
-    return useVuetifyControl(
-      useJsonFormsControl(props),
-      (value) => value || undefined
-    );
+    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
+    if (!jsonforms) {
+      throw new Error(
+        "'jsonforms' couldn't be injected. Are you within JsonForms?"
+      );
+    }
+
+    return {
+      ...useVuetifyControl(
+        useJsonFormsControl(props),
+        (value) => value || undefined
+      ),
+      jsonforms,
+    };
   },
   computed: {
     language(): string | undefined {
-      const language = this.control.uischema.options?.language;
-
-      return language;
-    },
-    languages(): string[] | undefined {
-      const languages = this.control.uischema.options?.languages;
-
-      return languages;
+      const language = this.control.uischema.options?.[':language'];
+      if (language) {
+        const rootData = this.jsonforms.core?.data;
+        return Resolve.data(rootData, language);
+      }
+      return this.control.uischema.options?.language;
     },
   },
 });
@@ -109,7 +120,11 @@ export const entry: JsonFormsRendererRegistryEntry = {
   renderer: controlRenderer,
   tester: rankWith(
     2,
-    and(isStringControl, optionIs('format', 'code'), hasOption('language'))
+    and(
+      isStringControl,
+      optionIs('format', 'code'),
+      or(hasOption('language'), hasOption(':language'))
+    )
   ),
 };
 </script>

@@ -55,7 +55,7 @@ import {
   FormContext,
   ResolvedJsonForms,
   vuetifyRenderers,
-  MonacoEditor,
+  VMonacoEditor,
 } from '@kchobantonov/jsonforms-vuetify-renderers';
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
@@ -785,7 +785,7 @@ const vuetifyFormWc = defineComponent({
         VVirtualTable,
         VWindow,
         VWindowItem,
-        MonacoEditor,
+        VMonacoEditor,
       },
       templateLayoutRendererContext: toRef(this, 'context'),
       formContext: toRef(this, 'context'),

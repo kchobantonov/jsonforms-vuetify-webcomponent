@@ -1,4 +1,6 @@
 {
   "javascript": "var test = 'some value';",
-  "html": "<html><body></body></html>"
+  "html": "<!DOCTYPE HTML>\r\n<html>\r\n\r\n<head>\r\n    <style>\r\n        #div1 {\r\n            width: 350px;\r\n            height: 70px;\r\n            padding: 10px;\r\n            border: 1px solid #aaaaaa;\r\n        }\r\n    </style>\r\n    <script>\r\n        function allowDrop(ev) {\r\n  ev.preventDefault();\r\n}\r\n\r\nfunction drag(ev) {\r\n  ev.dataTransfer.setData(\"text\", ev.target.id);\r\n}\r\n\r\nfunction drop(ev) {\r\n  ev.preventDefault();\r\n  var data = ev.dataTransfer.getData(\"text\");\r\n  ev.target.appendChild(document.getElementById(data));\r\n}\r\n    </script>\r\n</head>\r\n\r\n<body>\r\n\r\n    <p>Drag the W3Schools image into the rectangle:</p>\r\n\r\n    <div id=\"div1\" ondrop=\"drop(event)\" ondragover=\"allowDrop(event)\"></div>\r\n    <br>\r\n    <img id=\"drag1\" src=\"img_logo.gif\" draggable=\"true\" ondragstart=\"drag(event)\" width=\"336\" height=\"69\">\r\n\r\n</body>\r\n\r\n</html>",
+  "code": "{\r\n    \"name\": \"John Doe\",\r\n    \"age\": 33\r\n}",
+  "language": "json"
 }

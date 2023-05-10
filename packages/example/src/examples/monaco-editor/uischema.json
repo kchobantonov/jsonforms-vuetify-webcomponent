@@ -24,13 +24,33 @@
       "label": "HTML",
       "scope": "#/properties/html",
       "options": {
-        "multi": true,
-        "format": "code1",
+        "format": "code",
         "language": "html",
         "vuetify": {
-          "v-textarea": {
-            "prepend-icon": "mdi-script-text"
-          },
+          "v-monaco-editor": {
+            "rows": 50,
+            "rowHeight": 16,
+            "options": {
+              "minimap": { "enabled": true }
+            },
+            "initActions": ["editor.action.formatDocument"]
+          }
+        }
+      }
+    },
+    {
+      "type": "Control",
+      "label": "Select Language Code",
+      "scope": "#/properties/language"
+    },
+    {
+      "type": "Control",
+      "label": "Code",
+      "scope": "#/properties/code",
+      "options": {
+        "format": "code",
+        ":language": "language",
+        "vuetify": {
           "v-monaco-editor": {
             "options": {
               "minimap": { "enabled": false }

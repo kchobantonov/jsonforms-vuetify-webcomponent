@@ -67,11 +67,15 @@ export default VTextarea.extend({
         this.editor?.setValue(newValue ?? '');
       }
     },
-    language() {
-      this.editor?.updateOptions(this.appliedOptions());
+    language(language) {
+      const model = this.editor?.getModel();
+      if (model) {
+        this.monaco?.editor?.setModelLanguage(model, language);
+      }
     },
-    isDark() {
-      this.editor?.updateOptions(this.appliedOptions());
+    isDark(isDark) {
+      const theme = isDark ? 'vs-dark' : 'vs';
+      this.monaco?.editor.setTheme(theme);
     },
     disabled() {
       this.editor?.updateOptions(this.appliedOptions());
@@ -120,7 +124,7 @@ export default VTextarea.extend({
         ...options,
       };
     },
-    genDefaultSlot() {
+    genInput() {
       return this.$createElement(
         'div',
         {
@@ -318,6 +322,7 @@ export default VTextarea.extend({
       // Is Monaco already loaded?
       if (typeof monaco === 'object') {
         // Yes. Generate the monaco editor.
+        this.copyCssToShadowDom();
         this.genEditor();
         return;
       }
@@ -327,6 +332,7 @@ export default VTextarea.extend({
         // Yes, it's being loaded, so listen for it.
         this.$root.$once('monaco-loaded', () => {
           // instantiate the editor
+          this.copyCssToShadowDom();
           this.genEditor();
         });
 
@@ -335,6 +341,9 @@ export default VTextarea.extend({
 
       // No. Is the script loader installed?
       if (typeof (this as any).$loadScript === 'undefined') {
+        console.error(
+          'Please install the $loaderScript to load monaco script dynamically.'
+        );
         // No.
         this.isMonacoLoading = false;
         this.hasMonacoLoadingError = true;
@@ -378,23 +387,39 @@ export default VTextarea.extend({
     },
     copyCssToShadowDom() {
       if (this.$el.getRootNode() instanceof ShadowRoot) {
-        const shadowRoot = this.$el.getRootNode();
+        const shadowRoot = this.$el.getRootNode() as ShadowRoot;
+
+        const shadowLinks = Array.prototype.slice.call(
+          shadowRoot.querySelectorAll('link'),
+          0
+        );
+
         // We must move all CSS inside the shadow root, pick only link tags relevant to the editor
-        const documentLinks = Array.prototype.slice
+        const monacoLinkTags = Array.prototype.slice
           .call(document.getElementsByTagName('link'), 0)
           .filter((documentLink) => {
+            const href = documentLink.getAttribute('href');
             if (
-              /vs\/(base|editor|platform)/.test(
-                documentLink.getAttribute('href')
-              )
+              href &&
+              (/vs\/(base|editor|platform)/.test(href) ||
+                href.startsWith(this.url))
             ) {
-              return true;
+              return (
+                shadowLinks.find(
+                  (link) => link.getAttribute('href') === href
+                ) === undefined
+              );
             }
-            return true;
+            return false;
           });
-        documentLinks.forEach((documentLink) =>
-          shadowRoot.appendChild(documentLink)
-        );
+
+        monacoLinkTags.forEach((linkTag: HTMLLinkElement) => {
+          const newLink = document.createElement('link');
+          Array.from(linkTag.attributes).forEach((attr) => {
+            newLink.setAttribute(attr.name, attr.value);
+          });
+          shadowRoot.appendChild(newLink);
+        });
       }
     },
   },
