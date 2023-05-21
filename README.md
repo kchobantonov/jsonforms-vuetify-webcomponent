@@ -56,6 +56,43 @@ docker run --rm -p 8080:80 jsonforms-vuetify-webcomponent:latest
 
 Open <http://localhost:8080/demo.html>
 
+### Loading from CDN
+
+For example if we use version `3.1.0-alpha.0` of the webcomponent then using the below HTML snippet we can renders the demo form.
+
+```html
+<vuetify-json-forms id="vuetify-json-forms"></vuetify-json-forms>
+
+<script>
+  let demo = {
+    properties: {
+      firstName: {
+        type: "string",
+        description: "The person's first name.",
+      },
+      lastName: {
+        type: "string",
+        description: "The person's last name.",
+      },
+      age: {
+        description:
+          "Age in years which must be equal to or greater than zero.",
+        type: "integer",
+        minimum: 0,
+      },
+    },
+  };
+
+  var form = document.getElementById("vuetify-json-forms");
+  form.setAttribute("schema", JSON.stringify(demo));
+</script>
+
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.1.0-alpha.0/dist/vuetify-json-forms.min.js"
+></script>
+```
+
 ### Rebuild package-lock.json
 
 ```bash
