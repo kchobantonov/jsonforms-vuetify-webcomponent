@@ -31,14 +31,14 @@ module.exports = {
         patterns: [
           {
             context:
-              'node_modules/@kchobantonov/jsonforms-vuetify-webcomponent/dist/',
+              'node_modules/@chobantonov/jsonforms-vuetify-webcomponent/dist/',
             from: '*.min.js*',
             to: './js',
             noErrorOnMissing: true,
           },
           {
             context:
-              'node_modules/@kchobantonov/jsonforms-vuetify-webcomponent/dist/fonts',
+              'node_modules/@chobantonov/jsonforms-vuetify-webcomponent/dist/fonts',
             from: '*',
             to: './js/fonts',
           },

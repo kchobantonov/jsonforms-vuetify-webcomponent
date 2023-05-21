@@ -1,11 +1,13 @@
 {
-  "name": "@kchobantonov/jsonforms-vuetify-renderers",
-  "private": true,
+  "name": "@chobantonov/jsonforms-vuetify-renderers",
   "version": "3.1.0-alpha.0",
   "description": "Additional Vue 2 Vuetify renderers for JSON Forms",
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "vue",
     "vue2",

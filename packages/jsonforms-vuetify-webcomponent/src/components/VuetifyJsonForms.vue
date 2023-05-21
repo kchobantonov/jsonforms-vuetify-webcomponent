@@ -56,7 +56,7 @@ import {
   ResolvedJsonForms,
   vuetifyRenderers,
   VMonacoEditor,
-} from '@kchobantonov/jsonforms-vuetify-renderers';
+} from '@chobantonov/jsonforms-vuetify-renderers';
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
@@ -1068,5 +1068,5 @@ export default vuetifyFormWc;
 @import '~@mdi/font/css/materialdesignicons.min.css';
 @import '~vuetify/dist/vuetify.min.css';
 @import '~@jsonforms/vue2-vuetify/lib/jsonforms-vue2-vuetify.esm.css';
-@import '~@kchobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.esm.css';
+@import '~@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.esm.css';
 </style>

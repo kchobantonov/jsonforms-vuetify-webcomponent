@@ -1,10 +1,12 @@
 {
-  "name": "@kchobantonov/jsonforms-vuetify-webcomponent",
-  "private": true,
+  "name": "@chobantonov/jsonforms-vuetify-webcomponent",
   "version": "3.1.0-alpha.0",
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "vue",
     "vue2",
@@ -33,8 +35,7 @@
     "fix-vuetify-query-selector": "node ./patch-vuetify.js",
     "prebuild": "npm run clean && npm run wc-use-contenthash && npm run fix-vuetify-query-selector",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target wc-async --inline-vue src/web-components/*.vue",
-    "lerna-publish": "npm publish"
+    "build": "vue-cli-service build --target wc-async --inline-vue src/web-components/*.vue"
   },
   "files": [
     "dist",
@@ -45,7 +46,7 @@
     "@jsonforms/core": "3.1.0-alpha.0",
     "@jsonforms/vue2": "3.1.0-alpha.0",
     "@jsonforms/vue2-vuetify": "3.1.0-alpha.0",
-    "@kchobantonov/jsonforms-vuetify-renderers": "3.1.0-alpha.0",
+    "@chobantonov/jsonforms-vuetify-renderers": "3.1.0-alpha.0",
     "@mdi/font": "^5.9.55",
     "ajv-keywords": "^5.1.0",
     "core-js": "^3.9.1",

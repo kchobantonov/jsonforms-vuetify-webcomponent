@@ -4,7 +4,7 @@ import { AppState } from './types';
 import { RootState } from '../types';
 import { Module } from 'vuex';
 import { createAjv } from '@jsonforms/vue2-vuetify';
-import { vuetifyRenderers } from '@kchobantonov/jsonforms-vuetify-renderers';
+import { vuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
 
 const ajv = createAjv({ useDefaults: true });
 

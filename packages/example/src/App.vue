@@ -10,5 +10,5 @@ export default { name: 'App' };
 
 <style scoped>
 @import '~@jsonforms/vue2-vuetify/lib/jsonforms-vue2-vuetify.esm.css';
-@import '~@kchobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.esm.css';
+@import '~@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.esm.css';
 </style>
