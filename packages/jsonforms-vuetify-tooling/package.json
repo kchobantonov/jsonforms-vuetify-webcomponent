@@ -5,6 +5,7 @@
   "publisher": "kchobantonov",
   "description": "VSCode extension for JSONForms tooling using Vue2 Vuetify renderer set",
   "version": "0.0.5",
+  "private": true,
   "preview": true,
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
