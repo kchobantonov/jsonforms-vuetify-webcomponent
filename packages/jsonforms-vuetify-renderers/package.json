@@ -1,6 +1,6 @@
 {
   "name": "@chobantonov/jsonforms-vuetify-renderers",
-  "version": "3.1.0-alpha.0",
+  "version": "3.1.0-alpha.3",
   "description": "Additional Vue 2 Vuetify renderers for JSON Forms",
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
@@ -50,9 +50,9 @@
     "vue-template-compiler": "^2.7.0"
   },
   "peerDependencies": {
-    "@jsonforms/core": "3.1.0-alpha.0",
-    "@jsonforms/vue2": "3.1.0-alpha.0",
-    "@jsonforms/vue2-vuetify": "3.1.0-alpha.0",
+    "@jsonforms/core": "3.1.0-alpha.3",
+    "@jsonforms/vue2": "3.1.0-alpha.3",
+    "@jsonforms/vue2-vuetify": "3.1.0-alpha.3",
     "vue": "^2.7.0",
     "vuetify": "^2.4.0"
   },

@@ -1,6 +1,6 @@
 {
   "name": "@chobantonov/jsonforms-vuetify-webcomponent",
-  "version": "3.1.0-alpha.0",
+  "version": "3.1.0-alpha.3",
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
   "license": "MIT",
@@ -43,10 +43,10 @@
   ],
   "dependencies": {
     "@fontsource/roboto": "^4.5.8",
-    "@jsonforms/core": "3.1.0-alpha.0",
-    "@jsonforms/vue2": "3.1.0-alpha.0",
-    "@jsonforms/vue2-vuetify": "3.1.0-alpha.0",
-    "@chobantonov/jsonforms-vuetify-renderers": "3.1.0-alpha.0",
+    "@jsonforms/core": "3.1.0-alpha.3",
+    "@jsonforms/vue2": "3.1.0-alpha.3",
+    "@jsonforms/vue2-vuetify": "3.1.0-alpha.3",
+    "@chobantonov/jsonforms-vuetify-renderers": "3.1.0-alpha.3",
     "@mdi/font": "^5.9.55",
     "ajv-keywords": "^5.1.0",
     "core-js": "^3.9.1",
