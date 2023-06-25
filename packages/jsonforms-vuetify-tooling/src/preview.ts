@@ -289,42 +289,48 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
 
   <script type="text/javascript">
     var style = ${
-      files.style && files.style.data ? JSON.stringify(files.style.data) : "''"
+      files.style && files.style.data
+        ? JSON.stringify(files.style.data).replace(/\//g, "\\/")
+        : "''"
     };
     var data = ${
-      files.data && files.data.data ? JSON.stringify(files.data.data) : "''"
+      files.data && files.data.data
+        ? JSON.stringify(files.data.data).replace(/\//g, "\\/")
+        : "''"
     };
     var schema = ${
       files.schema && files.schema.data
-        ? JSON.stringify(files.schema.data)
+        ? JSON.stringify(files.schema.data).replace(/\//g, "\\/")
         : "''"
     };
     var uischema = ${
       files.uischema && files.uischema.data
-        ? JSON.stringify(files.uischema.data)
+        ? JSON.stringify(files.uischema.data).replace(/\//g, "\\/")
         : "''"
     };
     var uischemas = ${
       files.uischemas && files.uischemas.data
-        ? JSON.stringify(files.uischemas.data)
+        ? JSON.stringify(files.uischemas.data).replace(/\//g, "\\/")
         : "''"
     };
     var uidata = ${
       files.uidata && files.uidata.data
-        ? JSON.stringify(files.uidata.data)
+        ? JSON.stringify(files.uidata.data).replace(/\//g, "\\/")
         : "''"
     };
     var config = ${
       files.config && files.config.data
-        ? JSON.stringify(files.config.data)
+        ? JSON.stringify(files.config.data).replace(/\//g, "\\/")
         : "''"
     };
     var i18n = ${
-      files.i18n && files.i18n.data ? JSON.stringify(files.i18n.data) : "''"
+      files.i18n && files.i18n.data
+        ? JSON.stringify(files.i18n.data).replace(/\//g, "\\/")
+        : "''"
     };
     var preset = ${
       files.preset && files.preset.data
-        ? JSON.stringify(files.preset.data)
+        ? JSON.stringify(files.preset.data).replace(/\//g, "\\/")
         : "''"
     };
     ${
