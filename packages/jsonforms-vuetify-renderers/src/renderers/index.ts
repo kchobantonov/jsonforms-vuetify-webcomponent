@@ -18,9 +18,7 @@ import { entry as dataProviderSelectRendererEntry } from './DataProviderSelectRe
 import { entry as buttonRendererEntry } from './ButtonRenderer.vue';
 import { entry as monacoRendererEntry } from './MonacoRenderer.vue';
 
-import { extendedVuetifyRenderers } from '@jsonforms/vue2-vuetify';
-
-export const vuetifyRenderers = [
+export const extraVuetifyRenderers = [
   buttonRendererEntry,
   monacoRendererEntry,
   templateLabelRendererEntry,
@@ -30,5 +28,4 @@ export const vuetifyRenderers = [
   fileRendererEntry,
   dataProviderRendererEntry,
   dataProviderSelectRendererEntry,
-  ...extendedVuetifyRenderers,
 ];

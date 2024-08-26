@@ -15,24 +15,26 @@
 
 <script lang="ts">
 import {
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
   rankWith,
   uiTypeIs,
+  type JsonFormsRendererRegistryEntry,
 } from '@jsonforms/core';
-import { rendererProps, RendererProps } from '@jsonforms/vue2';
-import { useTranslator } from '@jsonforms/vue2-vuetify';
+import { rendererProps, type RendererProps } from '@jsonforms/vue';
+import { useJsonForms, useTranslator } from '@jsonforms/vue-vuetify';
 import isFunction from 'lodash/isFunction';
-import { defineComponent, inject, ref, unref } from 'vue';
-import { EmitFn } from 'vue/types/v3-setup-context';
-import { VBtn, VIcon } from 'vuetify/lib';
+import { defineComponent, inject, ref, unref, type SetupContext } from 'vue';
+import { VBtn, VIcon } from 'vuetify/components';
 import {
-  ActionEvent,
-  FormContext,
   AsyncFunction,
-  TemplateFormContext,
+  type ActionEvent,
+  type TemplateFormContext,
 } from '../core';
-import { ButtonElement, useJsonFormsButton, useVuetifyButton } from '../util';
+import {
+  useFormContext,
+  useJsonFormsButton,
+  useVuetifyButton,
+  type ButtonElement,
+} from '../util';
 
 const buttonRenderer = defineComponent({
   name: 'button-renderer',
@@ -47,23 +49,12 @@ const buttonRenderer = defineComponent({
     const t = useTranslator();
     const button = useVuetifyButton(useJsonFormsButton(props));
 
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JSON Forms?"
-      );
-    }
+    const jsonforms = useJsonForms();
+    const formContext = useFormContext();
 
-    const formContext = inject<FormContext>('formContext');
-    if (!formContext) {
-      throw new Error(
-        "'formContext' couldn't be injected. Are you within JsonForms?"
-      );
-    }
-
-    const handleActionEmitter = inject<EmitFn | undefined>(
+    const handleActionEmitter = inject<SetupContext['emit'] | undefined>(
       'handleActionEmitter',
-      undefined
+      undefined,
     );
 
     const scopeData = inject<any>('scopeData', null);
@@ -114,7 +105,9 @@ const buttonRenderer = defineComponent({
           if (this.handleActionEmitter) {
             this.handleActionEmitter('handle-action', source);
           } else {
-            this.$root.$emit('handle-action', source);
+            this.$root
+              ? this.$root.$emit('handle-action', source)
+              : this.$emit('handle-action', source);
           }
 
           if (isFunction(source.callback)) {

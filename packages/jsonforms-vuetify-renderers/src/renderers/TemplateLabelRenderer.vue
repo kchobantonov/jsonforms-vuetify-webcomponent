@@ -12,24 +12,28 @@
 <script lang="ts">
 import {
   and,
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
-  LabelElement,
   optionIs,
   rankWith,
   uiTypeIs,
+  type JsonFormsRendererRegistryEntry,
+  type LabelElement,
 } from '@jsonforms/core';
 import {
   rendererProps,
-  RendererProps,
   useJsonFormsLabel,
-} from '@jsonforms/vue2';
-import { useTranslator, useVuetifyLabel } from '@jsonforms/vue2-vuetify';
-import { ErrorObject } from 'ajv';
+  type RendererProps,
+} from '@jsonforms/vue';
+import {
+  useJsonForms,
+  useTranslator,
+  useVuetifyLabel,
+} from '@jsonforms/vue-vuetify';
+import type { ErrorObject } from 'ajv';
 import { defineComponent, inject, unref } from 'vue';
-import { VLabel } from 'vuetify/lib';
+import { VLabel } from 'vuetify/components';
 import { template as templateFn } from '../core/template';
-import { FormContext, TemplateFormContext } from '../core/types';
+import type { TemplateFormContext } from '../core/types';
+import { useFormContext } from '../util';
 
 const templateLabelRenderer = defineComponent({
   name: 'template-label-renderer',
@@ -43,20 +47,8 @@ const templateLabelRenderer = defineComponent({
     const t = useTranslator();
     const label = useVuetifyLabel(useJsonFormsLabel(props));
 
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JsonForms?"
-      );
-    }
-
-    const formContext = inject<FormContext>('formContext');
-
-    if (!formContext) {
-      throw new Error(
-        "'formContext' couldn't be injected. Are you within JsonForms?"
-      );
-    }
+    const jsonforms = useJsonForms();
+    const formContext = useFormContext();
 
     const scopeData = inject<any>('scopeData', null);
 
@@ -102,7 +94,7 @@ const templateLabelRenderer = defineComponent({
         // try to use i18n template if the template changes based on the language
         return this.t(
           this.uischema.options.i18n,
-          (this.uischema as LabelElement).text
+          (this.uischema as LabelElement).text,
         );
       }
       return (this.uischema as LabelElement).text;
@@ -123,7 +115,7 @@ const templateLabelRenderer = defineComponent({
   methods: {
     translate(
       key: string,
-      defaultMessage: string | undefined
+      defaultMessage: string | undefined,
     ): string | undefined {
       return this.t(key, defaultMessage ?? '');
     },

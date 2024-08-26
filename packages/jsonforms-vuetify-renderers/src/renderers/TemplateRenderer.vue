@@ -14,23 +14,22 @@
 <script lang="ts">
 import {
   and,
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
-  Layout,
+  type JsonFormsRendererRegistryEntry,
+  type Layout,
   rankWith,
-  UISchemaElement,
+  type UISchemaElement,
   uiTypeIs,
 } from '@jsonforms/core';
 import {
   DispatchRenderer,
   rendererProps,
-  RendererProps,
+  type RendererProps,
   useJsonFormsLayout,
-} from '@jsonforms/vue2';
+} from '@jsonforms/vue';
+import { useJsonForms, useVuetifyLayout } from '@jsonforms/vue-vuetify';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
-import { computed, defineComponent, inject, unref, provide } from 'vue';
-import { useVuetifyLayout } from '@jsonforms/vue2-vuetify';
+import { computed, defineComponent, inject, provide, unref } from 'vue';
 
 const templateRenderer = defineComponent({
   name: 'template-renderer',
@@ -43,24 +42,22 @@ const templateRenderer = defineComponent({
   setup(props: RendererProps<Layout>) {
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JsonForms?"
-      );
-    }
+    const jsonforms = useJsonForms();
 
     const elementTemplates = computed(() => {
       const elements =
         (unref(layout.layout).uischema as Layout)?.elements || [];
 
-      return elements.reduce(function (result, element) {
-        const name: string = (element as any).name;
-        if (name) {
-          result[name] = element;
-        }
-        return result;
-      }, {} as Record<string, UISchemaElement>);
+      return elements.reduce(
+        function (result, element) {
+          const name: string = (element as any).name;
+          if (name) {
+            result[name] = element;
+          }
+          return result;
+        },
+        {} as Record<string, UISchemaElement>,
+      );
     });
 
     const parentSlotContents = inject<

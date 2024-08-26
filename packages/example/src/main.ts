@@ -1,17 +1,5 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router';
-import store from './store';
-import vuetify from './plugins/vuetify';
-import './plugins';
-import LoadScript from 'vue-plugin-load-script';
+import buildVuetify from './plugins/vuetify';
 
-Vue.config.productionTip = false;
-Vue.use(LoadScript);
-
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: (h) => h(App),
-}).$mount('#app');
+createApp(App).use(buildVuetify()).mount('#app');

@@ -14,6 +14,7 @@
             "options": {
               "minimap": { "enabled": false }
             },
+            "noResize": true,
             "initActions": ["editor.action.formatDocument"]
           }
         }
@@ -28,11 +29,10 @@
         "language": "html",
         "vuetify": {
           "v-monaco-editor": {
-            "rows": 50,
-            "rowHeight": 16,
             "options": {
               "minimap": { "enabled": true }
             },
+            "minHeight": "400px",
             "initActions": ["editor.action.formatDocument"]
           }
         }
@@ -55,6 +55,7 @@
             "options": {
               "minimap": { "enabled": false }
             },
+            "height": "200px",
             "initActions": ["editor.action.formatDocument"]
           }
         }

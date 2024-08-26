@@ -20,18 +20,17 @@ Use Node 14.x
 
 ### Initial setup
 
-- Install monorepo dependencies: `npm ci`
-- Hook up dependencies between packages: `npm run init`
+- Install dependencies: `pnpm i --frozen-lockfile`
 
 ### Scripts
 
-- Build all: `npm run build`
-- Build and watch the extended renderer set: `npm run renderers:watch`
-- Run webcomponent demo: `npm run wcserve`
-- Run example app: `npm run example:serve`
-- Build example app for production: `npm run example:build`
-- Build VS Code extension: `npm run tooling:build`
-- Create VSIX VS Code extension package for local deployment: `npm run tooling:vsix`
+- Build (all packages): `pnpm run build`
+- Build and watch the extended renderer set: `pnpm run renderers:watch`
+- Run webcomponent demo: `pnpm run wcserve`
+- Run example app: `pnpm run example:serve`
+- Build example app for production: `pnpm run example:build`
+- Build VS Code extension: `pnpm run tooling:build`
+- Create VSIX VS Code extension package for local deployment: `pnpm run tooling:vsix`
 
 Recommendations:
 

@@ -5,28 +5,26 @@
     :isFocused="isFocused"
     :appliedOptions="appliedOptions"
   >
-    <v-hover v-slot="{ hover }">
-      <v-file-input
-        v-disabled-icon-focus
-        :id="control.id + '-input'"
-        :class="styles.control.input"
-        :disabled="!control.enabled"
-        :autofocus="appliedOptions.focus"
-        :placeholder="appliedOptions.placeholder"
-        :label="computedLabel"
-        :hint="control.description"
-        :persistent-hint="persistentHint()"
-        :required="control.required"
-        :error-messages="errorMessages"
-        :clearable="hover"
-        :accept="accept"
-        v-model="currentFile"
-        v-bind="vuetifyProps('v-file-input')"
-        @change="selectFile"
-        @focus="isFocused = true"
-        @blur="isFocused = false"
-      ></v-file-input>
-    </v-hover>
+    <v-file-input
+      v-disabled-icon-focus
+      :id="control.id + '-input'"
+      :class="styles.control.input"
+      :disabled="!control.enabled"
+      :autofocus="appliedOptions.focus"
+      :placeholder="appliedOptions.placeholder"
+      :label="computedLabel"
+      :hint="control.description"
+      :persistent-hint="persistentHint()"
+      :required="control.required"
+      :error-messages="errorMessages"
+      :clearable="control.enabled"
+      :accept="accept"
+      v-model="currentFile"
+      v-bind="vuetifyProps('v-file-input')"
+      @change="selectFile"
+      @focus="handleFocus"
+      @blur="handleBlur"
+    ></v-file-input>
     <v-dialog v-model="dialog" hide-overlay persistent width="300">
       <v-card>
         <v-toolbar dense flat>
@@ -52,26 +50,26 @@
 <script lang="ts">
 import {
   and,
-  ControlElement,
   getI18nKey,
   isStringControl,
-  JsonFormsRendererRegistryEntry,
-  JsonSchema,
   rankWith,
   schemaMatches,
   uiTypeIs,
+  type ControlElement,
+  type JsonFormsRendererRegistryEntry,
+  type JsonSchema,
 } from '@jsonforms/core';
 import {
-  DispatchRenderer,
   rendererProps,
-  RendererProps,
   useJsonFormsControl,
-} from '@jsonforms/vue2';
+  type RendererProps,
+} from '@jsonforms/vue';
 import {
   ControlWrapper,
+  DisabledIconFocus,
   useTranslator,
   useVuetifyControl,
-} from '@jsonforms/vue2-vuetify';
+} from '@jsonforms/vue-vuetify';
 import toNumber from 'lodash/toNumber';
 import { defineComponent, ref } from 'vue';
 import {
@@ -80,14 +78,12 @@ import {
   VCardText,
   VDialog,
   VFileInput,
-  VHover,
   VIcon,
   VProgressLinear,
   VSpacer,
   VToolbar,
   VToolbarTitle,
-} from 'vuetify/lib';
-import { DisabledIconFocus } from './directives';
+} from 'vuetify/components';
 
 const formatBytes = (bytes: number, decimals = 2) => {
   if (bytes === 0) return '0 Bytes';
@@ -121,7 +117,7 @@ const getFileSize = (
         formatExclusiveMaximum: any;
       }
     | undefined,
-  variant: 'min' | 'max'
+  variant: 'min' | 'max',
 ): [number | undefined, boolean] => {
   let exclusive = false;
   let fileSize: number | undefined = undefined;
@@ -177,7 +173,7 @@ const toBase64 = (
   file: File,
   reader: FileReader,
   vm: { progressIndeterminate: boolean; progressValue: number },
-  schemaFormat?: string
+  schemaFormat?: string,
 ) =>
   new Promise((resolve, reject) => {
     reader.onload = () => {
@@ -190,7 +186,7 @@ const toBase64 = (
         resolve(
           dataurl.substring(0, insertIndex) +
             `;filename=${encodeURIComponent(file.name)}` +
-            dataurl.substring(insertIndex)
+            dataurl.substring(insertIndex),
         );
       } else {
         resolve(dataurl.substring(dataurl.indexOf(',') + 1));
@@ -210,9 +206,7 @@ const toBase64 = (
 const fileRenderer = defineComponent({
   name: 'file-control-renderer',
   components: {
-    VHover,
     ControlWrapper,
-    DispatchRenderer,
     VFileInput,
     VDialog,
     VCard,
@@ -268,28 +262,28 @@ const fileRenderer = defineComponent({
       return getFileSize(
         this.control.schema as any,
         this.appliedOptions,
-        'min'
+        'min',
       )[0];
     },
     minFileSizeExclusive(): boolean | undefined {
       return getFileSize(
         this.control.schema as any,
         this.appliedOptions,
-        'min'
+        'min',
       )[1];
     },
     maxFileSize(): number | undefined {
       return getFileSize(
         this.control.schema as any,
         this.appliedOptions,
-        'max'
+        'max',
       )[0];
     },
     maxFileSizeExclusive(): boolean | undefined {
       return getFileSize(
         this.control.schema as any,
         this.appliedOptions,
-        'max'
+        'max',
       )[1];
     },
   },
@@ -324,7 +318,7 @@ const fileRenderer = defineComponent({
               this.control.path,
               this.maxFileSizeExclusive
                 ? 'error.formatExclusiveMaximum'
-                : 'error.formatMaximum'
+                : 'error.formatMaximum',
             );
 
             const formatSize = formatBytes(this.maxFileSize);
@@ -334,7 +328,7 @@ const fileRenderer = defineComponent({
               {
                 limitText: `${formatSize}`,
                 limit: `${this.maxFileSize}`,
-              }
+              },
             );
           }
         }
@@ -350,7 +344,7 @@ const fileRenderer = defineComponent({
               this.control.path,
               this.minFileSizeExclusive
                 ? 'error.formatExclusiveMinimum'
-                : 'error.formatMinimum'
+                : 'error.formatMinimum',
             );
 
             const formatSize = formatBytes(this.minFileSize);
@@ -360,7 +354,7 @@ const fileRenderer = defineComponent({
               {
                 limitText: `${formatSize}`,
                 limit: `${this.maxFileSize}`,
-              }
+              },
             );
           }
         }
@@ -379,7 +373,7 @@ const fileRenderer = defineComponent({
               value,
               this.currentFileReader,
               this,
-              schema.format
+              schema.format,
             );
 
             this.onChange(base64);
@@ -407,8 +401,8 @@ export const isBase64String = and(
       (Object.prototype.hasOwnProperty.call(schema, 'contentEncoding') &&
         (schema as any).contentEncoding == 'base64') ||
       schema.format === 'binary' ||
-      schema.format === 'byte'
-  )
+      schema.format === 'byte',
+  ),
 );
 
 export const entry: JsonFormsRendererRegistryEntry = {

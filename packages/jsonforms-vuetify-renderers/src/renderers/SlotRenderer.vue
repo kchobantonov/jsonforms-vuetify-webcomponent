@@ -13,19 +13,19 @@
 
 <script lang="ts">
 import {
-  JsonFormsRendererRegistryEntry,
-  Layout,
+  type JsonFormsRendererRegistryEntry,
+  type Layout,
   rankWith,
-  UISchemaElement,
+  type UISchemaElement,
   uiTypeIs,
 } from '@jsonforms/core';
 import {
   DispatchRenderer,
   rendererProps,
-  RendererProps,
+  type RendererProps,
   useJsonFormsLayout,
-} from '@jsonforms/vue2';
-import { useVuetifyLayout } from '@jsonforms/vue2-vuetify';
+} from '@jsonforms/vue';
+import { useVuetifyLayout } from '@jsonforms/vue-vuetify';
 import { defineComponent, inject } from 'vue';
 const slotRenderer = defineComponent({
   name: 'slot-renderer',
@@ -40,7 +40,7 @@ const slotRenderer = defineComponent({
 
     const slotContents = inject<Record<string, UISchemaElement>>(
       'templateRendererSlotContents',
-      {}
+      {},
     );
 
     return {

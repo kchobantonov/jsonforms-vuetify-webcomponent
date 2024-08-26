@@ -20,78 +20,45 @@
 
 <script lang="ts">
 import {
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
-  Layout,
   rankWith,
-  UISchemaElement,
   uiTypeIs,
+  type JsonFormsRendererRegistryEntry,
+  type JsonFormsSubStates,
+  type Layout,
+  type UISchemaElement,
 } from '@jsonforms/core';
 import {
-  DispatchRenderer,
   rendererProps,
-  RendererProps,
   useJsonFormsLayout,
-} from '@jsonforms/vue2';
-import { ErrorObject } from 'ajv';
-import Vue, { defineComponent, inject, ref, unref } from 'vue';
-import { DirectiveFunction, DirectiveOptions } from 'vue/types/umd';
-import { ComputedOptions, MethodOptions } from 'vue/types/v3-component-options';
+  type RendererProps,
+} from '@jsonforms/vue';
 import {
-  VAutocomplete,
-  VAvatar,
-  VBadge,
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VCheckbox,
-  VCol,
-  VCombobox,
-  VContainer,
-  VDatePicker,
-  VDialog,
-  VDivider,
-  VExpansionPanel,
-  VExpansionPanelContent,
-  VExpansionPanelHeader,
-  VExpansionPanels,
-  VFlex,
-  VHover,
-  VIcon,
-  VInput,
-  VLabel,
-  VList,
-  VListItem,
-  VListItemAction,
-  VListItemAvatar,
-  VListItemContent,
-  VListItemGroup,
-  VListItemTitle,
-  VMenu,
-  VRadio,
-  VRadioGroup,
-  VRow,
-  VSelect,
-  VSimpleTable,
-  VSlider,
-  VSpacer,
-  VSwitch,
-  VTab,
-  VTabItem,
-  VTabs,
-  VTextarea,
-  VTextField,
-  VTimePicker,
-  VTooltip,
-} from 'vuetify/lib';
-import { useTranslator, useVuetifyLayout } from '@jsonforms/vue2-vuetify';
+  useJsonForms,
+  useTranslator,
+  useVuetifyLayout,
+} from '@jsonforms/vue-vuetify';
+import { type ErrorObject } from 'ajv';
+import {
+  defineComponent,
+  inject,
+  ref,
+  unref,
+  type Component,
+  type ComponentPublicInstance,
+  type ComputedOptions,
+  type Directive,
+  type MethodOptions,
+} from 'vue';
 import TemplateCompiler from '../components/TemplateCompiler.vue';
 import {
-  Components,
-  NamedUISchemaElement,
-  TemplateContext,
+  TemplateComponentsKey,
+  TemplateComputedKey,
+  TemplateContextKey,
+  TemplateDirectivesKey,
+  TemplateFiltersKey,
+  TemplateMethodsKey,
+  type NamedUISchemaElement,
+  type TemplateContext,
 } from '../core/types';
 
 export interface TemplateLayout extends Layout {
@@ -105,26 +72,21 @@ export interface TemplateLayout extends Layout {
 const templateLayoutRenderer = defineComponent({
   name: 'template-layout-renderer',
   components: {
-    DispatchRenderer,
-    VLabel,
-    VBtn,
-    VSpacer,
     TemplateCompiler,
-    VFlex,
   },
   props: {
     ...rendererProps<TemplateLayout>(),
   },
-  setup(props: RendererProps<TemplateLayout>) {
+  async setup(props: RendererProps<TemplateLayout>) {
+    // dynamically import vuetify components so vite vue will not do tree shaking and removing the renderer functions from vuetify components in production mode
+    const defaultComponents: Record<string, Component> = await import(
+      'vuetify/components'
+    );
+
     const t = useTranslator();
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JsonForms?"
-      );
-    }
+    const jsonforms = useJsonForms();
 
     const defaultTemplateContext = {
       jsonforms: jsonforms,
@@ -139,10 +101,7 @@ const templateLayoutRenderer = defineComponent({
     };
 
     const overrideTemplateContext = unref(
-      inject<TemplateContext | undefined>(
-        'templateLayoutRendererContext',
-        undefined
-      )
+      inject<TemplateContext | undefined>(TemplateContextKey, undefined),
     );
 
     const templateContext = overrideTemplateContext
@@ -158,11 +117,16 @@ const templateLayoutRenderer = defineComponent({
       parentComponent: this,
       templateError,
       templateContext,
+      defaultComponents,
     };
   },
-  errorCaptured: function (err: Error, _vm: Vue, info: string) {
+  errorCaptured: function (
+    err: unknown,
+    _instance: ComponentPublicInstance | null,
+    info: string,
+  ) {
     if (info == 'render') {
-      this.templateError = err.message;
+      this.templateError = err instanceof Error ? err.message : String(err);
     }
   },
   computed: {
@@ -184,19 +148,17 @@ const templateLayoutRenderer = defineComponent({
             (element as any).name = `${index}`;
           }
           return element as UISchemaElement & { name: string };
-        }
+        },
       );
     },
-    componentDirectives(): Record<
-      string,
-      DirectiveFunction | DirectiveOptions
-    > {
+    componentDirectives(): Record<string, Directive> {
       const defaultDirective = {};
 
       const override = unref(
-        inject<
-          Record<string, DirectiveFunction | DirectiveOptions> | undefined
-        >('templateLayoutRendererComponentDirectives', undefined)
+        inject<Record<string, Directive> | undefined>(
+          TemplateDirectivesKey,
+          undefined,
+        ),
       );
 
       return override ? { ...defaultDirective, ...override } : defaultDirective;
@@ -210,10 +172,7 @@ const templateLayoutRenderer = defineComponent({
       defaultComputed.context = () => this.templateContext;
 
       const override = unref(
-        inject<ComputedOptions | undefined>(
-          'templateLayoutRendererComponentComputed',
-          undefined
-        )
+        inject<ComputedOptions | undefined>(TemplateComputedKey, undefined),
       );
       return override ? { ...defaultComputed, ...override } : defaultComputed;
     },
@@ -223,10 +182,7 @@ const templateLayoutRenderer = defineComponent({
       } as MethodOptions;
 
       const override = unref(
-        inject<MethodOptions | undefined>(
-          'templateLayoutRendererComponentMethods',
-          undefined
-        )
+        inject<MethodOptions | undefined>(TemplateMethodsKey, undefined),
       );
 
       return override ? { ...defaultMethods, ...override } : defaultMethods;
@@ -237,81 +193,28 @@ const templateLayoutRenderer = defineComponent({
       } as MethodOptions;
 
       const override = unref(
-        inject<MethodOptions | undefined>(
-          'templateLayoutRendererComponentFilters',
-          undefined
-        )
+        inject<MethodOptions | undefined>(TemplateFiltersKey, undefined),
       );
       return override ? { ...defaultFilters, ...override } : defaultFilters;
     },
-    componentComponents() {
+    componentComponents(): Record<string, Component> {
       // by default we use only Vuetify components that are already used by other renderers
-      const defaultComponents = {
-        VAutocomplete,
-        VAvatar,
-        VBadge,
-        VBtn,
-        VCard,
-        VCardActions,
-        VCardText,
-        VCardTitle,
-        VCheckbox,
-        VCol,
-        VCombobox,
-        VContainer,
-        VDatePicker,
-        VDialog,
-        VDivider,
-        VExpansionPanel,
-        VExpansionPanelContent,
-        VExpansionPanelHeader,
-        VExpansionPanels,
-        VFlex,
-        VHover,
-        VIcon,
-        VInput,
-        VLabel,
-        VList,
-        VListItem,
-        VListItemAction,
-        VListItemAvatar,
-        VListItemContent,
-        VListItemGroup,
-        VListItemTitle,
-        VMenu,
-        VRadio,
-        VRadioGroup,
-        VRow,
-        VSelect,
-        VSimpleTable,
-        VSlider,
-        VSpacer,
-        VSwitch,
-        VTab,
-        VTabItem,
-        VTabs,
-        VTextarea,
-        VTextField,
-        VTimePicker,
-        VTooltip,
-      } as Components;
-
       const override = unref(
-        inject<Components | undefined>(
-          'templateLayoutRendererComponentComponents',
-          undefined
-        )
+        inject<Record<string, Component> | undefined>(
+          TemplateComponentsKey,
+          undefined,
+        ),
       );
 
       return override
-        ? { ...defaultComponents, ...override }
-        : defaultComponents;
+        ? { ...this.defaultComponents, ...override }
+        : this.defaultComponents;
     },
   },
   methods: {
     translate(
       key: string,
-      defaultMessage: string | undefined
+      defaultMessage: string | undefined,
     ): string | undefined {
       return this.t(key, defaultMessage ?? '');
     },

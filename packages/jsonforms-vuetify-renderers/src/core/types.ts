@@ -1,15 +1,45 @@
-import {
+import type {
+  JsonFormsCellRendererRegistryEntry,
+  JsonFormsI18nState,
+  JsonFormsRendererRegistryEntry,
   JsonFormsSubStates,
+  JsonFormsUISchemaRegistryEntry,
   JsonSchema,
+  Middleware,
   Translator,
   UISchemaElement,
+  ValidationMode,
 } from '@jsonforms/core';
-import { ErrorObject } from 'ajv';
-import { AsyncComponent, Component } from 'vue';
+import type { MaybeReadonly } from '@jsonforms/vue';
+import type { Ajv, ErrorObject } from 'ajv';
+import type {
+  Component,
+  ComputedOptions,
+  Directive,
+  InjectionKey,
+  MethodOptions,
+} from 'vue';
 
 export const AsyncFunction = Object.getPrototypeOf(async function (
-  _event: ActionEvent
+  _event: ActionEvent,
 ) {}).constructor;
+
+export interface JsonFormsProps {
+  data: any;
+  schema?: JsonSchema;
+  schemaUrl?: string;
+  uischema?: UISchemaElement;
+  renderers: MaybeReadonly<JsonFormsRendererRegistryEntry[]>;
+  cells?: MaybeReadonly<JsonFormsCellRendererRegistryEntry[]>;
+  config?: any;
+  readonly?: boolean;
+  uischemas?: MaybeReadonly<JsonFormsUISchemaRegistryEntry[]>;
+  validationMode?: ValidationMode;
+  ajv?: Ajv;
+  i18n?: JsonFormsI18nState;
+  additionalErrors?: ErrorObject<string, Record<string, any>, unknown>[];
+  middleware?: Middleware;
+}
 
 export type ResolvedSchema = {
   schema?: JsonSchema;
@@ -58,12 +88,46 @@ export interface TemplateContext {
   additionalErrors?: ErrorObject[];
 }
 
-export type Components = {
-  [key: string]:
-    | Component<any, any, any, any>
-    | AsyncComponent<any, any, any, any>;
-};
-
 export interface NamedUISchemaElement extends UISchemaElement {
   name: string;
 }
+
+export interface DataProvider {
+  loading: boolean;
+  data: any;
+  error: any;
+}
+
+export const DataProviderKey: InjectionKey<DataProvider> = Symbol.for(
+  'jsonforms-vuetify-renderers:dataProvider',
+);
+
+export const TemplateContextKey: InjectionKey<TemplateContext> = Symbol.for(
+  'jsonforms-vuetify-renderers:templateContext',
+);
+
+export const TemplateDirectivesKey: InjectionKey<Record<string, Directive>> =
+  Symbol.for(
+    'jsonforms-vuetify-renderers:templateLayoutRendererComponentDirectives',
+  );
+
+export const TemplateComputedKey: InjectionKey<ComputedOptions> = Symbol.for(
+  'jsonforms-vuetify-renderers:templateLayoutRendererComponentComputed',
+);
+
+export const TemplateMethodsKey: InjectionKey<MethodOptions> = Symbol.for(
+  'jsonforms-vuetify-renderers:templateLayoutRendererComponentMethods',
+);
+
+export const TemplateFiltersKey: InjectionKey<MethodOptions> = Symbol.for(
+  'jsonforms-vuetify-renderers:templateLayoutRendererComponentFilters',
+);
+
+export const TemplateComponentsKey: InjectionKey<Record<string, Component>> =
+  Symbol.for(
+    'jsonforms-vuetify-renderers:templateLayoutRendererComponentComponents',
+  );
+
+export const FormContextKey: InjectionKey<FormContext> = Symbol.for(
+  'jsonforms-vuetify-renderers:formContext',
+);

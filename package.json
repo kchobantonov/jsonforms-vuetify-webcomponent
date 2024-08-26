@@ -1,15 +1,18 @@
 {
   "name": "jsonforms-vuetify-webcomponent",
-  "private": true,
+  "engines": {
+    "node": "^18.19.0",
+    "pnpm": ">=7.13.4"
+  },
   "scripts": {
-    "init": "lerna bootstrap --hoist",
+    "lerna": "lerna",
     "clean": "lerna run clean",
     "lint": "lerna run lint",
     "lint:fix": "lerna run lint:fix",
     "test": "lerna run test",
     "build": "lerna run build",
     "snapshot-version": "lerna version --no-git-tag-version --no-push --yes",
-    "example:serve": "lerna run --scope=example serve --stream",
+    "example:dev": "lerna run --scope=example dev --stream",
     "example:build": "lerna run --scope=example build",
     "renderers:build": "lerna run --scope=@chobantonov/jsonforms-vuetify-renderers build",
     "renderers:watch": "lerna run --scope=@chobantonov/jsonforms-vuetify-renderers watch --stream",
@@ -22,6 +25,6 @@
     "tooling:package": "lerna run --scope=jsonforms-vuetify-tooling package"
   },
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "lerna": "^6.6.2"
   }
 }

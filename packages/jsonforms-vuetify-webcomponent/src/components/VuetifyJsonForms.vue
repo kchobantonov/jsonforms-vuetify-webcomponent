@@ -1,6 +1,6 @@
 <template>
   <div ref="root">
-    <custom-style type="text/css" id="vuetify-theme">
+    <custom-style type="text/css" id="vuetify-theme-stylesheet">
       {{ vuetifyThemeCss }}
     </custom-style>
 
@@ -48,14 +48,16 @@ import {
   UISchemaElement,
   UISchemaTester,
   ValidationMode,
+  type JsonSchema,
 } from '@jsonforms/core';
-import { JsonFormsChangeEvent } from '@jsonforms/vue2';
+import { JsonFormsChangeEvent } from '@jsonforms/vue';
 import {
   createTranslator,
   FormContext,
   ResolvedJsonForms,
-  vuetifyRenderers,
   VMonacoEditor,
+  TemplateComponentsKey,
+  TemplateContextKey,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
@@ -63,190 +65,48 @@ import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
 import merge from 'lodash/merge';
 import * as shadyCss from 'shady-css-parser';
-import Vue, { defineComponent, PropType, Ref, ref, toRef } from 'vue';
-import LoadScript from 'vue-plugin-load-script';
 import {
-  VAlert,
-  VApp,
-  VAppBar,
-  VAppBarNavIcon,
-  VAppBarTitle,
-  VAutocomplete,
-  VAvatar,
-  VBadge,
-  VBanner,
-  VBottomNavigation,
-  VBottomSheet,
-  VBreadcrumbs,
-  VBreadcrumbsDivider,
-  VBreadcrumbsItem,
-  VBtn,
-  VBtnToggle,
-  VCalendar,
-  VCalendarCategory,
-  VCalendarDaily,
-  VCalendarMonthly,
-  VCalendarWeekly,
-  VCard,
-  VCardActions,
-  VCardSubtitle,
-  VCardText,
-  VCardTitle,
-  VCarousel,
-  VCarouselItem,
-  VCarouselReverseTransition,
-  VCarouselTransition,
-  VCheckbox,
-  VChip,
-  VChipGroup,
-  VCol,
-  VColorPicker,
-  VColorPickerCanvas,
-  VColorPickerSwatches,
-  VCombobox,
-  VContainer,
-  VContent,
-  VCounter,
-  VData,
-  VDataFooter,
-  VDataIterator,
-  VDataTable,
-  VDataTableHeader,
-  VDatePicker,
-  VDatePickerDateTable,
-  VDatePickerHeader,
-  VDatePickerMonthTable,
-  VDatePickerTitle,
-  VDatePickerYears,
-  VDialog,
-  VDialogBottomTransition,
-  VDialogTopTransition,
-  VDialogTransition,
-  VDivider,
-  VEditDialog,
-  VExpandTransition,
-  VExpandXTransition,
-  VExpansionPanel,
-  VExpansionPanelContent,
-  VExpansionPanelHeader,
-  VExpansionPanels,
-  VFabTransition,
-  VFadeTransition,
-  VFileInput,
-  VFlex,
-  VFooter,
-  VForm,
-  VHover,
-  VIcon,
-  VImg,
-  VInput,
-  VItem,
-  VItemGroup,
-  VLabel,
-  VLayout,
-  VLazy,
-  VList,
-  VListGroup,
-  VListItem,
-  VListItemAction,
-  VListItemActionText,
-  VListItemAvatar,
-  VListItemContent,
-  VListItemGroup,
-  VListItemIcon,
-  VListItemSubtitle,
-  VListItemTitle,
-  VMain,
-  VMenu,
-  VMenuTransition,
-  VMessages,
-  VNavigationDrawer,
-  VOtpInput,
-  VOverflowBtn,
-  VOverlay,
-  VPagination,
-  VParallax,
-  VPicker,
-  VProgressCircular,
-  VProgressLinear,
-  VRadio,
-  VRadioGroup,
-  VRangeSlider,
-  VRating,
-  VResponsive,
-  VRow,
-  VScaleTransition,
-  VScrollXReverseTransition,
-  VScrollXTransition,
-  VScrollYReverseTransition,
-  VScrollYTransition,
-  VSelect,
-  VSheet,
-  VSimpleCheckbox,
-  VSimpleTable,
-  VSkeletonLoader,
-  VSlideGroup,
-  VSlideItem,
-  VSlider,
-  VSlideXReverseTransition,
-  VSlideXTransition,
-  VSlideYReverseTransition,
-  VSlideYTransition,
-  VSnackbar,
-  VSpacer,
-  VSparkline,
-  VSpeedDial,
-  VStepper,
-  VStepperContent,
-  VStepperHeader,
-  VStepperItems,
-  VStepperStep,
-  VSubheader,
-  VSwitch,
-  VSystemBar,
-  VTab,
-  VTabItem,
-  VTableOverflow,
-  VTabReverseTransition,
-  VTabs,
-  VTabsItems,
-  VTabsSlider,
-  VTabTransition,
-  VTextarea,
-  VTextField,
-  VThemeProvider,
-  VTimeline,
-  VTimelineItem,
-  VTimePicker,
-  VTimePickerClock,
-  VTimePickerTitle,
-  VToolbar,
-  VToolbarItems,
-  VToolbarTitle,
-  VTooltip,
-  VTreeview,
-  VTreeviewNode,
-  VVirtualScroll,
-  VVirtualTable,
-  VWindow,
-  VWindowItem,
-} from 'vuetify/lib';
+  defineComponent,
+  PropType,
+  Ref,
+  ref,
+  toRef,
+  h,
+  inject,
+  type InjectionKey,
+} from 'vue';
+import { VApp, VSheet } from 'vuetify/components';
 import { VuetifyPreset } from 'vuetify/types/services/presets';
 import vuetify, { preset as defaultPreset } from '../plugins/vuetify';
+import { type ThemeInstance } from 'vuetify';
 
-Vue.use(LoadScript);
+const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme');
 
-Vue.config.productionTip = false;
+const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
+
+// dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
+const { extraVuetifyRenderers } = await import(
+  '@chobantonov/jsonforms-vuetify-renderers'
+);
+
+const vuetifyRenderers = [
+  ...extendedVuetifyRenderers,
+  ...extraVuetifyRenderers,
+];
+
+//Vue.use(LoadScript);
+
+//Vue.config.productionTip = false;
 
 const CustomStyle = defineComponent({
   name: 'custom-style',
-  render(createElement) {
-    return createElement('style', this.$slots.default);
+  setup(_, { slots }) {
+    return () => h('style', slots.default ? slots.default() : []);
   },
 });
 
 const transformUISchemas = (
-  uischemas?: string
+  uischemas?: string,
 ): JsonFormsUISchemaRegistryEntry[] => {
   const uischemasMap: {
     tester: string;
@@ -260,12 +120,12 @@ const transformUISchemas = (
           try {
             const tester = new Function(
               'jsonSchema, schemaPath, path',
-              `const NOT_APPLICABLE = -1; const tester = ${elem.tester}; return tester(jsonSchema, schemaPath, path);`
+              `const NOT_APPLICABLE = -1; const tester = ${elem.tester}; return tester(jsonSchema, schemaPath, path);`,
             );
             const result = tester(jsonSchema, schemaPath, path);
             if (typeof result !== 'number') {
               console.error(
-                `Error at uischema tester[${index}]: invalid result type, expected number but got ${typeof result}`
+                `Error at uischema tester[${index}]: invalid result type, expected number but got ${typeof result}`,
               );
             }
             return typeof result === 'number' ? result : NOT_APPLICABLE;
@@ -295,49 +155,23 @@ const vuetifyFormWc = defineComponent({
   emits: ['change'],
   props: {
     data: {
-      required: false,
-      type: String,
-      validator: function (value) {
-        try {
-          const data = typeof value === 'string' ? JSON.parse(value) : value;
-
-          return data !== undefined && data !== null;
-        } catch (e) {
-          return false;
-        }
-      },
+      required: true,
+      type: [String, Number, Boolean, Array, Object] as PropType<any>,
     },
     schema: {
       required: false,
-      type: String,
-      validator: function (value) {
-        try {
-          const schema = typeof value === 'string' ? JSON.parse(value) : value;
-
-          return schema !== undefined && schema !== null;
-        } catch (e) {
-          return false;
-        }
-      },
+      type: [Object, Boolean] as PropType<JsonSchema>,
+      default: undefined,
+    },
+    uischema: {
+      required: false,
+      type: Object as PropType<UISchemaElement>,
+      default: undefined,
     },
     schemaUrl: {
       required: false,
       type: String,
       default: undefined,
-    },
-    uischema: {
-      required: false,
-      type: String,
-      validator: function (value) {
-        try {
-          const uischema =
-            typeof value === 'string' ? JSON.parse(value) : value;
-
-          return uischema !== undefined && uischema !== null;
-        } catch (e) {
-          return false;
-        }
-      },
     },
     config: {
       required: false,
@@ -595,7 +429,7 @@ const vuetifyFormWc = defineComponent({
       vuetifyLocale,
       error,
       renderers: Object.freeze(vuetifyRenderers),
-      cells: Object.freeze(vuetifyRenderers),
+      cells: undefined,
 
       dataToUse,
       schemaToUse,
@@ -610,9 +444,6 @@ const vuetifyFormWc = defineComponent({
       localeToUse,
       additionalErrorsToUse,
       defaultPresetToUse,
-      vuetifyTheme: ref<{ generatedStyles: string } & VuetifyPreset['theme']>(
-        vuetify.framework.theme as any
-      ),
       uidataToUse,
       context,
     };
@@ -620,174 +451,10 @@ const vuetifyFormWc = defineComponent({
   provide() {
     return {
       // demo how we can extend the template layout components that we can use.
-      templateLayoutRendererComponentComponents: {
-        VAlert,
-        VApp,
-        VAppBar,
-        VAppBarNavIcon,
-        VAppBarTitle,
-        VAutocomplete,
-        VAvatar,
-        VBadge,
-        VBanner,
-        VBottomNavigation,
-        VBottomSheet,
-        VBreadcrumbs,
-        VBreadcrumbsDivider,
-        VBreadcrumbsItem,
-        VBtn,
-        VBtnToggle,
-        VCalendar,
-        VCalendarCategory,
-        VCalendarDaily,
-        VCalendarMonthly,
-        VCalendarWeekly,
-        VCard,
-        VCardActions,
-        VCardSubtitle,
-        VCardText,
-        VCardTitle,
-        VCarousel,
-        VCarouselItem,
-        VCarouselReverseTransition,
-        VCarouselTransition,
-        VCheckbox,
-        VChip,
-        VChipGroup,
-        VCol,
-        VColorPicker,
-        VColorPickerCanvas,
-        VColorPickerSwatches,
-        VCombobox,
-        VContainer,
-        VContent,
-        VCounter,
-        VData,
-        VDataFooter,
-        VDataIterator,
-        VDataTable,
-        VDataTableHeader,
-        VDatePicker,
-        VDatePickerDateTable,
-        VDatePickerHeader,
-        VDatePickerMonthTable,
-        VDatePickerTitle,
-        VDatePickerYears,
-        VDialog,
-        VDialogBottomTransition,
-        VDialogTopTransition,
-        VDialogTransition,
-        VDivider,
-        VEditDialog,
-        VExpandTransition,
-        VExpandXTransition,
-        VExpansionPanel,
-        VExpansionPanelContent,
-        VExpansionPanelHeader,
-        VExpansionPanels,
-        VFabTransition,
-        VFadeTransition,
-        VFileInput,
-        VFlex,
-        VFooter,
-        VForm,
-        VHover,
-        VIcon,
-        VImg,
-        VInput,
-        VItem,
-        VItemGroup,
-        VLabel,
-        VLayout,
-        VLazy,
-        VList,
-        VListGroup,
-        VListItem,
-        VListItemAction,
-        VListItemActionText,
-        VListItemAvatar,
-        VListItemContent,
-        VListItemGroup,
-        VListItemIcon,
-        VListItemSubtitle,
-        VListItemTitle,
-        VMain,
-        VMenu,
-        VMenuTransition,
-        VMessages,
-        VNavigationDrawer,
-        VOtpInput,
-        VOverflowBtn,
-        VOverlay,
-        VPagination,
-        VParallax,
-        VPicker,
-        VProgressCircular,
-        VProgressLinear,
-        VRadio,
-        VRadioGroup,
-        VRangeSlider,
-        VRating,
-        VResponsive,
-        VRow,
-        VScaleTransition,
-        VScrollXReverseTransition,
-        VScrollXTransition,
-        VScrollYReverseTransition,
-        VScrollYTransition,
-        VSelect,
-        VSheet,
-        VSimpleCheckbox,
-        VSimpleTable,
-        VSkeletonLoader,
-        VSlideGroup,
-        VSlideItem,
-        VSlider,
-        VSlideXReverseTransition,
-        VSlideXTransition,
-        VSlideYReverseTransition,
-        VSlideYTransition,
-        VSnackbar,
-        VSpacer,
-        VSparkline,
-        VSpeedDial,
-        VStepper,
-        VStepperContent,
-        VStepperHeader,
-        VStepperItems,
-        VStepperStep,
-        VSubheader,
-        VSwitch,
-        VSystemBar,
-        VTab,
-        VTabItem,
-        VTableOverflow,
-        VTabReverseTransition,
-        VTabs,
-        VTabsItems,
-        VTabsSlider,
-        VTabTransition,
-        VTextarea,
-        VTextField,
-        VThemeProvider,
-        VTimeline,
-        VTimelineItem,
-        VTimePicker,
-        VTimePickerClock,
-        VTimePickerTitle,
-        VToolbar,
-        VToolbarItems,
-        VToolbarTitle,
-        VTooltip,
-        VTreeview,
-        VTreeviewNode,
-        VVirtualScroll,
-        VVirtualTable,
-        VWindow,
-        VWindowItem,
+      [TemplateComponentsKey]: {
         VMonacoEditor,
       },
-      templateLayoutRendererContext: toRef(this, 'context'),
+      [TemplateContextKey]: toRef(this, 'context'),
       formContext: toRef(this, 'context'),
     };
   },
@@ -878,7 +545,7 @@ const vuetifyFormWc = defineComponent({
             locale: this.localeToUse,
             translate: createTranslator(
               this.localeToUse,
-              this.translationsToUse
+              this.translationsToUse,
             ) as Translator,
           };
           this.setVuetifyLocale(this.localeToUse);
@@ -896,7 +563,7 @@ const vuetifyFormWc = defineComponent({
             locale: this.localeToUse,
             translate: createTranslator(
               this.localeToUse,
-              this.translationsToUse
+              this.translationsToUse,
             ) as Translator,
           };
           this.$forceUpdate();
@@ -947,11 +614,10 @@ const vuetifyFormWc = defineComponent({
       return this.dataDefaultPreset?.theme?.dark || false;
     },
     vuetifyThemeCss() {
-      let css = this.vuetifyTheme?.generatedStyles;
-      if (
-        this.vuetifyTheme?.options?.customProperties &&
-        css.startsWith(':root {')
-      ) {
+      const theme = inject(ThemeSymbol);
+
+      let css = theme?.styles.value;
+      if (css && css.startsWith(':root {')) {
         // change to host if the variable generation is enabled
         css = ':host {' + css.substring(':root {'.length, css.length);
       }
@@ -1020,7 +686,7 @@ const vuetifyFormWc = defineComponent({
       if (this.uischemaToUse?.options) {
         preset = this.vuetifyProps(
           this.uischemaToUse.options,
-          'preset'
+          'preset',
         ) as Partial<VuetifyPreset>;
       }
       // apply any themes
@@ -1028,14 +694,14 @@ const vuetifyFormWc = defineComponent({
         this.$vuetify.theme,
         preset && preset.theme
           ? preset.theme
-          : this.defaultPresetToUse?.theme || {}
+          : this.defaultPresetToUse?.theme || {},
       );
 
       this.$vuetify.icons = merge(
         this.$vuetify.icons,
         preset && preset.icons
           ? preset.icons
-          : this.defaultPresetToUse?.icons || {}
+          : this.defaultPresetToUse?.icons || {},
       );
     },
     onChange(event: JsonFormsChangeEvent): void {
@@ -1043,7 +709,7 @@ const vuetifyFormWc = defineComponent({
     },
     vuetifyProps(
       options: Record<string, any>,
-      path: string
+      path: string,
     ): Record<string, any> {
       const props = get(options?.vuetify, path);
 
@@ -1067,6 +733,6 @@ export default vuetifyFormWc;
 @import '~@fontsource/roboto/index.css';
 @import '~@mdi/font/css/materialdesignicons.min.css';
 @import '~vuetify/dist/vuetify.min.css';
-@import '~@jsonforms/vue2-vuetify/lib/jsonforms-vue2-vuetify.esm.css';
+@import '~@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css';
 @import '~@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.esm.css';
 </style>

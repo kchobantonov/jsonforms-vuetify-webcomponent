@@ -6,18 +6,16 @@
       rounded
       height="6"
     ></v-progress-linear>
-    <v-alert outlined type="error" text v-else-if="error !== undefined">
+    <v-alert outlined type="error" v-else-if="error !== undefined">
       <strong>Unable to load vuetify-json-forms webcomponent</strong><br />
     </v-alert>
-    <vuetify-json-forms
-      v-else
-      v-bind="$attrs"
-      v-on="$listeners"
-    ></vuetify-json-forms>
+    <vuetify-json-forms v-else v-bind="$attrs"></vuetify-json-forms>
   </div>
 </template>
 
 <script lang="ts">
+import { useScriptTag } from '@vueuse/core';
+
 export default {
   name: 'vuetify-json-forms-wrapper',
   data() {
@@ -29,14 +27,9 @@ export default {
   },
   methods: {
     loadVuetifyJsonForms() {
-      this.$loadScript(this.location)
-        .then(() => {
-          this.loading = false;
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.error = error;
-        });
+      useScriptTag(this.location, (el: HTMLScriptElement) => {
+        this.loading = false;
+      });
     },
   },
   mounted() {
