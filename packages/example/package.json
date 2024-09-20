@@ -18,9 +18,9 @@
   "dependencies": {
     "@chobantonov/jsonforms-vuetify-renderers": "workspace:*",
     "@chobantonov/jsonforms-vuetify-webcomponent": "workspace:*",
-    "@jsonforms/core": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/core",
-    "@jsonforms/vue": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/vue",
-    "@jsonforms/vue-vuetify": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/vue-vuetify",
+    "@jsonforms/core": "3.4.0",
+    "@jsonforms/vue": "3.4.0",
+    "@jsonforms/vue-vuetify": "3.4.0",
     "@vueuse/core": "^10.9.0",
     "ajv": "^8.6.1",
     "ajv-keywords": "^5.1.0",

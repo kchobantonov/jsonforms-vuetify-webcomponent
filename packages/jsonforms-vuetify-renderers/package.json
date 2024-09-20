@@ -42,9 +42,9 @@
     "type-check": "vue-tsc --build --force"
   },
   "peerDependencies": {
-    "@jsonforms/core": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/core",
-    "@jsonforms/vue": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/vue",
-    "@jsonforms/vue-vuetify": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/vue-vuetify",
+    "@jsonforms/core": "3.4.0",
+    "@jsonforms/vue": "3.4.0",
+    "@jsonforms/vue-vuetify": "3.4.0",
     "@monaco-editor/loader": "^1.4.0",
     "@vue/compiler-dom": "^3.4.21",
     "ajv": "^8.6.1",
@@ -57,9 +57,9 @@
     "vuetify": "^3.6.6"
   },
   "devDependencies": {
-    "@jsonforms/core": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/core",
-    "@jsonforms/vue": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/vue",
-    "@jsonforms/vue-vuetify": "file:/Users/kchobantonov/dev/workspaces/kchobantonov/jsonforms/packages/vue-vuetify",
+    "@jsonforms/core": "3.4.0",
+    "@jsonforms/vue": "3.4.0",
+    "@jsonforms/vue-vuetify": "3.4.0",
     "@mdi/font": "^7.4.47",
     "@monaco-editor/loader": "^1.4.0",
     "@rushstack/eslint-patch": "^1.8.0",
