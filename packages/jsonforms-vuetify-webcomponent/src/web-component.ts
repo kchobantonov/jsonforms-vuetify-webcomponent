@@ -8,6 +8,7 @@ import jvrCss from '@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vueti
 import jvvCss from '@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css?inline';
 import materialDesignStyles from '@mdi/font/css/materialdesignicons.css?inline';
 import vuetifyStyles from 'vuetify/dist/vuetify.min.css?inline';
+import vuetifyLabsStyles from 'vuetify/dist/vuetify-labs.min.css?inline';
 
 const vuetifyCssResetForShadowRoot = `
 :host {
@@ -61,6 +62,7 @@ const VuetifyJsonFormsElement = defineCustomElement(VuetifyJsonForms, {
   styles: [
     vuetifyCssResetForShadowRoot,
     vuetifyStyles,
+    vuetifyLabsStyles,
     materialDesignStyles,
     jvvCss,
     jvrCss,
