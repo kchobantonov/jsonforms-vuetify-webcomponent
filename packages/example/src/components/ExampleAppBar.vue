@@ -2,6 +2,7 @@
 import { useAppStore } from '../store';
 import JsonFormsLogo from '../assets/JsonFormsLogo.vue';
 import ThemeChanger from './ThemeChanger.vue';
+import webComponentUrl from '@/assets/webcomponent.svg';
 
 const appStore = useAppStore();
 </script>
@@ -37,6 +38,27 @@ const appStore = useAppStore();
               </template>
               {{
                 appStore.formOnly ? `Show Form Wrapper` : `Hide Form Wrapper`
+              }}
+            </v-tooltip>
+          </v-col>
+          <v-col>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  icon
+                  v-bind="props"
+                  :disabled="!appStore.exampleName"
+                  @click="
+                    appStore.useWebComponentView = !appStore.useWebComponentView
+                  "
+                >
+                  <v-img height="24" width="24" :src="webComponentUrl" />
+                </v-btn>
+              </template>
+              {{
+                appStore.useWebComponentView
+                  ? `Do not use webcomponent`
+                  : `Use webcomponent`
               }}
             </v-tooltip>
           </v-col>

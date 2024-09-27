@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,6 +13,152 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="./dist/vuetify-json-forms.esm.js"></script>
+
+    <script type="text/javascript">
+      const data = {
+        name: 'John Doe',
+        vegetarian: false,
+        birthDate: '1985-06-02',
+        personalData: {
+          age: 34,
+          drivingSkill: 7,
+        },
+        postalCode: '12345',
+      };
+
+      const schema = {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            minLength: 3,
+            description: 'Please enter your name',
+          },
+          vegetarian: {
+            type: 'boolean',
+          },
+          birthDate: {
+            type: 'string',
+            format: 'date',
+          },
+          nationality: {
+            type: 'string',
+            enum: ['DE', 'IT', 'JP', 'US', 'RU', 'Other'],
+          },
+          personalData: {
+            type: 'object',
+            properties: {
+              age: {
+                type: 'integer',
+                description: 'Please enter your age.',
+              },
+              height: {
+                type: 'number',
+              },
+              drivingSkill: {
+                type: 'number',
+                maximum: 10,
+                minimum: 1,
+                default: 7,
+              },
+            },
+            required: ['age', 'height'],
+          },
+          occupation: {
+            type: 'string',
+          },
+          postalCode: {
+            type: 'string',
+            maxLength: 5,
+          },
+        },
+        required: ['occupation', 'nationality'],
+      };
+      const uischema = {
+        type: 'VerticalLayout',
+        elements: [
+          {
+            type: 'HorizontalLayout',
+            elements: [
+              {
+                type: 'Control',
+                scope: '#/properties/name',
+              },
+              {
+                type: 'Control',
+                scope: '#/properties/personalData/properties/age',
+              },
+              {
+                type: 'Control',
+                scope: '#/properties/birthDate',
+              },
+            ],
+          },
+          {
+            type: 'Label',
+            text: 'Additional Information',
+          },
+          {
+            type: 'HorizontalLayout',
+            elements: [
+              {
+                type: 'Control',
+                scope: '#/properties/personalData/properties/height',
+              },
+              {
+                type: 'Control',
+                scope: '#/properties/nationality',
+              },
+              {
+                type: 'Control',
+                scope: '#/properties/occupation',
+                options: {
+                  suggestion: [
+                    'Accountant',
+                    'Engineer',
+                    'Freelancer',
+                    'Journalism',
+                    'Physician',
+                    'Student',
+                    'Teacher',
+                    'Other',
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      };
+    </script>
+
+    <vuetify-json-forms> </vuetify-json-forms>
+
+    <script>
+      const form = document.querySelector('vuetify-json-forms');
+
+      if (data) {
+        form.setAttribute('data', JSON.stringify(data));
+      }
+      if (schema) {
+        form.setAttribute('schema', JSON.stringify(schema));
+      }
+      if (uischema) {
+        form.setAttribute('uischema', JSON.stringify(uischema));
+      }
+
+      const onChange = (customEvent) => {
+        let [event] = customEvent.detail;
+        console.log('Form state data:' + JSON.stringify(event.data));
+        console.log('Form state errors:' + JSON.stringify(event.errors));
+      };
+
+      if (onChange) {
+        form.addEventListener('change', onChange);
+      }
+      // if (onHandleAction) {
+      //   form.addEventListener('handle-action', onHandleAction);
+      // }
+    </script>
   </body>
 </html>

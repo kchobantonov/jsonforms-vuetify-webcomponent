@@ -10,7 +10,7 @@ import VuetifyLogo from '../assets/VuetifyLogo.vue';
       ></v-col>
       <v-col cols="12" class="text-center">
         <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to JSON Forms Vue 3 Vuetify
+          Welcome to JSON Forms Vue 3 Vuetify WebComponent
         </h1>
         <h2 class="display-3 font-weight-bold mb-3">More Forms. Less Code.</h2>
       </v-col>

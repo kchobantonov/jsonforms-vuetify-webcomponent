@@ -1,32 +1,30 @@
 <template>
-  <vuetify-json-forms
-    :data="data"
-    :schema="schema"
-    :schemaUrl="schemaUrl"
-    :uischema="uischema"
-    :config="config"
-    :readonly="readonly"
-    :uischemas="uischemas"
-    :validationMode="validationMode"
-    :locale="locale"
-    :customStyle="customStyle"
-    :translations="translations"
-    :additionalErrors="additionalErrors"
-    :defaultPreset="defaultPreset"
-    :uidata="uidata"
-    @change="onChange"
-  ></vuetify-json-forms>
+  <Suspense>
+    <vuetify-json-forms
+      :data="data"
+      :schema="schema"
+      :schemaUrl="schemaUrl"
+      :uischema="uischema"
+      :config="config"
+      :readonly="readonly"
+      :uischemas="uischemas"
+      :validationMode="validationMode"
+      :customStyle="customStyle"
+      :translations="translations"
+      :additionalErrors="additionalErrors"
+      :uidata="uidata"
+      @change="onChange"
+    ></vuetify-json-forms
+  ></Suspense>
 </template>
 
 <script lang="ts">
+import { useAppStore } from '@/store';
 import { ValidationMode } from '@jsonforms/core';
 import { JsonFormsChangeEvent } from '@jsonforms/vue';
-const isArray = () =>
-  import('lodash/isArray').then((module) => {
-    return module;
-  });
 import { defineComponent, PropType } from 'vue';
-const VuetifyJsonForms = () => import('../components/VuetifyJsonForms.vue');
+import VuetifyJsonForms from '../components/VuetifyJsonForms.vue';
+//const VuetifyJsonForms = () => import('../components/VuetifyJsonForms.vue');
 
 const vuetifyFormWc = defineComponent({
   components: {
@@ -35,7 +33,6 @@ const vuetifyFormWc = defineComponent({
   emits: ['change', 'handle-action'],
   props: {
     data: {
-      required: false,
       type: String,
       validator: function (value) {
         try {
@@ -48,7 +45,6 @@ const vuetifyFormWc = defineComponent({
       },
     },
     schema: {
-      required: false,
       type: String,
       validator: function (value) {
         try {
@@ -61,12 +57,9 @@ const vuetifyFormWc = defineComponent({
       },
     },
     schemaUrl: {
-      required: false,
       type: String,
-      default: undefined,
     },
     uischema: {
-      required: false,
       type: String,
       validator: function (value) {
         try {
@@ -79,7 +72,6 @@ const vuetifyFormWc = defineComponent({
       },
     },
     config: {
-      required: false,
       type: String,
       validator: function (value) {
         try {
@@ -92,22 +84,20 @@ const vuetifyFormWc = defineComponent({
       },
     },
     readonly: {
-      required: false,
       type: String,
       default: 'false',
     },
     uischemas: {
-      required: false,
       type: String,
-      validator: async function (value) {
-        const validate = await isArray();
-
+      validator: function (value) {
         try {
           const uischemas =
             typeof value == 'string' ? JSON.parse(value) : value;
 
           return (
-            uischemas !== undefined && uischemas !== null && validate(uischemas)
+            uischemas !== undefined &&
+            uischemas !== null &&
+            Array.isArray(uischemas)
           );
         } catch (e) {
           return false;
@@ -115,7 +105,6 @@ const vuetifyFormWc = defineComponent({
       },
     },
     validationMode: {
-      required: false,
       type: [String] as PropType<ValidationMode>,
       default: 'ValidateAndShow',
       validator: function (value) {
@@ -127,17 +116,14 @@ const vuetifyFormWc = defineComponent({
       },
     },
     locale: {
-      required: false,
       type: String,
       default: 'en',
     },
     customStyle: {
-      required: false,
       type: String,
-      default: '.v-application--wrap { min-height: 0px; }',
+      default: '.v-application__wrap { min-height: 0px; }',
     },
     translations: {
-      required: false,
       type: String,
       validator: function (value) {
         try {
@@ -151,10 +137,8 @@ const vuetifyFormWc = defineComponent({
       },
     },
     additionalErrors: {
-      required: false,
       type: String,
-      validator: async function (value) {
-        const validate = await isArray();
+      validator: function (value) {
         try {
           const additionalErrors =
             typeof value == 'string' ? JSON.parse(value) : value;
@@ -162,31 +146,25 @@ const vuetifyFormWc = defineComponent({
           return (
             additionalErrors !== undefined &&
             additionalErrors !== null &&
-            validate(additionalErrors)
+            Array.isArray(additionalErrors)
           );
         } catch (e) {
           return false;
         }
       },
     },
-    defaultPreset: {
-      required: false,
-      type: String,
-      validator: function (value) {
-        try {
-          const preset = typeof value == 'string' ? JSON.parse(value) : value;
-
-          return preset !== undefined && preset !== null;
-        } catch (e) {
-          return false;
-        }
-      },
+    dark: {
+      type: Boolean,
+      default: false,
+    },
+    rtl: {
+      type: Boolean,
+      default: false,
     },
     uidata: {
-      required: false,
       type: String,
       default: () => {
-        return {};
+        return '{}';
       },
       validator: function (value) {
         try {
@@ -209,6 +187,12 @@ const vuetifyFormWc = defineComponent({
     onChange(event: JsonFormsChangeEvent): void {
       this.$emit('change', event);
     },
+  },
+  setup(props: any) {
+    const appStore = useAppStore();
+    appStore.rtl = props.rtl;
+    appStore.dark = props.dark;
+    appStore.locale = props.locale;
   },
 });
 

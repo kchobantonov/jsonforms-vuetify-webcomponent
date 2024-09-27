@@ -30,16 +30,18 @@ const theme = computed(() => {
 </script>
 
 <template>
-  <v-locale-provider :rtl="appStore.rtl">
+  <v-locale-provider :rtl="appStore.rtl" :locale="appStore.jsonforms.locale">
     <v-theme-provider :theme="theme">
       <v-app>
         <example-app-bar></example-app-bar>
         <example-drawer></example-drawer>
         <example-settings></example-settings>
-        <v-main>
-          <example-view v-if="example" :example="example"></example-view>
-          <home-view v-else></home-view>
-        </v-main>
+        <Suspense>
+          <v-main>
+            <example-view v-if="example" :example="example"></example-view>
+            <home-view v-else></home-view>
+          </v-main>
+        </Suspense>
       </v-app>
     </v-theme-provider>
   </v-locale-provider>

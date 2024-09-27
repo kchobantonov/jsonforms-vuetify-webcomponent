@@ -5,6 +5,7 @@ const appstore = reactive({
   exampleName: useHistoryHash(''),
   rtl: false,
   formOnly: false,
+  useWebComponentView: false,
   dark: useLocalStorage('vuetify-example-dark', false),
   theme: useLocalStorage('vuetify-example-theme', 'light'),
   drawer: true,

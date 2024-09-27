@@ -7,6 +7,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 //import VueDevTools from 'vite-plugin-vue-devtools';
 // needed for json-refs
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -32,6 +33,14 @@ export default defineConfig({
       globals: {
         process: true,
       },
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/@chobantonov/jsonforms-vuetify-webcomponent/dist/*', // Source path
+          dest: 'js', // Target directory
+        },
+      ],
     }),
   ],
   build: {

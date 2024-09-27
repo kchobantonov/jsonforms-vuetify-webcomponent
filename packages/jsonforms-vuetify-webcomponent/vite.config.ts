@@ -31,6 +31,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    outDir: 'dist',
     lib: {
       entry: resolve(__dirname, 'src/web-component.ts'),
       name: 'vuetify-json-forms',
@@ -49,5 +50,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+  },
+  define: {
+    //'process.env.NODE_ENV': JSON.stringify('production'),
   },
 });

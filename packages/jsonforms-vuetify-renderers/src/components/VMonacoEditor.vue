@@ -68,6 +68,7 @@ import {
 } from 'vue';
 import { useTheme } from 'vuetify';
 import { VField, VInput } from 'vuetify/components';
+
 import { callEvent, type VFieldProps, type VInputProps } from './common';
 
 import useMonaco from './useMonaco';
@@ -276,6 +277,16 @@ onMounted(() => {
 onBeforeUnmount(() => {
   editor.value?.dispose();
 });
+</script>
+
+<script lang="ts">
+import { Intersect } from 'vuetify/directives';
+
+export default {
+  directives: {
+    intersect: Intersect,
+  },
+};
 </script>
 
 <style scoped>

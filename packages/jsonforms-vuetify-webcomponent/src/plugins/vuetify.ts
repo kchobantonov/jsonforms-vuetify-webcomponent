@@ -1,7 +1,7 @@
 import { createVuetify, type Blueprint, type ThemeDefinition } from 'vuetify';
 import { md1, md2, md3 } from 'vuetify/blueprints';
 
-import '@fortawesome/fontawesome-free/css/all.css';
+//import '@fortawesome/fontawesome-free/css/all.css';
 import '@mdi/font/css/materialdesignicons.css';
 
 import { bg, de, en } from 'vuetify/locale';
@@ -13,6 +13,7 @@ import { watch } from 'vue';
 import { fa, aliases as faAliases } from 'vuetify/iconsets/fa';
 import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
 import { mdiIconAliases, faIconAliases } from '@jsonforms/vue-vuetify';
+import { useAppStore } from '@/store';
 
 export function getCustomThemes(blueprint: string) {
   const getThemeColors = (blueprint: string) => {
@@ -158,11 +159,11 @@ export function buildVuetify() {
     appStore.blueprint,
     appStore.variant,
     appStore.iconset,
-    appStore.jsonforms.locale,
+    appStore.locale,
   );
 
   watch(
-    () => appStore.jsonforms.locale,
+    () => appStore.locale,
     (locale: string) => {
       vuetify.locale.current.value = locale;
       dayjs.locale(locale);

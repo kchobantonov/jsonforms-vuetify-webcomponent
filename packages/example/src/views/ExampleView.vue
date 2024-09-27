@@ -34,6 +34,7 @@ import {
   type JsonFormsProps,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import type { ExampleDescription } from '@/core/types';
+import VuetifyJsonFormsWrapper from '../components/VuetifyJsonFormsWrapper.vue';
 
 // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
 const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
@@ -107,6 +108,15 @@ const onChange = (event: JsonFormsChangeEvent): void => {
     );
   }
   errors.value = event.errors;
+};
+
+const onWebComponentChange = (customEvent: CustomEvent): void => {
+  const details = customEvent.detail as any[];
+  if (details && details.length > 0) {
+    const event: JsonFormsChangeEvent = details[0];
+
+    onChange(event);
+  }
 };
 
 const reloadMonacoSchema = () => {
@@ -380,7 +390,31 @@ watch(
               </v-card-title>
               <v-divider class="mx-4"></v-divider>
               <div class="json-forms">
+                <vuetify-json-forms-wrapper
+                  v-if="appStore.useWebComponentView"
+                  :custom-style="`.v-application__wrap { min-height: 0px; }`"
+                  :data="state.data ? JSON.stringify(state.data) : undefined"
+                  :schema="
+                    state.schema ? JSON.stringify(state.schema) : undefined
+                  "
+                  :uischema="
+                    state.uischema ? JSON.stringify(state.uischema) : undefined
+                  "
+                  :uischemas="
+                    state.uischemas
+                      ? JSON.stringify(state.uischemas)
+                      : undefined
+                  "
+                  :config="
+                    state.config ? JSON.stringify(state.config) : undefined
+                  "
+                  :validationMode="state.validationMode"
+                  :readonly="state.readonly"
+                  :locale="state.i18n?.locale ?? 'en'"
+                  @change="onWebComponentChange"
+                ></vuetify-json-forms-wrapper>
                 <ResolvedJsonForms
+                  v-else
                   :state="state as JsonFormsProps"
                   @change="onChange"
                 />
@@ -529,7 +563,27 @@ watch(
       </v-snackbar>
     </v-container>
     <div class="json-forms" v-else>
-      <ResolvedJsonForms :state="state as JsonFormsProps" @change="onChange" />
+      <vuetify-json-forms-wrapper
+        v-if="appStore.useWebComponentView"
+        :custom-style="`.v-application__wrap { min-height: 0px; }`"
+        :data="state.data ? JSON.stringify(state.data) : undefined"
+        :schema="state.schema ? JSON.stringify(state.schema) : undefined"
+        :uischema="state.uischema ? JSON.stringify(state.uischema) : undefined"
+        :uischemas="
+          state.uischemas ? JSON.stringify(state.uischemas) : undefined
+        "
+        :config="state.config ? JSON.stringify(state.config) : undefined"
+        :validationMode="state.validationMode"
+        :readonly="state.readonly"
+        :locale="state.i18n?.locale ?? 'en'"
+        @change="onWebComponentChange"
+      ></vuetify-json-forms-wrapper>
+
+      <ResolvedJsonForms
+        v-else
+        :state="state as JsonFormsProps"
+        @change="onChange"
+      />
     </div>
   </div>
 </template>

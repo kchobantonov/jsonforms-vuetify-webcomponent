@@ -14,9 +14,6 @@
     "sourceMap": true,
     "baseUrl": ".",
     "jsx": "preserve",
-    "types": [
-      "webpack-env"
-    ],
     "paths": {
       "@/*": [
         "src/*"
@@ -38,8 +35,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
-  "vueCompilerOptions": {
-    "target": 2.7
-  }
+  ]
 }

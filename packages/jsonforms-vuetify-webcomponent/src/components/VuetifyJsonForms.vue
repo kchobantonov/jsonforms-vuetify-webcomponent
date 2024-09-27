@@ -1,54 +1,50 @@
 <template>
-  <div ref="root">
-    <custom-style type="text/css" id="vuetify-theme-stylesheet">
-      {{ vuetifyThemeCss }}
-    </custom-style>
+  <Suspense>
+    <div ref="root">
+      <custom-style type="text/css" id="vuetify-theme-stylesheet">
+        {{ vuetifyThemeCss }}
+      </custom-style>
 
-    <custom-style type="text/css">
-      {{ customStyle }}
-    </custom-style>
+      <custom-style type="text/css">
+        {{ customStyle }}
+      </custom-style>
 
-    <v-app>
-      <div v-if="error !== undefined">
-        <v-container style="height: 400px">
-          <v-row class="fill-height" align-content="center" justify="center">
-            <v-col class="text-subtitle-1 text-center error" cols="12">
-              {{ error }}
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-      <v-sheet v-else :dark="dark" tile>
-        <resolved-json-forms
-          :data="dataToUse"
-          :schema="schemaToUse"
-          :schemaUrl="schemaUrlToUse"
-          :uischema="uischemaToUse"
-          :renderers="renderers"
-          :cells="cells"
-          :config="configToUse"
-          :readonly="readonlyToUse"
-          :uischemas="uischemasToUse"
-          :validationMode="validationModeToUse"
-          :i18n="i18nToUse"
-          :additionalErrors="additionalErrorsToUse"
-          @change="onChange"
-        ></resolved-json-forms>
-      </v-sheet>
-    </v-app>
-  </div>
+      <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
+        <v-theme-provider :theme="appStore.dark ? 'dark' : 'light'">
+          <v-app>
+            <div v-if="error !== undefined">
+              <v-container style="height: 400px">
+                <v-row
+                  class="fill-height"
+                  align-content="center"
+                  justify="center"
+                >
+                  <v-col class="text-subtitle-1 text-center error" cols="12">
+                    {{ error }}
+                  </v-col>
+                </v-row>
+              </v-container>
+            </div>
+            <resolved-json-forms
+              :state="state"
+              @change="onChange"
+            ></resolved-json-forms>
+          </v-app>
+        </v-theme-provider>
+      </v-locale-provider>
+    </div>
+  </Suspense>
 </template>
 
 <script lang="ts">
 import {
-  JsonFormsI18nState,
+  defaultMiddleware,
   JsonFormsUISchemaRegistryEntry,
   NOT_APPLICABLE,
   Translator,
   UISchemaElement,
   UISchemaTester,
   ValidationMode,
-  type JsonSchema,
 } from '@jsonforms/core';
 import { JsonFormsChangeEvent } from '@jsonforms/vue';
 import {
@@ -58,12 +54,12 @@ import {
   VMonacoEditor,
   TemplateComponentsKey,
   TemplateContextKey,
+  JsonFormsProps,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
-import merge from 'lodash/merge';
 import * as shadyCss from 'shady-css-parser';
 import {
   defineComponent,
@@ -74,29 +70,55 @@ import {
   h,
   inject,
   type InjectionKey,
+  reactive,
+  markRaw,
 } from 'vue';
-import { VApp, VSheet } from 'vuetify/components';
-import { VuetifyPreset } from 'vuetify/types/services/presets';
-import vuetify, { preset as defaultPreset } from '../plugins/vuetify';
+import { VApp, VThemeProvider, VLocaleProvider } from 'vuetify/components';
 import { type ThemeInstance } from 'vuetify';
+import { useAppStore } from '@/store';
+
+// import { extendedVuetifyRenderers } from '@jsonforms/vue-vuetify';
+// import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
+
+import {
+  AnyOfStringOrEnumControlRenderer,
+  BooleanControlRenderer,
+  BooleanToggleControlRenderer,
+  ControlWrapper,
+  DateControlRenderer,
+  DateTimeControlRenderer,
+  EnumControlRenderer,
+  IntegerControlRenderer,
+  MultiStringControlRenderer,
+  NumberControlRenderer,
+  OneOfEnumControlRenderer,
+  OneOfRadioGroupControlRenderer,
+  PasswordControlRenderer,
+  RadioGroupControlRenderer,
+  SliderControlRenderer,
+  StringControlRenderer,
+  StringMaskControlRenderer,
+  TimeControlRenderer,
+  AutocompleteEnumControlRenderer,
+  AutocompleteOneOfEnumControlRenderer,
+  ArrayLayoutRenderer,
+  CategorizationRenderer,
+  CategorizationStepperRenderer,
+  GroupRenderer,
+  HorizontalLayoutRenderer,
+  VerticalLayoutRenderer,
+  AllOfRenderer,
+  AnyOfRenderer,
+  ArrayControlRenderer,
+  EnumArrayRenderer,
+  ObjectRenderer,
+  OneOfRenderer,
+  OneOfTabRenderer,
+  LabelRenderer,
+  ListWithDetailRenderer,
+} from '@jsonforms/vue-vuetify';
 
 const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme');
-
-const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
-
-// dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
-const { extraVuetifyRenderers } = await import(
-  '@chobantonov/jsonforms-vuetify-renderers'
-);
-
-const vuetifyRenderers = [
-  ...extendedVuetifyRenderers,
-  ...extraVuetifyRenderers,
-];
-
-//Vue.use(LoadScript);
-
-//Vue.config.productionTip = false;
 
 const CustomStyle = defineComponent({
   name: 'custom-style',
@@ -145,28 +167,83 @@ const transformUISchemas = (
 };
 
 const vuetifyFormWc = defineComponent({
-  vuetify,
   components: {
     ResolvedJsonForms,
     VApp,
-    VSheet,
+    VThemeProvider,
+    VLocaleProvider,
     CustomStyle,
+
+    AnyOfStringOrEnumControlRenderer,
+    BooleanControlRenderer,
+    BooleanToggleControlRenderer,
+    ControlWrapper,
+    DateControlRenderer,
+    DateTimeControlRenderer,
+    EnumControlRenderer,
+    IntegerControlRenderer,
+    MultiStringControlRenderer,
+    NumberControlRenderer,
+    OneOfEnumControlRenderer,
+    OneOfRadioGroupControlRenderer,
+    PasswordControlRenderer,
+    RadioGroupControlRenderer,
+    SliderControlRenderer,
+    StringControlRenderer,
+    StringMaskControlRenderer,
+    TimeControlRenderer,
+    AutocompleteEnumControlRenderer,
+    AutocompleteOneOfEnumControlRenderer,
+    ArrayLayoutRenderer,
+    CategorizationRenderer,
+    CategorizationStepperRenderer,
+    GroupRenderer,
+    HorizontalLayoutRenderer,
+    VerticalLayoutRenderer,
+    AllOfRenderer,
+    AnyOfRenderer,
+    ArrayControlRenderer,
+    EnumArrayRenderer,
+    ObjectRenderer,
+    OneOfRenderer,
+    OneOfTabRenderer,
+    LabelRenderer,
+    ListWithDetailRenderer,
   },
   emits: ['change'],
   props: {
     data: {
       required: true,
-      type: [String, Number, Boolean, Array, Object] as PropType<any>,
+      type: String,
     },
     schema: {
       required: false,
-      type: [Object, Boolean] as PropType<JsonSchema>,
+      type: String,
       default: undefined,
+      validator: function (value) {
+        try {
+          const schema = typeof value === 'string' ? JSON.parse(value) : value;
+
+          return schema !== undefined && schema !== null;
+        } catch (e) {
+          return false;
+        }
+      },
     },
     uischema: {
       required: false,
-      type: Object as PropType<UISchemaElement>,
+      type: String,
       default: undefined,
+      validator: function (value) {
+        try {
+          const uischema =
+            typeof value === 'string' ? JSON.parse(value) : value;
+
+          return uischema !== undefined && uischema !== null;
+        } catch (e) {
+          return false;
+        }
+      },
     },
     schemaUrl: {
       required: false,
@@ -219,15 +296,10 @@ const vuetifyFormWc = defineComponent({
         );
       },
     },
-    locale: {
-      required: false,
-      type: String,
-      default: 'en',
-    },
     customStyle: {
       required: false,
       type: String,
-      default: '.v-application--wrap { min-height: 0px; }',
+      default: '.v-application__wrap { min-height: 0px; }',
     },
     translations: {
       required: false,
@@ -261,24 +333,11 @@ const vuetifyFormWc = defineComponent({
         }
       },
     },
-    defaultPreset: {
-      required: false,
-      type: String,
-      validator: function (value) {
-        try {
-          const preset = typeof value === 'string' ? JSON.parse(value) : value;
-
-          return preset !== undefined && preset !== null;
-        } catch (e) {
-          return false;
-        }
-      },
-    },
     uidata: {
       required: false,
       type: String,
       default: () => {
-        return {};
+        return '{}';
       },
       validator: function (value) {
         try {
@@ -291,7 +350,9 @@ const vuetifyFormWc = defineComponent({
       },
     },
   },
-  setup(props) {
+  async setup(props) {
+    const appStore = useAppStore();
+
     let error: any = undefined;
 
     let dataToUse: any = undefined;
@@ -302,13 +363,10 @@ const vuetifyFormWc = defineComponent({
     let readonlyToUse = false;
     let uischemasToUse: JsonFormsUISchemaRegistryEntry[] = [];
     let validationModeToUse: ValidationMode = 'ValidateAndShow';
-    let i18nToUse: JsonFormsI18nState | undefined = undefined;
     let additionalErrorsToUse: ErrorObject[] = [];
     let translationsToUse: Record<string, any> = {};
-    let localeToUse = 'en';
 
     let uidataToUse: Record<string, any> = {};
-    let defaultPresetToUse = defaultPreset;
 
     try {
       try {
@@ -368,24 +426,6 @@ const vuetifyFormWc = defineComponent({
         console.log(e);
       }
 
-      localeToUse =
-        typeof props.locale === 'string' ? props.locale : localeToUse;
-
-      i18nToUse = {
-        locale: localeToUse,
-        translate: createTranslator(localeToUse, translationsToUse),
-      };
-
-      try {
-        defaultPresetToUse =
-          typeof props.defaultPreset == 'string'
-            ? merge({}, defaultPreset, JSON.parse(props.defaultPreset))
-            : defaultPreset;
-      } catch (e) {
-        error = `Default Preset Error: ${e}`;
-        console.log(e);
-      }
-
       try {
         uischemasToUse = transformUISchemas(props.uischemas);
       } catch (e) {
@@ -418,34 +458,49 @@ const vuetifyFormWc = defineComponent({
       uidata: uidataToUse,
     });
 
-    const vuetifyLocale = 'en';
-
     // provide the schema $id so that we can refer to it in UI schema rule conditions
     if (schemaToUse && !schemaToUse.$id) {
       schemaToUse.$id = '/';
     }
 
-    return {
-      vuetifyLocale,
-      error,
-      renderers: Object.freeze(vuetifyRenderers),
-      cells: undefined,
+    const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
 
-      dataToUse,
-      schemaToUse,
-      schemaUrlToUse,
-      uischemaToUse,
-      configToUse,
-      readonlyToUse,
-      uischemasToUse,
-      validationModeToUse,
-      i18nToUse,
-      translationsToUse,
-      localeToUse,
-      additionalErrorsToUse,
-      defaultPresetToUse,
+    // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
+    const { extraVuetifyRenderers } = await import(
+      '@chobantonov/jsonforms-vuetify-renderers'
+    );
+
+    const renderers = markRaw([
+      ...extendedVuetifyRenderers,
+      ...extraVuetifyRenderers,
+    ]);
+
+    const state = reactive<JsonFormsProps>({
+      data: dataToUse,
+      schema: schemaToUse,
+      schemaUrl: schemaUrlToUse,
+      uischema: uischemaToUse,
+      renderers: renderers,
+      cells: undefined, // not defined
+      config: configToUse,
+      readonly: readonlyToUse,
+      uischemas: uischemasToUse,
+      validationMode: validationModeToUse,
+      i18n: {
+        locale: appStore.locale,
+        translate: createTranslator(appStore.locale, translationsToUse),
+      },
+      additionalErrors: additionalErrorsToUse,
+      middleware: defaultMiddleware,
+    });
+
+    return {
+      error,
+      state,
       uidataToUse,
+      translationsToUse,
       context,
+      appStore,
     };
   },
   provide() {
@@ -464,7 +519,7 @@ const vuetifyFormWc = defineComponent({
         if (value !== oldValue) {
           const data =
             typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.dataToUse = data;
+          this.state.data = data;
           this.$forceUpdate();
         }
       },
@@ -474,7 +529,7 @@ const vuetifyFormWc = defineComponent({
         if (value !== oldValue) {
           const schema =
             typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.schemaToUse = schema;
+          this.state.schema = schema;
           this.$forceUpdate();
         }
       },
@@ -483,7 +538,7 @@ const vuetifyFormWc = defineComponent({
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
           const schemaUrl = typeof value === 'string' ? value : undefined;
-          this.schemaUrlToUse = schemaUrl;
+          this.state.schemaUrl = schemaUrl;
           this.$forceUpdate();
         }
       },
@@ -493,7 +548,7 @@ const vuetifyFormWc = defineComponent({
         if (value !== oldValue) {
           const uischema =
             typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.uischemaToUse = uischema;
+          this.state.uischema = uischema;
           this.$forceUpdate();
         }
       },
@@ -503,7 +558,7 @@ const vuetifyFormWc = defineComponent({
         if (value !== oldValue) {
           const config =
             typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.configToUse = config;
+          this.state.config = config;
           this.$forceUpdate();
         }
       },
@@ -511,7 +566,7 @@ const vuetifyFormWc = defineComponent({
     readonly: {
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
-          this.readonlyToUse = value == 'true';
+          this.state.readonly = value == 'true';
           this.$forceUpdate();
         }
       },
@@ -519,7 +574,7 @@ const vuetifyFormWc = defineComponent({
     uischemas: {
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
-          this.uischemasToUse = transformUISchemas(value);
+          this.state.uischemas = transformUISchemas(value);
           this.$forceUpdate();
         }
       },
@@ -527,28 +582,12 @@ const vuetifyFormWc = defineComponent({
     validationMode: {
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
-          this.validationModeToUse =
+          this.state.validationMode =
             value === 'ValidateAndShow' ||
             value === 'ValidateAndHide' ||
             value === 'NoValidation'
               ? value
               : 'ValidateAndShow';
-          this.$forceUpdate();
-        }
-      },
-    },
-    locale: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.localeToUse = value ? value : 'en';
-          this.i18nToUse = {
-            locale: this.localeToUse,
-            translate: createTranslator(
-              this.localeToUse,
-              this.translationsToUse,
-            ) as Translator,
-          };
-          this.setVuetifyLocale(this.localeToUse);
           this.$forceUpdate();
         }
       },
@@ -559,10 +598,24 @@ const vuetifyFormWc = defineComponent({
           this.translationsToUse =
             typeof value === 'string' ? JSON.parse(value) : {};
 
-          this.i18nToUse = {
-            locale: this.localeToUse,
+          this.state.i18n = {
+            locale: this.appStore.locale,
             translate: createTranslator(
-              this.localeToUse,
+              this.appStore.locale,
+              this.translationsToUse,
+            ) as Translator,
+          };
+          this.$forceUpdate();
+        }
+      },
+    },
+    'appStore.locale': {
+      handler(value: string, oldValue?: string) {
+        if (value !== oldValue) {
+          this.state.i18n = {
+            locale: value,
+            translate: createTranslator(
+              value,
               this.translationsToUse,
             ) as Translator,
           };
@@ -573,21 +626,8 @@ const vuetifyFormWc = defineComponent({
     additionalErrors: {
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
-          this.additionalErrorsToUse =
+          this.state.additionalErrors =
             typeof value === 'string' ? JSON.parse(value) : [];
-          this.$forceUpdate();
-        }
-      },
-    },
-    defaultPreset: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.defaultPresetToUse =
-            typeof value === 'string'
-              ? merge({}, defaultPreset, JSON.parse(value))
-              : undefined;
-
-          this.applyTheme();
           this.$forceUpdate();
         }
       },
@@ -596,23 +636,16 @@ const vuetifyFormWc = defineComponent({
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
           this.uidataToUse = typeof value === 'string' ? JSON.parse(value) : {};
-          this.context.value.uidata = this.uidataToUse;
+          this.context.uidata = this.uidataToUse;
           this.$forceUpdate();
         }
       },
     },
   },
   async mounted() {
-    this.applyTheme();
-    this.vuetifyLocale = this.$vuetify.lang.current;
-    this.setVuetifyLocale(this.localeToUse);
-
     this.injectShadowFontsInDocument();
   },
   computed: {
-    dark() {
-      return this.dataDefaultPreset?.theme?.dark || false;
-    },
     vuetifyThemeCss() {
       const theme = inject(ThemeSymbol);
 
@@ -681,29 +714,6 @@ const vuetifyFormWc = defineComponent({
         }
       }
     },
-    applyTheme(): void {
-      let preset: Partial<VuetifyPreset> | null = null;
-      if (this.uischemaToUse?.options) {
-        preset = this.vuetifyProps(
-          this.uischemaToUse.options,
-          'preset',
-        ) as Partial<VuetifyPreset>;
-      }
-      // apply any themes
-      this.$vuetify.theme = merge(
-        this.$vuetify.theme,
-        preset && preset.theme
-          ? preset.theme
-          : this.defaultPresetToUse?.theme || {},
-      );
-
-      this.$vuetify.icons = merge(
-        this.$vuetify.icons,
-        preset && preset.icons
-          ? preset.icons
-          : this.defaultPresetToUse?.icons || {},
-      );
-    },
     onChange(event: JsonFormsChangeEvent): void {
       this.$emit('change', event);
     },
@@ -715,24 +725,10 @@ const vuetifyFormWc = defineComponent({
 
       return props && isPlainObject(props) ? props : {};
     },
-    setVuetifyLocale(locale: string): void {
-      // if vuetify supports that locale then change it
-      if (this.$vuetify.lang.locales[locale]) {
-        this.$vuetify.lang.current = locale;
-      } else {
-        this.$vuetify.lang.current = this.vuetifyLocale || 'en';
-      }
-    },
   },
 });
 
 export default vuetifyFormWc;
 </script>
 
-<style scoped>
-@import '~@fontsource/roboto/index.css';
-@import '~@mdi/font/css/materialdesignicons.min.css';
-@import '~vuetify/dist/vuetify.min.css';
-@import '~@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css';
-@import '~@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.esm.css';
-</style>
+<style scoped></style>
