@@ -77,6 +77,9 @@ const schemaModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 const uischemaModel = shallowRef<monaco.editor.ITextModel | undefined>(
   undefined,
 );
+const uischemasModel = shallowRef<monaco.editor.ITextModel | undefined>(
+  undefined,
+);
 const dataModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 const i18nModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 
@@ -181,6 +184,32 @@ const saveMonacoUiSchema = () => {
     (modelValue) =>
       (state.uischema = modelValue ? JSON.parse(modelValue) : undefined),
     'New UI schema applied',
+  );
+};
+
+const reloadMonacoUiSchemas = () => {
+  const example = find(
+    examples,
+    (example) => example.name === appStore.exampleName,
+  );
+
+  if (example) {
+    uischemasModel.value = getMonacoModelForUri(
+      monaco.Uri.parse(toUiSchemasUri(example.name)),
+      example.input.uischemas
+        ? JSON.stringify(example.input.uischemas, null, 2)
+        : '',
+    );
+    toast('Original example UI schemas loaded. Apply it to take effect.');
+  }
+};
+
+const saveMonacoUiSchemas = () => {
+  saveMonacoModel(
+    uischemasModel,
+    (modelValue) =>
+      (state.uischemas = modelValue ? JSON.parse(modelValue) : undefined),
+    'New UI schemas applied',
   );
 };
 
@@ -304,6 +333,13 @@ const updateMonacoModels = (example: ExampleDescription) => {
       : '',
   );
 
+  uischemasModel.value = getMonacoModelForUri(
+    monaco.Uri.parse(toUiSchemasUri(example.name)),
+    example.input.uischemas
+      ? JSON.stringify(example.input.uischemas, null, 2)
+      : '',
+  );
+
   dataModel.value = getMonacoModelForUri(
     monaco.Uri.parse(toDataUri(example.name)),
     Array.isArray(example.input.data) || typeof example.input.data === 'object'
@@ -322,6 +358,9 @@ const toSchemaUri = (id: string): string => {
 };
 const toUiSchemaUri = (id: string): string => {
   return `${id}.uischema.json`;
+};
+const toUiSchemasUri = (id: string): string => {
+  return `${id}.uischemas.json`;
 };
 const toDataUri = (id: string): string => {
   return `${id}.data.json`;
@@ -383,8 +422,9 @@ watch(
             <v-spacer expand />
             <v-tab :key="1">Schema</v-tab>
             <v-tab :key="2">UI Schema</v-tab>
-            <v-tab :key="3">Data</v-tab>
-            <v-tab :key="4">Internationalization</v-tab>
+            <v-tab :key="3">UI Schemas</v-tab>
+            <v-tab :key="4">Data</v-tab>
+            <v-tab :key="5">Internationalization</v-tab>
           </v-tabs>
         </v-card-text>
         <v-window v-model="activeTab">
@@ -498,6 +538,39 @@ watch(
             <v-card>
               <v-card-title>
                 <v-toolbar flat>
+                  <v-toolbar-title>UI Schemas</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ props }">
+                      <v-btn icon @click="reloadMonacoUiSchemas" v-bind="props">
+                        <v-icon>$reload</v-icon>
+                      </v-btn>
+                    </template>
+                    {{ `Reload Example UI Schemas` }}
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ props }">
+                      <v-btn icon @click="saveMonacoUiSchemas" v-bind="props">
+                        <v-icon>$save</v-icon>
+                      </v-btn>
+                    </template>
+                    {{ `Apply Change To Example UI Schemas` }}
+                  </v-tooltip>
+                </v-toolbar>
+              </v-card-title>
+              <v-divider class="mx-4"></v-divider>
+              <monaco-editor
+                language="json"
+                v-model="uischemasModel"
+                style="height: calc(100vh - 100px)"
+                :editorBeforeMount="registerValidations"
+              ></monaco-editor>
+            </v-card>
+          </v-window-item>
+          <v-window-item :key="4">
+            <v-card>
+              <v-card-title>
+                <v-toolbar flat>
                   <v-toolbar-title>Data</v-toolbar-title>
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
@@ -527,7 +600,7 @@ watch(
               ></monaco-editor>
             </v-card>
           </v-window-item>
-          <v-window-item :key="4">
+          <v-window-item :key="5">
             <v-card>
               <v-card-title>
                 <v-toolbar flat>
