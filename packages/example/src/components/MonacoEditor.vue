@@ -35,6 +35,7 @@ const props = withDefaults(
     language?: string;
     height?: DimensionValue;
     width?: DimensionValue;
+    options?: Record<string, any>;
     editorBeforeMount?: (api: MonacoApi) => void;
   }>(),
   {
@@ -73,6 +74,7 @@ const resizeObserver = new ResizeObserver(() => {
 onMounted(() => {
   props.editorBeforeMount?.(monaco);
   editor = monaco.editor.create(container.value!, {
+    ...(props.options ?? {}),
     value: typeof props.modelValue === 'string' ? props.modelValue : undefined,
     model: typeof props.modelValue !== 'string' ? props.modelValue : undefined,
     theme: theme.current.value.dark ? 'vs-dark' : 'vs',

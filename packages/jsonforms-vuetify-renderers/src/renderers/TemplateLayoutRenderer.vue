@@ -60,6 +60,7 @@ import {
   type NamedUISchemaElement,
   type TemplateContext,
 } from '../core/types';
+import * as defaultComponents from 'vuetify/components';
 
 export interface TemplateLayout extends Layout {
   type: 'TemplateLayout';
@@ -77,12 +78,7 @@ const templateLayoutRenderer = defineComponent({
   props: {
     ...rendererProps<TemplateLayout>(),
   },
-  async setup(props: RendererProps<TemplateLayout>) {
-    // dynamically import vuetify components so vite vue will not do tree shaking and removing the renderer functions from vuetify components in production mode
-    const defaultComponents: Record<string, Component> = await import(
-      'vuetify/components'
-    );
-
+  setup(props: RendererProps<TemplateLayout>) {
     const t = useTranslator();
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
@@ -101,7 +97,10 @@ const templateLayoutRenderer = defineComponent({
     };
 
     const overrideTemplateContext = unref(
-      inject<TemplateContext | undefined>(TemplateContextKey, undefined),
+      inject<Partial<TemplateContext> | undefined>(
+        TemplateContextKey,
+        undefined,
+      ),
     );
 
     const templateContext = overrideTemplateContext

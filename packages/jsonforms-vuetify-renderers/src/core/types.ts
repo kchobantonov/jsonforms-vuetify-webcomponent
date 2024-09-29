@@ -76,6 +76,7 @@ export type ActionEvent = {
 };
 
 export interface TemplateContext {
+  [key: string]: any;
   jsonforms: JsonFormsSubStates;
 
   // below are just the shortcuts for acessing the jsonforms.core
@@ -102,9 +103,8 @@ export const DataProviderKey: InjectionKey<DataProvider> = Symbol.for(
   'jsonforms-vuetify-renderers:dataProvider',
 );
 
-export const TemplateContextKey: InjectionKey<TemplateContext> = Symbol.for(
-  'jsonforms-vuetify-renderers:templateContext',
-);
+export const TemplateContextKey: InjectionKey<Partial<TemplateContext>> =
+  Symbol.for('jsonforms-vuetify-renderers:templateContext');
 
 export const TemplateDirectivesKey: InjectionKey<Record<string, Directive>> =
   Symbol.for(

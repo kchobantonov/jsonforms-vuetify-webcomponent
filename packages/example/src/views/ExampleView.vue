@@ -32,6 +32,8 @@ import { useAppStore } from '../store';
 import {
   ResolvedJsonForms,
   type JsonFormsProps,
+  TemplateComponentsKey,
+  TemplateContextKey,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import type { ExampleDescription } from '@/core/types';
 import VuetifyJsonFormsWrapper from '../components/VuetifyJsonFormsWrapper.vue';
@@ -77,6 +79,11 @@ const uischemaModel = shallowRef<monaco.editor.ITextModel | undefined>(
 );
 const dataModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 const i18nModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
+
+provide(TemplateComponentsKey, { MonacoEditor });
+provide(TemplateContextKey, {
+  getMonacoDataModel: () => dataModel.value,
+});
 
 const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
   const example = cloneDeep(exampleProp);
@@ -409,7 +416,7 @@ watch(
                     state.config ? JSON.stringify(state.config) : undefined
                   "
                   :validationMode="state.validationMode"
-                  :readonly="state.readonly"
+                  :readonly="`${state.readonly}`"
                   :locale="state.i18n?.locale ?? 'en'"
                   @change="onWebComponentChange"
                 ></vuetify-json-forms-wrapper>
@@ -574,7 +581,7 @@ watch(
         "
         :config="state.config ? JSON.stringify(state.config) : undefined"
         :validationMode="state.validationMode"
-        :readonly="state.readonly"
+        :readonly="`${state.readonly}`"
         :locale="state.i18n?.locale ?? 'en'"
         @change="onWebComponentChange"
       ></vuetify-json-forms-wrapper>

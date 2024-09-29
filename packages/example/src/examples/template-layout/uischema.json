@@ -68,7 +68,7 @@
       "elements": [
         {
           "type": "TemplateLayout",
-          "template": "<v-container fluid><v-row><v-col><monaco-editor v-if='typeof context.getMonacoDataModel === \"function\"' :theme='$vuetify.theme.dark ? \"vs-dark\" : \"vs\"' height='200' language='json' :options='{ readOnly: true, automaticLayout: true, autoIndent: true, formatOnPaste: true, formatOnType: true, minimap: { enabled: false } }' :value='context.getMonacoDataModel()'></monaco-editor><pre v-else>{{JSON.stringify(data, null, 2)}}</pre></v-col></v-row></v-container>"
+          "template": "<v-container fluid><v-row><v-col><monaco-editor v-if='typeof context.getMonacoDataModel === \"function\"' style='height: 200px' language='json' :options='{ readOnly: true, automaticLayout: true, autoIndent: true, formatOnPaste: true, formatOnType: true, minimap: { enabled: false } }' :model-value='context.getMonacoDataModel()'></monaco-editor><pre v-else>{{JSON.stringify(data, null, 2)}}</pre></v-col></v-row></v-container>"
         }
       ]
     },

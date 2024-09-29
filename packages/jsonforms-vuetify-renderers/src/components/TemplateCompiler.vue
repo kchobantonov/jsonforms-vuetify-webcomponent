@@ -1,5 +1,5 @@
 <template>
-  <component :is="compiledComponent" v-if="compiledComponent">
+  <component v-if="component" :is="component" :="$attrs">
     <template v-if="defaultElement" v-slot:default>
       <slot>
         <dispatch-renderer
@@ -41,14 +41,10 @@ import {
   type Directive,
   type MethodOptions,
   type PropType,
+  markRaw,
+  compile,
 } from 'vue';
 import type { NamedUISchemaElement } from '../core/types';
-
-const compileToFunctions = () =>
-  import('@vue/compiler-dom').then((module) => {
-    const { compile } = module;
-    return compile;
-  });
 
 const templateCompiler = defineComponent({
   name: 'template-compiler',
@@ -98,7 +94,7 @@ const templateCompiler = defineComponent({
   },
   data() {
     return {
-      compiledComponent: null as Component | null,
+      component: null as Component | null,
     };
   },
 
@@ -142,15 +138,19 @@ const templateCompiler = defineComponent({
         : undefined;
     },
   },
-  async created() {
-    await this.compile();
-  },
-  methods: {
-    async compile() {
-      const compile = await compileToFunctions();
-      const component = compile(this.template);
-      this.compiledComponent = merge(component, unref(this.componentProps));
-    },
+  created() {
+    const render = compile(this.template);
+
+    this.component = markRaw(
+      defineComponent(
+        merge(
+          {
+            render: render,
+          },
+          unref(this.componentProps),
+        ),
+      ),
+    );
   },
 });
 
