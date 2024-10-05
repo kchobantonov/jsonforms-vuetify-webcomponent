@@ -4,7 +4,7 @@
   "elements": [
     {
       "type": "TemplateLayout",
-      "template": "<v-container class=\"secondary lighten-2\" fluid><v-row align=\"center\" justify=\"center\"><v-col><v-img src=\"https://jsonforms.io/img/logo.svg\" max-width=\"200px\" max-height=\"200px\" style=\"filter: invert(1); margin: auto;\"></v-img></v-col><v-spacer></v-spacer><v-col><v-img src=\"https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-dark-text.svg\" max-width=\"200px\" max-height=\"200px\" style=\"margin: auto;\"></v-img></v-col></v-row></v-container>",
+      "template": "<v-toolbar><v-row align=\"center\" justify=\"center\" no-gutters><v-col><v-img src=\"https://jsonforms.io/img/logo.svg\" max-width=\"50px\" max-height=\"50px\" style=\"filter: invert(1); margin-left: 20px;\"></v-img></v-col><v-spacer></v-spacer><v-col class=\"d-flex justify-end\"><v-img src=\"https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-dark-text.svg\" max-width=\"200px\" max-height=\"200px\" style=\"margin-right: 20px;\"></v-img></v-col></v-row></v-toolbar>",
       "name": "header"
     },
     {
@@ -64,7 +64,7 @@
     },
     {
       "type": "TemplateLayout",
-      "template": "<v-card-text><v-card-title>JSON Data  <v-tooltip bottom color=\"error\" v-if=\"errors && errors.length > 0\"><template v-slot:activator=\"{ on: onTooltip }\"><v-icon v-on=\"onTooltip\" color=\"red\">mdi-alert-circle</v-icon></template><span>Validation Errors</span></v-tooltip><v-tooltip bottom color=\"success\" v-else><template v-slot:activator=\"{ on: onTooltip }\"><v-icon v-on=\"onTooltip\" color=\"green\">mdi-check-circle</v-icon></template><span>No Validation Errors</span></v-tooltip></v-card-title><slot name=\"0\"></slot></v-card-text>",
+      "template": "<v-card-text><v-card-title>JSON Data <v-tooltip bottom color=\"error\" v-if=\"errors && errors.length > 0\"><template v-slot:activator=\"{ props }\"><v-icon v-bind=\"props\" color=\"red\">mdi-alert-circle</v-icon></template><span>Validation Errors</span></v-tooltip><v-tooltip bottom color=\"success\" v-else><template v-slot:activator=\"{ props }\"><v-icon v-bind=\"props\" color=\"green\">mdi-check-circle</v-icon></template><span>No Validation Errors</span></v-tooltip></v-card-title><slot name=\"0\"></slot></v-card-text>",
       "elements": [
         {
           "type": "TemplateLayout",
