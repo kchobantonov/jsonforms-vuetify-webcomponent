@@ -1,10 +1,10 @@
 <template>
   <dispatch-renderer
-    v-if="template"
+    v-if="templateUISchema"
     :visible="layout.visible"
     :enabled="layout.enabled"
     :schema="layout.schema"
-    :uischema="template"
+    :uischema="templateUISchema"
     :path="layout.path"
     :renderers="layout.renderers"
     :cells="layout.cells"
@@ -29,7 +29,15 @@ import {
 import { useJsonForms, useVuetifyLayout } from '@jsonforms/vue-vuetify';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
-import { computed, defineComponent, inject, provide, unref } from 'vue';
+import {
+  computed,
+  defineComponent,
+  inject,
+  provide,
+  unref,
+  type ComputedRef,
+} from 'vue';
+import { TemplateRenderSlotContentsKey } from '../core';
 
 const templateRenderer = defineComponent({
   name: 'template-renderer',
@@ -61,14 +69,16 @@ const templateRenderer = defineComponent({
     });
 
     const parentSlotContents = inject<
-      Record<string, UISchemaElement> | undefined
-    >('templateRendererSlotContents', undefined);
+      ComputedRef<Record<string, UISchemaElement>> | undefined
+    >(TemplateRenderSlotContentsKey, undefined);
 
-    const slotContents = parentSlotContents
-      ? Object.assign({}, parentSlotContents, elementTemplates.value)
-      : elementTemplates.value;
+    const slotContents = computed(() =>
+      parentSlotContents
+        ? { ...parentSlotContents.value, ...elementTemplates.value }
+        : elementTemplates.value,
+    );
 
-    provide('templateRendererSlotContents', slotContents);
+    provide(TemplateRenderSlotContentsKey, slotContents);
 
     return {
       ...layout,
@@ -79,7 +89,7 @@ const templateRenderer = defineComponent({
     name(): string {
       return (this.layout.uischema as any).name;
     },
-    template(): UISchemaElement | undefined {
+    templateUISchema(): UISchemaElement | undefined {
       const uischemas = this.jsonforms.uischemas;
 
       return uischemas
@@ -97,6 +107,6 @@ export const hasName = (uischema: any) =>
 
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: templateRenderer,
-  tester: rankWith(1, and(uiTypeIs('Template'), hasName)),
+  tester: rankWith(10, and(uiTypeIs('Template'), hasName)),
 };
 </script>

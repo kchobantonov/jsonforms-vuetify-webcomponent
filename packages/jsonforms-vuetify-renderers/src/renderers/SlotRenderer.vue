@@ -1,10 +1,10 @@
 <template>
   <dispatch-renderer
-    v-if="template"
+    v-if="slotUISchema"
     :visible="layout.visible"
     :enabled="layout.enabled"
     :schema="layout.schema"
-    :uischema="template"
+    :uischema="slotUISchema"
     :path="layout.path"
     :renderers="layout.renderers"
     :cells="layout.cells"
@@ -26,7 +26,9 @@ import {
   useJsonFormsLayout,
 } from '@jsonforms/vue';
 import { useVuetifyLayout } from '@jsonforms/vue-vuetify';
-import { defineComponent, inject } from 'vue';
+import { computed, defineComponent, inject, type ComputedRef } from 'vue';
+import { TemplateRenderSlotContentsKey } from '../core';
+
 const slotRenderer = defineComponent({
   name: 'slot-renderer',
   components: {
@@ -38,9 +40,9 @@ const slotRenderer = defineComponent({
   setup(props: RendererProps<Layout>) {
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
-    const slotContents = inject<Record<string, UISchemaElement>>(
-      'templateRendererSlotContents',
-      {},
+    const slotContents = inject<ComputedRef<Record<string, UISchemaElement>>>(
+      TemplateRenderSlotContentsKey,
+      computed(() => ({})),
     );
 
     return {
@@ -52,13 +54,13 @@ const slotRenderer = defineComponent({
     name(): string {
       return (this.uischema as any).name;
     },
-    slotOutlet(): UISchemaElement | undefined {
+    defaultSlot(): UISchemaElement | undefined {
       const elements = (this.layout.uischema as Layout).elements;
       return elements && elements.length > 0 ? elements[0] : undefined;
     },
-    template(): UISchemaElement | undefined {
+    slotUISchema(): UISchemaElement | undefined {
       const slotContent = this.slotContents[this.name];
-      return slotContent ? slotContent : this.slotOutlet;
+      return slotContent ?? this.defaultSlot;
     },
   },
 });
@@ -67,6 +69,6 @@ export default slotRenderer;
 
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: slotRenderer,
-  tester: rankWith(1, uiTypeIs('Slot')),
+  tester: rankWith(10, uiTypeIs('Slot')),
 };
 </script>

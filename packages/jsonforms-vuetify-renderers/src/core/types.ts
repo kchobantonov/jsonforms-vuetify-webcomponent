@@ -15,6 +15,7 @@ import type { Ajv, ErrorObject } from 'ajv';
 import type {
   Component,
   ComputedOptions,
+  ComputedRef,
   Directive,
   InjectionKey,
   MethodOptions,
@@ -131,3 +132,7 @@ export const TemplateComponentsKey: InjectionKey<Record<string, Component>> =
 export const FormContextKey: InjectionKey<FormContext> = Symbol.for(
   'jsonforms-vuetify-renderers:formContext',
 );
+
+export const TemplateRenderSlotContentsKey: InjectionKey<
+  ComputedRef<Record<string, UISchemaElement>>
+> = Symbol.for('jsonforms-vuetify-renderers:templateRendererSlotContents');
