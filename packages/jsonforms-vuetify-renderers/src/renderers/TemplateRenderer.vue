@@ -107,6 +107,6 @@ export const hasName = (uischema: any) =>
 
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: templateRenderer,
-  tester: rankWith(10, and(uiTypeIs('Template'), hasName)),
+  tester: rankWith(2, and(uiTypeIs('Template'), hasName)),
 };
 </script>

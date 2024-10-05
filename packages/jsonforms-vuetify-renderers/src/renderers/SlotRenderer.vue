@@ -69,6 +69,6 @@ export default slotRenderer;
 
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: slotRenderer,
-  tester: rankWith(10, uiTypeIs('Slot')),
+  tester: rankWith(2, uiTypeIs('Slot')),
 };
 </script>

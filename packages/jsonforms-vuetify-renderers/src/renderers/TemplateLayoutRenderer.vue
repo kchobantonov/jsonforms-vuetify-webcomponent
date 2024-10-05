@@ -231,6 +231,6 @@ export default templateLayoutRenderer;
 
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: templateLayoutRenderer,
-  tester: rankWith(1, uiTypeIs('TemplateLayout')),
+  tester: rankWith(2, uiTypeIs('TemplateLayout')),
 };
 </script>
