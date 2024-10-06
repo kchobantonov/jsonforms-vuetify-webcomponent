@@ -36,7 +36,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/web-component.ts'),
       name: 'vuetify-json-forms',
-      formats: ['es', 'cjs'],
+      formats: ['es'],
       fileName: (format: string) => {
         if (format === 'es') {
           format = 'esm';
