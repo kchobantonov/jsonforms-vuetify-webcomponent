@@ -29,6 +29,7 @@
   "main": "lib/jsonforms-vuetify-renderers.cjs.js",
   "module": "lib/jsonforms-vuetify-renderers.esm.js",
   "typings": "lib/index.d.ts",
+  "type": "module",
   "files": [
     "lib",
     "src"
