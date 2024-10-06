@@ -24,7 +24,6 @@ import { ValidationMode } from '@jsonforms/core';
 import { JsonFormsChangeEvent } from '@jsonforms/vue';
 import { defineComponent, PropType } from 'vue';
 import VuetifyJsonForms from '../components/VuetifyJsonForms.vue';
-//const VuetifyJsonForms = () => import('../components/VuetifyJsonForms.vue');
 
 const vuetifyFormWc = defineComponent({
   components: {

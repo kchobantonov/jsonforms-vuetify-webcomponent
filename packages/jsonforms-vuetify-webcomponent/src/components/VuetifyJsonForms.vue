@@ -37,6 +37,17 @@
 </template>
 
 <script lang="ts">
+import { useAppStore } from '@/store';
+import {
+  createTranslator,
+  FormContext,
+  JsonFormsProps,
+  ResolvedJsonForms,
+  TemplateComponentsKey,
+  TemplateContextKey,
+  VMonacoEditor,
+  extraVuetifyRenderers,
+} from '@chobantonov/jsonforms-vuetify-renderers';
 import {
   defaultMiddleware,
   JsonFormsUISchemaRegistryEntry,
@@ -47,15 +58,6 @@ import {
   ValidationMode,
 } from '@jsonforms/core';
 import { JsonFormsChangeEvent } from '@jsonforms/vue';
-import {
-  createTranslator,
-  FormContext,
-  ResolvedJsonForms,
-  VMonacoEditor,
-  TemplateComponentsKey,
-  TemplateContextKey,
-  JsonFormsProps,
-} from '@chobantonov/jsonforms-vuetify-renderers';
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
@@ -63,60 +65,20 @@ import isPlainObject from 'lodash/isPlainObject';
 import * as shadyCss from 'shady-css-parser';
 import {
   defineComponent,
-  PropType,
-  Ref,
-  ref,
-  toRef,
   h,
   inject,
   type InjectionKey,
-  reactive,
   markRaw,
+  PropType,
+  reactive,
+  Ref,
+  ref,
+  toRef,
 } from 'vue';
-import { VApp, VThemeProvider, VLocaleProvider } from 'vuetify/components';
 import { type ThemeInstance } from 'vuetify';
-import { useAppStore } from '@/store';
+import { VApp, VLocaleProvider, VThemeProvider } from 'vuetify/components';
 
-// import { extendedVuetifyRenderers } from '@jsonforms/vue-vuetify';
-// import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
-
-import {
-  AnyOfStringOrEnumControlRenderer,
-  BooleanControlRenderer,
-  BooleanToggleControlRenderer,
-  ControlWrapper,
-  DateControlRenderer,
-  DateTimeControlRenderer,
-  EnumControlRenderer,
-  IntegerControlRenderer,
-  MultiStringControlRenderer,
-  NumberControlRenderer,
-  OneOfEnumControlRenderer,
-  OneOfRadioGroupControlRenderer,
-  PasswordControlRenderer,
-  RadioGroupControlRenderer,
-  SliderControlRenderer,
-  StringControlRenderer,
-  StringMaskControlRenderer,
-  TimeControlRenderer,
-  AutocompleteEnumControlRenderer,
-  AutocompleteOneOfEnumControlRenderer,
-  ArrayLayoutRenderer,
-  CategorizationRenderer,
-  CategorizationStepperRenderer,
-  GroupRenderer,
-  HorizontalLayoutRenderer,
-  VerticalLayoutRenderer,
-  AllOfRenderer,
-  AnyOfRenderer,
-  ArrayControlRenderer,
-  EnumArrayRenderer,
-  ObjectRenderer,
-  OneOfRenderer,
-  OneOfTabRenderer,
-  LabelRenderer,
-  ListWithDetailRenderer,
-} from '@jsonforms/vue-vuetify';
+import { extendedVuetifyRenderers } from '@jsonforms/vue-vuetify';
 
 const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme');
 
@@ -173,42 +135,6 @@ const vuetifyFormWc = defineComponent({
     VThemeProvider,
     VLocaleProvider,
     CustomStyle,
-
-    AnyOfStringOrEnumControlRenderer,
-    BooleanControlRenderer,
-    BooleanToggleControlRenderer,
-    ControlWrapper,
-    DateControlRenderer,
-    DateTimeControlRenderer,
-    EnumControlRenderer,
-    IntegerControlRenderer,
-    MultiStringControlRenderer,
-    NumberControlRenderer,
-    OneOfEnumControlRenderer,
-    OneOfRadioGroupControlRenderer,
-    PasswordControlRenderer,
-    RadioGroupControlRenderer,
-    SliderControlRenderer,
-    StringControlRenderer,
-    StringMaskControlRenderer,
-    TimeControlRenderer,
-    AutocompleteEnumControlRenderer,
-    AutocompleteOneOfEnumControlRenderer,
-    ArrayLayoutRenderer,
-    CategorizationRenderer,
-    CategorizationStepperRenderer,
-    GroupRenderer,
-    HorizontalLayoutRenderer,
-    VerticalLayoutRenderer,
-    AllOfRenderer,
-    AnyOfRenderer,
-    ArrayControlRenderer,
-    EnumArrayRenderer,
-    ObjectRenderer,
-    OneOfRenderer,
-    OneOfTabRenderer,
-    LabelRenderer,
-    ListWithDetailRenderer,
   },
   emits: ['change'],
   props: {
@@ -462,13 +388,6 @@ const vuetifyFormWc = defineComponent({
     if (schemaToUse && !schemaToUse.$id) {
       schemaToUse.$id = '/';
     }
-
-    const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
-
-    // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
-    const { extraVuetifyRenderers } = await import(
-      '@chobantonov/jsonforms-vuetify-renderers'
-    );
 
     const renderers = markRaw([
       ...extendedVuetifyRenderers,
