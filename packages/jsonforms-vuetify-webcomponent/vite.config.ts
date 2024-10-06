@@ -82,6 +82,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // support runtime compilation of Vue components
+      vue: 'vue/dist/vue.esm-bundler.js',
     },
   },
   define: {
