@@ -8,6 +8,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 // needed for json-refs
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'node:path';
+import { createHash } from 'crypto';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -45,6 +46,38 @@ export default defineConfig({
     },
     minify: true,
     sourcemap: true, // generates sourcemap files
+    rollupOptions: {
+      output: {
+        chunkFileNames: (chunkInfo) => {
+          // Use the npm module name or file name for the chunk
+          let moduleName = chunkInfo.facadeModuleId
+            ? chunkInfo.facadeModuleId.split('/').slice(-2).join('_')
+            : chunkInfo.name;
+          if (moduleName.endsWith('.js')) {
+            moduleName = moduleName.substring(
+              0,
+              moduleName.length - '.js'.length,
+            );
+          }
+          // Create an MD5 hash of the chunk content for cache-busting
+          const hash = createHash('md5')
+            .update(chunkInfo.code || '')
+            .digest('hex')
+            .slice(0, 20); // Slice the hash to make it shorter (optional)
+
+          return `chunks/${moduleName}-${hash}.js`;
+        },
+        assetFileNames: (assetInfo) => {
+          // Create an MD5 hash of the asset content for cache-busting
+          const hash = createHash('md5')
+            .update(assetInfo.source || '')
+            .digest('hex')
+            .slice(0, 20);
+
+          return `assets/${assetInfo.name}-${hash}[extname]`;
+        },
+      },
+    },
   },
   resolve: {
     alias: {
