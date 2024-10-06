@@ -10,6 +10,12 @@ import materialDesignStyles from '@mdi/font/css/materialdesignicons.css?inline';
 import vuetifyStyles from 'vuetify/dist/vuetify.min.css?inline';
 import vuetifyLabsStyles from 'vuetify/dist/vuetify-labs.min.css?inline';
 
+import { renderers } from './renderers';
+for (const entry of renderers) {
+  if (entry.render) {
+  }
+}
+
 const vuetifyCssResetForShadowRoot = `
 :host {
   box-sizing: border-box;
