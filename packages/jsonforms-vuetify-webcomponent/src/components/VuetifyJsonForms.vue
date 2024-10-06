@@ -46,7 +46,6 @@ import {
   TemplateComponentsKey,
   TemplateContextKey,
   VMonacoEditor,
-  extraVuetifyRenderers,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import {
   defaultMiddleware,
@@ -77,8 +76,6 @@ import {
 } from 'vue';
 import { type ThemeInstance } from 'vuetify';
 import { VApp, VLocaleProvider, VThemeProvider } from 'vuetify/components';
-
-import { extendedVuetifyRenderers } from '@jsonforms/vue-vuetify';
 
 const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme');
 
@@ -389,17 +386,22 @@ const vuetifyFormWc = defineComponent({
       schemaToUse.$id = '/';
     }
 
-    const renderers = markRaw([
-      ...extendedVuetifyRenderers,
-      ...extraVuetifyRenderers,
-    ]);
+    // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
+    const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
+
+    // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
+    const { extraVuetifyRenderers } = await import(
+      '@chobantonov/jsonforms-vuetify-renderers'
+    );
+
+    const renderers = [...extendedVuetifyRenderers, ...extraVuetifyRenderers];
 
     const state = reactive<JsonFormsProps>({
       data: dataToUse,
       schema: schemaToUse,
       schemaUrl: schemaUrlToUse,
       uischema: uischemaToUse,
-      renderers: renderers,
+      renderers: markRaw(renderers),
       cells: undefined, // not defined
       config: configToUse,
       readonly: readonlyToUse,
