@@ -651,5 +651,3 @@ const vuetifyFormWc = defineComponent({
 
 export default vuetifyFormWc;
 </script>
-
-<style scoped></style>
