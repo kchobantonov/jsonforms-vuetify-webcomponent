@@ -48,6 +48,9 @@ const appStore = useAppStore();
                   icon
                   v-bind="props"
                   :disabled="!appStore.exampleName"
+                  :variant="
+                    appStore.useWebComponentView ? 'outlined' : undefined
+                  "
                   @click="
                     appStore.useWebComponentView = !appStore.useWebComponentView
                   "
