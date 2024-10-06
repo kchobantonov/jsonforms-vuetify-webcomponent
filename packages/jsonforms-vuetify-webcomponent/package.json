@@ -25,6 +25,7 @@
     "customization",
     "template"
   ],
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "prebuild": "rimraf dist",
