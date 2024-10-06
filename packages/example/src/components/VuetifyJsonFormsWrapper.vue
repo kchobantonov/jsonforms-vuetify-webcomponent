@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useScriptTag } from '@vueuse/core';
 
-const location = './js/vuetify-json-forms.esm.js';
+const location = './js/vuetify-json-forms.js';
 const loading = ref(true);
 
 useScriptTag(

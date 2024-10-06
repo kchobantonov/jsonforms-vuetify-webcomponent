@@ -34,21 +34,35 @@ export default defineConfig({
   ],
   build: {
     outDir: 'dist',
-    lib: {
-      entry: resolve(__dirname, 'src/web-component.ts'),
-      name: 'vuetify-json-forms',
-      formats: ['es'],
-      fileName: (format: string) => {
-        if (format === 'es') {
-          format = 'esm';
-        }
-        return `vuetify-json-forms.${format}.js`;
-      },
-    },
     minify: true,
     sourcemap: true, // generates sourcemap files
     rollupOptions: {
+      input: resolve(__dirname, 'src/web-component.ts'), // Specify the entry point here
       output: {
+        entryFileNames: 'vuetify-json-forms.js', // Set the output file name
+        manualChunks(id) {
+          if (id.includes('node_modules/vuetify')) {
+            return 'vuetify';
+          }
+
+          if (id.includes('node_modules/vue')) {
+            return 'vue';
+          }
+
+          // Create a chunk for JSON Forms or other specific libraries
+          if (id.includes('node_modules/@jsonforms')) {
+            return 'jsonforms';
+          }
+
+          if (id.includes('node_modules/monaco')) {
+            return 'monaco';
+          }
+
+          // Check if the module is from node_modules
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
         chunkFileNames: (chunkInfo) => {
           // Use the npm module name or file name for the chunk
           let moduleName = chunkInfo.facadeModuleId
@@ -62,20 +76,11 @@ export default defineConfig({
           }
           // Create an MD5 hash of the chunk content for cache-busting
           const hash = createHash('md5')
-            .update(chunkInfo.code || '')
+            .update((chunkInfo as any).code || '')
             .digest('hex')
             .slice(0, 20); // Slice the hash to make it shorter (optional)
 
           return `chunks/${moduleName}-${hash}.js`;
-        },
-        assetFileNames: (assetInfo) => {
-          // Create an MD5 hash of the asset content for cache-busting
-          const hash = createHash('md5')
-            .update(assetInfo.source || '')
-            .digest('hex')
-            .slice(0, 20);
-
-          return `assets/${assetInfo.name}-${hash}[extname]`;
         },
       },
     },
