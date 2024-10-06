@@ -1,4 +1,4 @@
-import { App, defineCustomElement } from 'vue';
+import { type App, defineCustomElement } from 'vue';
 import VuetifyJsonForms from './web-components/VuetifyJsonForms.ce.vue';
 
 import LoadScript from 'vue-plugin-load-script';

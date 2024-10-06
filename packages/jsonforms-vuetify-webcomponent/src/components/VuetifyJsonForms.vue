@@ -40,8 +40,8 @@
 import { useAppStore } from '@/store';
 import {
   createTranslator,
-  FormContext,
-  JsonFormsProps,
+  type FormContext,
+  type JsonFormsProps,
   ResolvedJsonForms,
   TemplateComponentsKey,
   TemplateContextKey,
@@ -49,15 +49,15 @@ import {
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import {
   defaultMiddleware,
-  JsonFormsUISchemaRegistryEntry,
+  type JsonFormsUISchemaRegistryEntry,
   NOT_APPLICABLE,
-  Translator,
-  UISchemaElement,
-  UISchemaTester,
-  ValidationMode,
+  type Translator,
+  type UISchemaElement,
+  type UISchemaTester,
+  type ValidationMode,
 } from '@jsonforms/core';
-import { JsonFormsChangeEvent } from '@jsonforms/vue';
-import { ErrorObject } from 'ajv';
+import { type JsonFormsChangeEvent } from '@jsonforms/vue';
+import { type ErrorObject } from 'ajv';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
@@ -68,9 +68,9 @@ import {
   inject,
   type InjectionKey,
   markRaw,
-  PropType,
+  type PropType,
   reactive,
-  Ref,
+  type Ref,
   ref,
   toRef,
 } from 'vue';
