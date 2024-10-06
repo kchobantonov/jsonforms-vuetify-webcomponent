@@ -31,7 +31,7 @@
       :disabled="isDisabled.value"
       :focused="isFocused"
       :error="isValid.value === false"
-      :loading="!isMonacoLoaded || props.loading"
+      :loading="props.loading"
       #default="{ props: { class: fieldClass } }"
     >
       <span v-if="props.prefix" class="v-text-field__prefix">
@@ -70,8 +70,6 @@ import { useTheme } from 'vuetify';
 import { VField, VInput } from 'vuetify/components';
 
 import { callEvent, type VFieldProps, type VInputProps } from './common';
-
-import useMonaco from './useMonaco';
 
 interface MonacoEditorProps extends VInputProps, VFieldProps {
   autofocus?: boolean;
@@ -155,8 +153,6 @@ const emit = defineEmits([
   'mousedown:control',
 ]);
 
-const { monaco: monacoRef, loaded: isMonacoLoaded } = useMonaco();
-
 const editor = shallowRef<monaco.editor.IStandaloneCodeEditor | undefined>(
   undefined,
 );
@@ -201,7 +197,7 @@ watch(
   (isDark) => {
     if (editor.value) {
       const monacoTheme = isDark ? 'vs-dark' : 'vs';
-      monacoRef.value?.editor.setTheme(monacoTheme);
+      monaco.editor.setTheme(monacoTheme);
     }
   },
 );
@@ -224,7 +220,7 @@ watch(
     if (editor.value && language !== prev && language) {
       const model = editor.value.getModel();
       if (model) {
-        monacoRef.value?.editor.setModelLanguage(model, language);
+        monaco.editor.setModelLanguage(model, language);
       }
     }
   },
@@ -233,44 +229,39 @@ watch(
 // Monaco Editor Setup
 onMounted(() => {
   if (containerRef.value) {
-    const stopWatch = watch(isMonacoLoaded, (loaded) => {
-      if (loaded) {
-        editor.value = monacoRef.value?.editor.create(containerRef.value!, {
-          ...(props.options ?? {}),
-          value: model.value ?? undefined,
-          language: props.language,
-          readOnly: props.disabled || props.readonly || undefined,
-          automaticLayout: true,
-          theme: vuetifyTheme.current.value.dark ? 'vs-dark' : 'vs',
-        });
-
-        editor.value?.onDidChangeModelContent(() => {
-          model.value = editor.value!.getValue();
-          emit('update:modelValue', model.value);
-        });
-
-        editor.value?.onDidFocusEditorWidget(() => {
-          isFocused.value = true;
-          emit('focus');
-        });
-
-        editor.value?.onDidBlurEditorWidget(() => {
-          isFocused.value = false;
-          emit('blur');
-        });
-
-        if (props.initActions && props.initActions.length > 0) {
-          nextTick(() => {
-            if (props.initActions) {
-              for (const action of props.initActions) {
-                editor.value?.getAction(action)?.run();
-              }
-            }
-          });
-        }
-        stopWatch();
-      }
+    editor.value = monaco.editor.create(containerRef.value!, {
+      ...(props.options ?? {}),
+      value: model.value ?? undefined,
+      language: props.language,
+      readOnly: props.disabled || props.readonly || undefined,
+      automaticLayout: true,
+      theme: vuetifyTheme.current.value.dark ? 'vs-dark' : 'vs',
     });
+
+    editor.value?.onDidChangeModelContent(() => {
+      model.value = editor.value!.getValue();
+      emit('update:modelValue', model.value);
+    });
+
+    editor.value?.onDidFocusEditorWidget(() => {
+      isFocused.value = true;
+      emit('focus');
+    });
+
+    editor.value?.onDidBlurEditorWidget(() => {
+      isFocused.value = false;
+      emit('blur');
+    });
+
+    if (props.initActions && props.initActions.length > 0) {
+      nextTick(() => {
+        if (props.initActions) {
+          for (const action of props.initActions) {
+            editor.value?.getAction(action)?.run();
+          }
+        }
+      });
+    }
   }
 });
 

@@ -1,7 +1,5 @@
 import * as monaco from 'monaco-editor';
 
-import 'monaco-editor/min/vs/editor/editor.main.css';
-
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
@@ -29,6 +27,3 @@ if (!self.MonacoEnvironment) {
 
   monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 }
-
-export default monaco;
-export type MonacoApi = typeof monaco;

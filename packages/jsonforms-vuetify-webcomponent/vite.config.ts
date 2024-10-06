@@ -12,6 +12,7 @@ import { createHash } from 'crypto';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './', // Use relative paths for assets
   optimizeDeps: {
     // Exclude vuetify since it has an issue with vite dev - TypeError: makeVExpansionPanelTextProps is not a function - the makeVExpansionPanelTextProps is used before it is defined
     exclude: ['vuetify'],
