@@ -21,7 +21,7 @@
       :accept="accept"
       v-model="currentFile"
       v-bind="vuetifyProps('v-file-input')"
-      @change="selectFile"
+      @update:model-value="selectFile"
       @focus="handleFocus"
       @blur="handleBlur"
     ></v-file-input>
