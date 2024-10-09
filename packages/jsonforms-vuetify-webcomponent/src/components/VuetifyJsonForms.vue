@@ -61,7 +61,6 @@ import { type ErrorObject } from 'ajv';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
-import * as shadyCss from 'shady-css-parser';
 import {
   defineComponent,
   h,
@@ -76,6 +75,7 @@ import {
 } from 'vue';
 import { type ThemeInstance } from 'vuetify';
 import { VApp, VLocaleProvider, VThemeProvider } from 'vuetify/components';
+import { extractAndInjectFonts } from '../util/inject-fonts';
 
 const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme');
 
@@ -564,7 +564,7 @@ const vuetifyFormWc = defineComponent({
     },
   },
   async mounted() {
-    this.injectShadowFontsInDocument();
+    extractAndInjectFonts(this.$el.getRootNode());
   },
   computed: {
     vuetifyThemeCss() {
@@ -579,62 +579,6 @@ const vuetifyFormWc = defineComponent({
     },
   },
   methods: {
-    // include the fonts outside the webcomponent for now - https://github.com/google/material-design-icons/issues/1165
-    injectShadowFontsInDocument(): void {
-      const root = this.$el.getRootNode();
-      if (root instanceof ShadowRoot && root.hasChildNodes()) {
-        const parser = new shadyCss.Parser();
-        class FaceFontStringifier extends shadyCss.Stringifier {
-          insideFontFace = false;
-          visit(node: shadyCss.Node): string | undefined {
-            if (node.type === shadyCss.nodeType.stylesheet) {
-              return super.visit(node);
-            }
-            if (
-              node.type === shadyCss.nodeType.atRule &&
-              node.name === 'font-face'
-            ) {
-              try {
-                this.insideFontFace = true;
-                return super.visit(node);
-              } finally {
-                this.insideFontFace = false;
-              }
-            }
-            return this.insideFontFace ? super.visit(node) : '';
-          }
-        }
-        const faceFontStringifier = new FaceFontStringifier();
-
-        // we have css with scope so we should have unique id
-        const rootTemplate = this.$refs['root'] as Element;
-        const dataAttrNames = rootTemplate
-          .getAttributeNames()
-          .filter((an) => an.startsWith('data-v-'));
-        const uniqueId =
-          dataAttrNames && dataAttrNames.length > 0 ? dataAttrNames[0] : '';
-
-        let children = root.childNodes;
-        for (let i = 0; i < children.length; i++) {
-          const node = children[i];
-          if (node.nodeName.toLowerCase() === 'style' && node.textContent) {
-            try {
-              const id = `vuetify-json-forms-${uniqueId}-ff-${i}`;
-              let el = document.querySelector(`style[id="${id}"]`);
-              if (!el) {
-                el = document.createElement('style');
-                el.id = id;
-                const ast = parser.parse(node.textContent);
-                el.textContent = faceFontStringifier.stringify(ast);
-                document.head.appendChild(el);
-              }
-            } catch (e) {
-              console.log(e);
-            }
-          }
-        }
-      }
-    },
     onChange(event: JsonFormsChangeEvent): void {
       this.$emit('change', event);
     },

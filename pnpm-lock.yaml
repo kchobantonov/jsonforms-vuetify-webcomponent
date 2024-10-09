@@ -373,6 +373,9 @@ importers:
       '@fontsource/roboto':
         specifier: ^4.5.8
         version: 4.5.8
+      '@fortawesome/fontawesome-free':
+        specifier: ^6.5.2
+        version: 6.6.0
       '@jsonforms/core':
         specifier: 3.4.0
         version: 3.4.0
@@ -1180,7 +1183,6 @@ packages:
   /@fortawesome/fontawesome-free@6.6.0:
     resolution: {integrity: sha512-60G28ke/sXdtS9KZCpZSHHkCbdsOGEhIUGlwq6yhY74UpTiToIh8np7A8yphhM4BWsvNFtIvLpi4co+h9Mr9Ow==}
     engines: {node: '>=6'}
-    dev: true
 
   /@gar/promisify@1.1.3:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}

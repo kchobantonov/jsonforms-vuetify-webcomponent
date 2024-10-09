@@ -29,7 +29,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "rimraf dist",
-    "build": "run-p \"build-only {@}\" --",
+    "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
@@ -44,6 +44,7 @@
   ],
   "dependencies": {
     "@chobantonov/jsonforms-vuetify-renderers": "workspace:*",
+    "@fortawesome/fontawesome-free": "^6.5.2",
     "@fontsource/roboto": "^4.5.8",
     "@jsonforms/core": "3.4.0",
     "@jsonforms/vue": "3.4.0",

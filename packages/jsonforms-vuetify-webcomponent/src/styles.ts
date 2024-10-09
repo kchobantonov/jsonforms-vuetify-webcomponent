@@ -1,11 +1,12 @@
-import jvrCss from '@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.css?inline';
-import jvvCss from '@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css?inline';
-import materialDesignStyles from '@mdi/font/css/materialdesignicons.css?inline';
-import vuetifyStyles from 'vuetify/dist/vuetify.min.css?inline';
-import vuetifyLabsStyles from 'vuetify/dist/vuetify-labs.min.css?inline';
-import monacoStyles from 'monaco-editor/min/vs/editor/editor.main.css?inline';
+import jsonFormsVuetifyStyles from '@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.css?url';
+import jsonFormsVueVuetifyStyles from '@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css?url';
+import materialDesignIconsStyles from '@mdi/font/css/materialdesignicons.css?url';
+import fontAwesomeStyles from '@fortawesome/fontawesome-free/css/all.css?url';
+import vuetifyStyles from 'vuetify/dist/vuetify.css?url';
+import vuetifyLabsStyles from 'vuetify/dist/vuetify-labs.css?url';
+import monacoEditorStylesUrl from 'monaco-editor/min/vs/editor/editor.main.css?url';
 
-const vuetifyCssResetForShadowRoot = `
+const vuetifyResetStyles = `
 :host {
   box-sizing: border-box;
   overflow-y: scroll;
@@ -49,11 +50,14 @@ const vuetifyCssResetForShadowRoot = `
 }`;
 
 export const styles = [
-  vuetifyCssResetForShadowRoot,
-  vuetifyStyles,
-  vuetifyLabsStyles,
-  materialDesignStyles,
-  jvvCss,
-  jvrCss,
-  monacoStyles,
+  vuetifyResetStyles,
+  `
+  @import url(${materialDesignIconsStyles});
+  @import url(${fontAwesomeStyles});
+  @import url(${vuetifyStyles});
+  @import url(${vuetifyLabsStyles});
+  @import url(${jsonFormsVuetifyStyles});
+  @import url(${jsonFormsVueVuetifyStyles});
+  @import url('${monacoEditorStylesUrl}');
+  `,
 ];

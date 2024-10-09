@@ -20,9 +20,9 @@
 
 <script lang="ts">
 import { useAppStore } from '@/store';
-import { ValidationMode } from '@jsonforms/core';
-import { JsonFormsChangeEvent } from '@jsonforms/vue';
-import { defineComponent, PropType } from 'vue';
+import { type ValidationMode } from '@jsonforms/core';
+import { type JsonFormsChangeEvent } from '@jsonforms/vue';
+import { defineComponent, type PropType } from 'vue';
 import VuetifyJsonForms from '../components/VuetifyJsonForms.vue';
 
 const vuetifyFormWc = defineComponent({

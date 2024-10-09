@@ -1,11 +1,8 @@
 import { createVuetify, type Blueprint, type ThemeDefinition } from 'vuetify';
 import { md1, md2, md3 } from 'vuetify/blueprints';
 
-//import '@fortawesome/fontawesome-free/css/all.css';
-import '@mdi/font/css/materialdesignicons.css';
-
 import { bg, de, en } from 'vuetify/locale';
-import 'vuetify/styles';
+
 // just make sure that the locales are loaded
 
 import dayjs from 'dayjs';
