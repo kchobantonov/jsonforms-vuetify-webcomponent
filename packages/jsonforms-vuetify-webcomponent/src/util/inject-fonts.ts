@@ -101,7 +101,7 @@ const processStyleNode = async (
 
 export const extractAndInjectFonts = (root: Node) => {
   try {
-    const id = `vuetify-json-forms-face-fonts`;
+    const id = `vuetify-json-forms-fonts`;
     let el = document.querySelector(`style[id="${id}"]`);
     if (!el) {
       if (root instanceof ShadowRoot && root.hasChildNodes()) {
