@@ -30,6 +30,7 @@ import type { MonacoApi } from '../core/monaco';
 import { examples } from '../examples';
 import { useAppStore } from '../store';
 import {
+  createTranslator,
   ResolvedJsonForms,
   type JsonFormsProps,
   TemplateComponentsKey,
@@ -101,13 +102,43 @@ const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
     readonly: appStore.jsonforms.readonly,
     uischemas: example.input.uischemas,
     validationMode: appStore.jsonforms.validationMode,
-    i18n: exampleProp.input.i18n ?? {
+    i18n: {
       locale: appStore.jsonforms.locale,
+      translate: createTranslator(
+        appStore.jsonforms.locale,
+        example.input.i18n,
+      ),
+      translations: example.input.i18n,
     },
     additionalErrors: undefined,
     middleware: undefined,
   };
 };
+
+const reloadState = (state: JsonFormsProps): JsonFormsProps => {
+  return {
+    data: state.data,
+    schema: state.schema,
+    uischema: state.uischema,
+    renderers: renderers,
+    cells: undefined, // not defined
+    config: appStore.jsonforms.config,
+    readonly: appStore.jsonforms.readonly,
+    uischemas: state.uischemas,
+    validationMode: appStore.jsonforms.validationMode,
+    i18n: {
+      locale: appStore.jsonforms.locale,
+      translate: createTranslator(
+        appStore.jsonforms.locale,
+        state.i18n?.translations,
+      ),
+      translations: state.i18n?.translations,
+    },
+    additionalErrors: undefined,
+    middleware: undefined,
+  };
+};
+
 const state = reactive<JsonFormsProps>(initialState(props.example));
 
 const onChange = (event: JsonFormsChangeEvent): void => {
@@ -278,7 +309,14 @@ const saveMonacoI18N = () => {
   saveMonacoModel(
     i18nModel,
     (modelValue) =>
-      (state.i18n = modelValue ? JSON.parse(modelValue) : undefined),
+      (state.i18n = {
+        locale: appStore.jsonforms.locale,
+        translate: createTranslator(
+          appStore.jsonforms.locale,
+          modelValue ? JSON.parse(modelValue) : {},
+        ),
+        translations: modelValue ? JSON.parse(modelValue) : {},
+      }),
     'New i18n applied',
   );
 };
@@ -390,7 +428,7 @@ watch(
   () => appStore.jsonforms,
   (value) => {
     // reset state when store jsonforms changes
-    Object.assign(state, initialState(props.example));
+    Object.assign(state, reloadState(state));
   },
   { deep: true },
 );
@@ -458,6 +496,11 @@ watch(
                   :validationMode="state.validationMode"
                   :readonly="`${state.readonly}`"
                   :locale="state.i18n?.locale ?? 'en'"
+                  :translations="
+                    state.i18n?.translations
+                      ? JSON.stringify(state.i18n?.translations)
+                      : '{}'
+                  "
                   @change="onWebComponentChange"
                 ></vuetify-json-forms-wrapper>
                 <ResolvedJsonForms
@@ -656,6 +699,11 @@ watch(
         :validationMode="state.validationMode"
         :readonly="`${state.readonly}`"
         :locale="state.i18n?.locale ?? 'en'"
+        :translations="
+          state.i18n?.translations
+            ? JSON.stringify(state.i18n?.translations)
+            : '{}'
+        "
         @change="onWebComponentChange"
       ></vuetify-json-forms-wrapper>
 
