@@ -299,8 +299,9 @@ const fileRenderer = defineComponent({
       this.currentFile = undefined;
       this.reset();
     },
-    async selectFile(value: File) {
+    async selectFile(files: File | File[]) {
       const schema: JsonSchema = this.control.schema;
+      const value = Array.isArray(files) ? files[0] : files;
 
       if (value == null) {
         this.currentFileValidationErrors = null;

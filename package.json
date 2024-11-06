@@ -18,7 +18,7 @@
     "renderers:watch": "lerna run --scope=@chobantonov/jsonforms-vuetify-renderers watch --stream",
     "renderers:test": "lerna run --scope=@chobantonov/jsonforms-vuetify-renderers test",
     "wc:build": "lerna run --scope=@chobantonov/jsonforms-vuetify-webcomponent build",
-    "wc:serve": "lerna run --scope=@chobantonov/jsonforms-vuetify-webcomponent serve --stream",
+    "wc:dev": "lerna run --scope=@chobantonov/jsonforms-vuetify-webcomponent dev --stream",
     "wc:test": "lerna run --scope=@chobantonov/jsonforms-vuetify-webcomponent test",
     "tooling:build": "lerna run --scope=jsonforms-vuetify-tooling build",
     "tooling:vsix": "lerna run --scope=jsonforms-vuetify-tooling vsix",

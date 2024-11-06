@@ -37,7 +37,7 @@ export interface JsonFormsProps {
   uischemas?: MaybeReadonly<JsonFormsUISchemaRegistryEntry[]>;
   validationMode?: ValidationMode;
   ajv?: Ajv;
-  i18n?: JsonFormsI18nState;
+  i18n?: JsonFormsI18nState & { translations?: Record<string, any> };
   additionalErrors?: ErrorObject<string, Record<string, any>, unknown>[];
   middleware?: Middleware;
 }

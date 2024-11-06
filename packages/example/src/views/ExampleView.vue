@@ -12,6 +12,7 @@ import {
   ref,
   shallowRef,
   watch,
+  type Reactive,
   type ShallowRef,
 } from 'vue';
 import {
@@ -115,7 +116,7 @@ const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
   };
 };
 
-const reloadState = (state: JsonFormsProps): JsonFormsProps => {
+const reloadState = (state: Reactive<JsonFormsProps>): JsonFormsProps => {
   return {
     data: state.data,
     schema: state.schema,

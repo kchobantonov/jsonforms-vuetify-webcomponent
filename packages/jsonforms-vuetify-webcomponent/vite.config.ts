@@ -92,7 +92,4 @@ export default defineConfig({
       vue: 'vue/dist/vue.esm-bundler.js',
     },
   },
-  define: {
-    'process.env.NODE_ENV': JSON.stringify('production'),
-  },
 });
