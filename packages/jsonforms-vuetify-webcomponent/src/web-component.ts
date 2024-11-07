@@ -10,6 +10,7 @@ import './monaco-setup';
 
 import { renderers } from './renderers';
 for (const entry of renderers) {
+  // hack to make sure that vite do not remove the render function
   if (entry.render) {
   }
 }
