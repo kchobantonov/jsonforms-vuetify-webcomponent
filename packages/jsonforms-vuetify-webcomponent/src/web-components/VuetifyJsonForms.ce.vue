@@ -20,11 +20,11 @@
 
 <script lang="ts">
 import { useAppStore } from '@/store';
+import { HandleActionEmitterKey } from '@chobantonov/jsonforms-vuetify-renderers';
 import { type ValidationMode } from '@jsonforms/core';
 import { type JsonFormsChangeEvent } from '@jsonforms/vue';
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, watch, type PropType } from 'vue';
 import VuetifyJsonForms from '../components/VuetifyJsonForms.vue';
-import { HandleActionEmitterKey } from '@chobantonov/jsonforms-vuetify-renderers';
 
 const vuetifyFormWc = defineComponent({
   components: {
@@ -193,6 +193,27 @@ const vuetifyFormWc = defineComponent({
     appStore.rtl = props.rtl;
     appStore.dark = props.dark;
     appStore.locale = props.locale;
+
+    watch(
+      () => props.rtl,
+      (value) => {
+        appStore.rtl = value;
+      },
+    );
+    watch(
+      () => props.dark,
+      (value) => {
+        appStore.dark = value;
+      },
+    );
+    watch(
+      () => props.locale,
+      (value) => {
+        appStore.locale = value;
+      },
+    );
+
+    return appStore;
   },
 });
 
