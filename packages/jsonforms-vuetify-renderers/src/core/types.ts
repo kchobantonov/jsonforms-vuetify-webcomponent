@@ -19,6 +19,7 @@ import type {
   Directive,
   InjectionKey,
   MethodOptions,
+  Ref,
   SetupContext,
 } from 'vue';
 
@@ -41,6 +42,7 @@ export interface JsonFormsProps {
   i18n?: JsonFormsI18nState & { translations?: Record<string, any> };
   additionalErrors?: ErrorObject<string, Record<string, any>, unknown>[];
   middleware?: Middleware;
+  onHandleAction?: (event: ActionEvent) => void;
 }
 
 export type ResolvedSchema = {
@@ -50,11 +52,11 @@ export type ResolvedSchema = {
 };
 
 export interface FormContext {
-  schemaUrl?: string;
-}
+  [key: string]: any;
 
-export interface TemplateFormContext extends FormContext {
-  jsonforms: JsonFormsSubStates;
+  schemaUrl?: string;
+
+  jsonforms?: JsonFormsSubStates;
 
   // below are just the shortcuts for acessing the jsonforms.core
   locale?: string;
@@ -70,25 +72,11 @@ export type ActionEvent = {
   action: string;
   callback?: (event: ActionEvent) => void;
   jsonforms: JsonFormsSubStates;
-  context: TemplateFormContext;
+  context: FormContext;
   // the action parameters passes from the UI schema
   params: Record<string, any>;
   $el: Element;
 };
-
-export interface TemplateContext {
-  [key: string]: any;
-  jsonforms: JsonFormsSubStates;
-
-  // below are just the shortcuts for acessing the jsonforms.core
-  locale?: string;
-  translate?: Translator;
-  data?: any;
-  schema?: JsonSchema;
-  uischema?: UISchemaElement;
-  errors?: ErrorObject[];
-  additionalErrors?: ErrorObject[];
-}
 
 export interface NamedUISchemaElement extends UISchemaElement {
   name: string;
@@ -103,9 +91,6 @@ export interface DataProvider {
 export const DataProviderKey: InjectionKey<DataProvider> = Symbol.for(
   'jsonforms-vuetify-renderers:dataProvider',
 );
-
-export const TemplateContextKey: InjectionKey<Partial<TemplateContext>> =
-  Symbol.for('jsonforms-vuetify-renderers:templateContext');
 
 export const TemplateDirectivesKey: InjectionKey<Record<string, Directive>> =
   Symbol.for(
@@ -129,7 +114,7 @@ export const TemplateComponentsKey: InjectionKey<Record<string, Component>> =
     'jsonforms-vuetify-renderers:templateLayoutRendererComponentComponents',
   );
 
-export const FormContextKey: InjectionKey<FormContext> = Symbol.for(
+export const FormContextKey: InjectionKey<Ref<FormContext>> = Symbol.for(
   'jsonforms-vuetify-renderers:formContext',
 );
 

@@ -40,11 +40,11 @@
 import { useAppStore } from '@/store';
 import {
   createTranslator,
-  type TemplateContext,
+  type FormContext,
   type JsonFormsProps,
   ResolvedJsonForms,
   TemplateComponentsKey,
-  TemplateContextKey,
+  FormContextKey,
   VMonacoEditor,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import {
@@ -377,7 +377,7 @@ const vuetifyFormWc = defineComponent({
       error = `Error: ${e}`;
       console.log(e);
     }
-    let context: Ref<Partial<TemplateContext>> = ref({
+    let context: Ref<FormContext> = ref({
       uidata: uidataToUse,
     });
 
@@ -430,7 +430,7 @@ const vuetifyFormWc = defineComponent({
       [TemplateComponentsKey]: {
         VMonacoEditor,
       },
-      [TemplateContextKey]: toRef(this, 'context'),
+      [FormContextKey]: toRef(this, 'context'),
     };
   },
   watch: {

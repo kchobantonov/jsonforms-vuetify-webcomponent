@@ -29,10 +29,9 @@ import {
   useVuetifyLabel,
 } from '@jsonforms/vue-vuetify';
 import type { ErrorObject } from 'ajv';
-import { defineComponent, unref } from 'vue';
+import { defineComponent } from 'vue';
 import { VLabel } from 'vuetify/components';
 import { template as templateFn } from '../core/template';
-import type { TemplateFormContext } from '../core/types';
 import { useFormContext } from '../util';
 
 const templateLabelRenderer = defineComponent({
@@ -68,20 +67,6 @@ const templateLabelRenderer = defineComponent({
     data(): any {
       return this.jsonforms.core?.data;
     },
-    context(): TemplateFormContext {
-      return {
-        jsonforms: this.jsonforms,
-        locale: this.jsonforms.i18n?.locale,
-        translate: this.jsonforms.i18n?.translate,
-
-        data: this.jsonforms.core?.data,
-        schema: this.jsonforms.core?.schema,
-        uischema: this.jsonforms.core?.uischema,
-        errors: this.jsonforms.core?.errors,
-        additionalErrors: this.jsonforms.core?.additionalErrors,
-        ...unref(this.formContext),
-      };
-    },
     errors(): ErrorObject[] | undefined {
       return this.jsonforms.core?.errors;
     },
@@ -99,7 +84,7 @@ const templateLabelRenderer = defineComponent({
       const compile = templateFn(this.template, {
         imports: {
           data: this.data,
-          context: this.context,
+          context: this.formContext,
           errors: this.errors,
           translate: this.translate.bind(this),
         },

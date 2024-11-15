@@ -1,3 +1,4 @@
+import type { ActionEvent } from '@chobantonov/jsonforms-vuetify-renderers';
 import type {
   UISchemaElement,
   JsonSchema,
@@ -19,4 +20,5 @@ export type ExampleInputDescription = {
   data: string | number | boolean | any[] | Record<string, any>;
   i18n?: Record<string, any>;
   renderers?: JsonFormsRendererRegistryEntry[];
+  onHandleAction?: (event: ActionEvent) => void;
 };

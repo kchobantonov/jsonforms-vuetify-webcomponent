@@ -35,7 +35,8 @@ import {
   ResolvedJsonForms,
   type JsonFormsProps,
   TemplateComponentsKey,
-  TemplateContextKey,
+  FormContextKey,
+  type ActionEvent,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import type { ExampleDescription } from '@/core/types';
 import VuetifyJsonFormsWrapper from '../components/VuetifyJsonFormsWrapper.vue';
@@ -86,9 +87,13 @@ const dataModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 const i18nModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 
 provide(TemplateComponentsKey, { MonacoEditor });
-provide(TemplateContextKey, {
-  getMonacoDataModel: () => dataModel.value,
-});
+provide(
+  FormContextKey,
+  ref({
+    appStore: appStore,
+    getMonacoDataModel: () => dataModel.value,
+  }),
+);
 
 const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
   const example = cloneDeep(exampleProp);
@@ -152,12 +157,27 @@ const onChange = (event: JsonFormsChangeEvent): void => {
   errors.value = event.errors;
 };
 
+const onHandleAction = (event: ActionEvent): void => {
+  if (props.example.input.onHandleAction) {
+    props.example.input.onHandleAction(event);
+  }
+};
+
 const onWebComponentChange = (customEvent: CustomEvent): void => {
   const details = customEvent.detail as any[];
   if (details && details.length > 0) {
     const event: JsonFormsChangeEvent = details[0];
 
     onChange(event);
+  }
+};
+
+const onWebComponentHandleAction = (customEvent: CustomEvent): void => {
+  const details = customEvent.detail as any[];
+  if (details && details.length > 0) {
+    const event: ActionEvent = details[0];
+
+    onHandleAction(event);
   }
 };
 
@@ -503,11 +523,13 @@ watch(
                       : '{}'
                   "
                   @change="onWebComponentChange"
+                  @handleAction="onWebComponentHandleAction"
                 ></vuetify-json-forms-wrapper>
                 <ResolvedJsonForms
                   v-else
                   :state="state as JsonFormsProps"
                   @change="onChange"
+                  @handleAction="onHandleAction"
                 />
               </div>
             </v-card>
@@ -706,12 +728,14 @@ watch(
             : '{}'
         "
         @change="onWebComponentChange"
+        @handleAction="onWebComponentHandleAction"
       ></vuetify-json-forms-wrapper>
 
       <ResolvedJsonForms
         v-else
         :state="state as JsonFormsProps"
         @change="onChange"
+        @handleAction="onHandleAction"
       />
     </div>
   </div>

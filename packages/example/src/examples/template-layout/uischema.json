@@ -1,7 +1,46 @@
 {
   "type": "TemplateLayout",
-  "template": "<v-card class=\"mx-auto my-12\" outlined><slot name=\"header\"></slot><v-card-title><h2>Custom TemplateLayout with JSONForms and Vuetify</h2></v-card-title><div v-for=\"element in elements\" :key=\"element.name\"><slot v-if=\"element.name != 'header'\" :name=\"element.name\"></slot><v-divider class=\"mx-6\"></v-divider></div></v-card>",
+  "template": "<v-card class=\"mx-auto my-12\" outlined><slot name=\"header\"></slot><slot name=\"title\"></slot><div v-for=\"element in elements\" :key=\"element.name\"><slot v-if=\"element.name != 'header' && element.name != 'title'\" :name=\"element.name\"></slot><v-divider class=\"mx-6\"></v-divider></div></v-card>",
   "elements": [
+    {
+      "type": "TemplateLayout",
+      "template": "<v-card-title class=\"d-flex align-center\"><span>{{translate('Custom TemplateLayout with JSONForms and Vuetify', 'Custom TemplateLayout with JSONForms and Vuetify')}}</span><v-spacer /><slot v-for=\"element in elements\" :key=\"element.name\" :name=\"element.name\"></slot></v-card-title>",
+      "name": "title",
+      "elements": [
+        {
+          "type": "Button",
+          "label": "EN",
+          "action": "changeLang",
+          "params": {
+            "lang": "en"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        },
+        {
+          "type": "Button",
+          "label": "BG",
+          "action": "changeLang",
+          "params": {
+            "lang": "bg"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        }
+      ]
+    },
     {
       "type": "TemplateLayout",
       "template": "<v-toolbar><v-row align=\"center\" justify=\"center\" no-gutters><v-col><v-img src=\"https://jsonforms.io/img/logo.svg\" max-width=\"50px\" max-height=\"50px\" style=\"filter: invert(1); margin-left: 20px;\"></v-img></v-col><v-spacer></v-spacer><v-col class=\"d-flex justify-end\"><v-img src=\"https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-dark-text.svg\" max-width=\"200px\" max-height=\"200px\" style=\"margin-right: 20px;\"></v-img></v-col></v-row></v-toolbar>",
@@ -29,7 +68,7 @@
         },
         {
           "type": "TemplateLayout",
-          "template": "<div>Additional Information For <strong>{{ data.name }}</strong></div>"
+          "template": "<div>{{translate('Additional Information For', 'Additional Information For')}} <strong>{{ data.name }}</strong></div>"
         },
         {
           "type": "HorizontalLayout",

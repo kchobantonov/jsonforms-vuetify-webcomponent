@@ -22,7 +22,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
 import merge from 'lodash/merge';
-import { computed, inject } from 'vue';
+import { computed, inject, type Ref } from 'vue';
 import { FormContextKey, type FormContext } from '../core';
 
 export interface ButtonElement extends UISchemaElement, Internationalizable {
@@ -61,7 +61,7 @@ export const mapStateToButtonProps = (
   const params = uischema.params;
   const t = getTranslator()(state);
   const i18nKeyPrefix = getI18nKeyPrefixBySchema(undefined, uischema);
-  const i18nKey = i18nKeyPrefix ? `${i18nKeyPrefix}.label` : label ?? '';
+  const i18nKey = i18nKeyPrefix ? `${i18nKeyPrefix}.label` : (label ?? '');
   const i18nText = t(i18nKey, label, { uischema });
 
   const config = getConfig(state);
@@ -139,7 +139,7 @@ export const useElementArrayControl = <I extends { control: any }>(
 };
 
 export const useFormContext = () => {
-  const formContext = inject<FormContext>(FormContextKey);
+  const formContext = inject<Ref<FormContext>>(FormContextKey);
 
   if (!formContext) {
     throw new Error(

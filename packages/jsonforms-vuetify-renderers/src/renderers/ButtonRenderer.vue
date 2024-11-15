@@ -22,13 +22,12 @@ import {
 import { rendererProps, type RendererProps } from '@jsonforms/vue';
 import { useJsonForms, useTranslator } from '@jsonforms/vue-vuetify';
 import isFunction from 'lodash/isFunction';
-import { defineComponent, inject, ref, unref, type SetupContext } from 'vue';
+import { defineComponent, inject, ref, type SetupContext } from 'vue';
 import { VBtn, VIcon } from 'vuetify/components';
 import {
   AsyncFunction,
-  type ActionEvent,
-  type TemplateFormContext,
   HandleActionEmitterKey,
+  type ActionEvent,
 } from '../core';
 import {
   useFormContext,
@@ -69,22 +68,6 @@ const buttonRenderer = defineComponent({
       handleActionEmitter,
     };
   },
-  computed: {
-    context(): TemplateFormContext {
-      return {
-        ...unref(this.formContext),
-        jsonforms: this.jsonforms,
-        locale: this.jsonforms.i18n?.locale,
-        translate: this.jsonforms.i18n?.translate,
-
-        data: this.jsonforms.core?.data,
-        schema: this.jsonforms.core?.schema,
-        uischema: this.jsonforms.core?.uischema,
-        errors: this.jsonforms.core?.errors,
-        additionalErrors: this.jsonforms.core?.additionalErrors,
-      };
-    },
-  },
   methods: {
     async click() {
       this.loading = true;
@@ -92,7 +75,7 @@ const buttonRenderer = defineComponent({
       const source: ActionEvent = {
         action: this.button.action,
         jsonforms: this.jsonforms,
-        context: this.context,
+        context: this.formContext,
         // the action parameters passes from the UI schema
         params: this.button.params ? { ...this.button.params } : {},
         $el: this.$el,

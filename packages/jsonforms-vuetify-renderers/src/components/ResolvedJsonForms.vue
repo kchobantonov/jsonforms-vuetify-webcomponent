@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { JsonSchema } from '@jsonforms/core';
+import type { JsonFormsSubStates, JsonSchema } from '@jsonforms/core';
 import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
 import type { Ajv } from 'ajv';
 import { normalizeId } from 'ajv/dist/compile/resolve';
@@ -11,9 +11,9 @@ import {
   onMounted,
   provide,
   reactive,
-  ref,
   watch,
   type Ref,
+  type SetupContext,
 } from 'vue';
 import {
   VAlert,
@@ -24,6 +24,7 @@ import {
 } from 'vuetify/components';
 import {
   FormContextKey,
+  HandleActionEmitterKey,
   createAjv,
   type FormContext,
   type JsonFormsProps,
@@ -40,7 +41,7 @@ const resolvedSchema = reactive<ResolvedSchema>({
   error: undefined,
 });
 
-const emits = defineEmits(['change']);
+const emits = defineEmits(['change', 'handle-action']);
 
 const onChange = (event: JsonFormsChangeEvent): void => {
   emits('change', event);
@@ -148,23 +149,67 @@ const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
   ajv: props.state.ajv ?? createAjv(),
 }));
 
-let context: Ref<FormContext> | undefined = undefined;
-const parentContext = inject<FormContext | undefined>(
+const jsonforms = inject<JsonFormsSubStates | undefined>(
+  'jsonforms',
+  undefined,
+);
+const defaultContext: FormContext = {
+  schemaUrl: props.state.schemaUrl,
+
+  jsonforms: jsonforms,
+  locale: jsonforms?.i18n?.locale,
+  translate: jsonforms?.i18n?.translate,
+
+  data: jsonforms?.core?.data,
+  schema: jsonforms?.core?.schema,
+  uischema: jsonforms?.core?.uischema,
+  errors: jsonforms?.core?.errors,
+  additionalErrors: jsonforms?.core?.additionalErrors,
+};
+
+watch(
+  () => jsonforms,
+  (newJsonforms) => {
+    if (newJsonforms) {
+      defaultContext.value = {
+        schemaUrl: props.state.schemaUrl,
+        jsonforms: newJsonforms,
+        locale: newJsonforms.i18n?.locale,
+        translate: newJsonforms.i18n?.translate,
+        data: newJsonforms.core?.data,
+        schema: newJsonforms.core?.schema,
+        uischema: newJsonforms.core?.uischema,
+        errors: newJsonforms.core?.errors,
+        additionalErrors: newJsonforms.core?.additionalErrors,
+      };
+    }
+  },
+  { immediate: true },
+);
+
+const overrideContext = inject<Ref<FormContext> | undefined>(
   FormContextKey,
   undefined,
 );
-if (parentContext) {
-  context = ref(parentContext);
-  if (!context.value.schemaUrl && props.state.schemaUrl) {
-    context.value.schemaUrl = props.state.schemaUrl;
-  }
-} else {
-  context = ref({
-    schemaUrl: props.state.schemaUrl,
-  });
-}
 
-provide(FormContextKey, context.value);
+const context = computed(() =>
+  overrideContext
+    ? {
+        ...defaultContext,
+        ...overrideContext.value,
+      }
+    : defaultContext,
+);
+
+provide(FormContextKey, context);
+
+const handleActionEmitter = inject<SetupContext['emit'] | undefined>(
+  HandleActionEmitterKey,
+  undefined,
+);
+if (!handleActionEmitter) {
+  provide(HandleActionEmitterKey, emits as SetupContext['emit']);
+}
 </script>
 
 <template>

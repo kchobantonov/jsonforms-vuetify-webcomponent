@@ -53,13 +53,13 @@ import TemplateCompiler from '../components/TemplateCompiler.vue';
 import {
   TemplateComponentsKey,
   TemplateComputedKey,
-  TemplateContextKey,
   TemplateDirectivesKey,
   TemplateFiltersKey,
   TemplateMethodsKey,
   type NamedUISchemaElement,
-  type TemplateContext,
 } from '../core/types';
+import { useFormContext } from '../util';
+
 import * as defaultComponents from 'vuetify/components';
 
 export interface TemplateLayout extends Layout {
@@ -83,30 +83,7 @@ const templateLayoutRenderer = defineComponent({
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
     const jsonforms = useJsonForms();
-
-    const defaultTemplateContext = {
-      jsonforms: jsonforms,
-      locale: jsonforms.i18n?.locale,
-      translate: jsonforms.i18n?.translate,
-
-      data: jsonforms.core?.data,
-      schema: jsonforms.core?.schema,
-      uischema: jsonforms.core?.uischema,
-      errors: jsonforms.core?.errors,
-      additionalErrors: jsonforms.core?.additionalErrors,
-    };
-
-    const overrideTemplateContext = unref(
-      inject<Partial<TemplateContext> | undefined>(
-        TemplateContextKey,
-        undefined,
-      ),
-    );
-
-    const templateContext = overrideTemplateContext
-      ? { ...defaultTemplateContext, ...overrideTemplateContext }
-      : defaultTemplateContext;
-
+    const context = useFormContext();
     const templateError = ref<string | null>(null);
 
     return {
@@ -115,7 +92,7 @@ const templateLayoutRenderer = defineComponent({
       jsonforms,
       parentComponent: this,
       templateError,
-      templateContext,
+      context,
       defaultComponents,
     };
   },
@@ -168,7 +145,7 @@ const templateLayoutRenderer = defineComponent({
       defaultComputed.data = () => this.data;
       defaultComputed.errors = () => this.errors;
       defaultComputed.elements = () => this.namedElements;
-      defaultComputed.context = () => this.templateContext;
+      defaultComputed.context = () => this.context;
 
       const override = unref(
         inject<ComputedOptions | undefined>(TemplateComputedKey, undefined),
