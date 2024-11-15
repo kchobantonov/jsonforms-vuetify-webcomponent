@@ -40,7 +40,7 @@
 import { useAppStore } from '@/store';
 import {
   createTranslator,
-  type FormContext,
+  type TemplateContext,
   type JsonFormsProps,
   ResolvedJsonForms,
   TemplateComponentsKey,
@@ -377,7 +377,7 @@ const vuetifyFormWc = defineComponent({
       error = `Error: ${e}`;
       console.log(e);
     }
-    let context: Ref<FormContext & { uidata: Record<string, any> }> = ref({
+    let context: Ref<Partial<TemplateContext>> = ref({
       uidata: uidataToUse,
     });
 
