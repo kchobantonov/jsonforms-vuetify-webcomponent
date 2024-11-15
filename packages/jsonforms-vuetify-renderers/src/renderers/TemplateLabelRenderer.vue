@@ -29,7 +29,7 @@ import {
   useVuetifyLabel,
 } from '@jsonforms/vue-vuetify';
 import type { ErrorObject } from 'ajv';
-import { defineComponent, inject, unref } from 'vue';
+import { defineComponent, unref } from 'vue';
 import { VLabel } from 'vuetify/components';
 import { template as templateFn } from '../core/template';
 import type { TemplateFormContext } from '../core/types';
