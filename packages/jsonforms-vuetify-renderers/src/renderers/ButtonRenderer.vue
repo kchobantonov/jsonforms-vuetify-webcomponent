@@ -57,8 +57,6 @@ const buttonRenderer = defineComponent({
       undefined,
     );
 
-    const scopeData = inject<any>('scopeData', null);
-
     const loading = ref(false);
 
     return {
@@ -66,7 +64,6 @@ const buttonRenderer = defineComponent({
       t,
       jsonforms,
       formContext,
-      scopeData,
       loading,
       handleActionEmitter,
     };
@@ -84,7 +81,6 @@ const buttonRenderer = defineComponent({
         uischema: this.jsonforms.core?.uischema,
         errors: this.jsonforms.core?.errors,
         additionalErrors: this.jsonforms.core?.additionalErrors,
-        scopeData: this.scopeData,
       };
     },
   },

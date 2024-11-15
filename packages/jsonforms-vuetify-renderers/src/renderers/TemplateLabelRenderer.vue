@@ -50,15 +50,12 @@ const templateLabelRenderer = defineComponent({
     const jsonforms = useJsonForms();
     const formContext = useFormContext();
 
-    const scopeData = inject<any>('scopeData', null);
-
     return {
       ...label,
       t,
       jsonforms,
       parentComponent: this,
       formContext,
-      scopeData,
     };
   },
   computed: {
@@ -82,7 +79,6 @@ const templateLabelRenderer = defineComponent({
         uischema: this.jsonforms.core?.uischema,
         errors: this.jsonforms.core?.errors,
         additionalErrors: this.jsonforms.core?.additionalErrors,
-        scopeData: this.scopeData,
         ...unref(this.formContext),
       };
     },

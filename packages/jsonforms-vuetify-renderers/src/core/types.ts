@@ -54,7 +54,6 @@ export interface FormContext {
 
 export interface TemplateFormContext extends FormContext {
   jsonforms: JsonFormsSubStates;
-  scopeData: any;
 
   // below are just the shortcuts for acessing the jsonforms.core
   locale?: string;
