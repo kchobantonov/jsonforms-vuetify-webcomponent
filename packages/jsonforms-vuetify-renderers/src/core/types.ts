@@ -19,6 +19,7 @@ import type {
   Directive,
   InjectionKey,
   MethodOptions,
+  SetupContext,
 } from 'vue';
 
 export const AsyncFunction = Object.getPrototypeOf(async function (
@@ -135,3 +136,6 @@ export const FormContextKey: InjectionKey<FormContext> = Symbol.for(
 export const TemplateRenderSlotContentsKey: InjectionKey<
   ComputedRef<Record<string, UISchemaElement>>
 > = Symbol.for('jsonforms-vuetify-renderers:templateRendererSlotContents');
+
+export const HandleActionEmitterKey: InjectionKey<SetupContext['emit']> =
+  Symbol.for('jsonforms-vuetify-renderers:handleActionEmitter');

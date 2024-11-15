@@ -28,6 +28,7 @@ import {
   AsyncFunction,
   type ActionEvent,
   type TemplateFormContext,
+  HandleActionEmitterKey,
 } from '../core';
 import {
   useFormContext,
@@ -53,7 +54,7 @@ const buttonRenderer = defineComponent({
     const formContext = useFormContext();
 
     const handleActionEmitter = inject<SetupContext['emit'] | undefined>(
-      'handleActionEmitter',
+      HandleActionEmitterKey,
       undefined,
     );
 

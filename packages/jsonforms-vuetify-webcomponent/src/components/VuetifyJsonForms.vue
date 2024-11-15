@@ -431,7 +431,6 @@ const vuetifyFormWc = defineComponent({
         VMonacoEditor,
       },
       [TemplateContextKey]: toRef(this, 'context'),
-      formContext: toRef(this, 'context'),
     };
   },
   watch: {

@@ -24,6 +24,7 @@ import { type ValidationMode } from '@jsonforms/core';
 import { type JsonFormsChangeEvent } from '@jsonforms/vue';
 import { defineComponent, type PropType } from 'vue';
 import VuetifyJsonForms from '../components/VuetifyJsonForms.vue';
+import { HandleActionEmitterKey } from '@chobantonov/jsonforms-vuetify-renderers';
 
 const vuetifyFormWc = defineComponent({
   components: {
@@ -179,7 +180,7 @@ const vuetifyFormWc = defineComponent({
   provide() {
     return {
       // provide the this.$emit to be used as handleActionEmitter since this emitter is connected to the native web component
-      handleActionEmitter: this.$emit,
+      [HandleActionEmitterKey]: this.$emit,
     };
   },
   methods: {
