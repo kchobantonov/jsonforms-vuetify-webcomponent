@@ -84,8 +84,8 @@ const vuetifyFormWc = defineComponent({
       },
     },
     readonly: {
-      type: String,
-      default: 'false',
+      type: Boolean,
+      default: false,
     },
     uischemas: {
       type: String,
@@ -188,7 +188,7 @@ const vuetifyFormWc = defineComponent({
       this.$emit('change', event);
     },
   },
-  setup(props: any) {
+  setup(props) {
     const appStore = useAppStore();
     appStore.rtl = props.rtl;
     appStore.dark = props.dark;

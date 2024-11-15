@@ -515,8 +515,10 @@ watch(
                     state.config ? JSON.stringify(state.config) : undefined
                   "
                   :validationMode="state.validationMode"
-                  :readonly="`${state.readonly}`"
+                  :readonly="state.readonly"
                   :locale="state.i18n?.locale ?? 'en'"
+                  :rtl="appStore.rtl"
+                  :dark="appStore.dark"
                   :translations="
                     state.i18n?.translations
                       ? JSON.stringify(state.i18n?.translations)
@@ -720,8 +722,10 @@ watch(
         "
         :config="state.config ? JSON.stringify(state.config) : undefined"
         :validationMode="state.validationMode"
-        :readonly="`${state.readonly}`"
+        :readonly="state.readonly"
         :locale="state.i18n?.locale ?? 'en'"
+        :rtl="appStore.rtl"
+        :dark="appStore.dark"
         :translations="
           state.i18n?.translations
             ? JSON.stringify(state.i18n?.translations)

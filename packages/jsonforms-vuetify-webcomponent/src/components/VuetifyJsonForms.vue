@@ -10,26 +10,28 @@
       </custom-style>
 
       <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
-        <v-theme-provider :theme="appStore.dark ? 'dark' : 'light'">
-          <v-app>
-            <div v-if="error !== undefined">
-              <v-container style="height: 400px">
-                <v-row
-                  class="fill-height"
-                  align-content="center"
-                  justify="center"
-                >
-                  <v-col class="text-subtitle-1 text-center error" cols="12">
-                    {{ error }}
-                  </v-col>
-                </v-row>
-              </v-container>
-            </div>
-            <resolved-json-forms
-              :state="state"
-              @change="onChange"
-            ></resolved-json-forms>
-          </v-app>
+        <v-theme-provider :theme="theme">
+          <v-defaults-provider :defaults="appStore.defaults">
+            <v-app>
+              <div v-if="error !== undefined">
+                <v-container style="height: 400px">
+                  <v-row
+                    class="fill-height"
+                    align-content="center"
+                    justify="center"
+                  >
+                    <v-col class="text-subtitle-1 text-center error" cols="12">
+                      {{ error }}
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </div>
+              <resolved-json-forms
+                :state="state"
+                @change="onChange"
+              ></resolved-json-forms>
+            </v-app>
+          </v-defaults-provider>
         </v-theme-provider>
       </v-locale-provider>
     </div>
@@ -62,6 +64,7 @@ import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
 import {
+  computed,
   defineComponent,
   h,
   inject,
@@ -74,7 +77,12 @@ import {
   toRef,
 } from 'vue';
 import { type ThemeInstance } from 'vuetify';
-import { VApp, VLocaleProvider, VThemeProvider } from 'vuetify/components';
+import {
+  VApp,
+  VLocaleProvider,
+  VThemeProvider,
+  VDefaultsProvider,
+} from 'vuetify/components';
 import { extractAndInjectFonts } from '../util/inject-fonts';
 
 const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme');
@@ -131,6 +139,7 @@ const vuetifyFormWc = defineComponent({
     VApp,
     VThemeProvider,
     VLocaleProvider,
+    VDefaultsProvider,
     CustomStyle,
   },
   emits: ['change'],
@@ -188,8 +197,8 @@ const vuetifyFormWc = defineComponent({
     },
     readonly: {
       required: false,
-      type: String,
-      default: 'false',
+      type: Boolean,
+      default: false,
     },
     uischemas: {
       required: false,
@@ -330,7 +339,7 @@ const vuetifyFormWc = defineComponent({
         console.log(e);
       }
 
-      readonlyToUse = props.readonly == 'true';
+      readonlyToUse = props.readonly;
 
       validationModeToUse =
         props.validationMode === 'ValidateAndShow' ||
@@ -415,6 +424,10 @@ const vuetifyFormWc = defineComponent({
       middleware: defaultMiddleware,
     });
 
+    const theme = computed(() => {
+      return appStore.dark ? 'dark' : 'light';
+    });
+
     return {
       error,
       state,
@@ -422,6 +435,7 @@ const vuetifyFormWc = defineComponent({
       translationsToUse,
       context,
       appStore,
+      theme,
     };
   },
   provide() {
@@ -484,9 +498,9 @@ const vuetifyFormWc = defineComponent({
       },
     },
     readonly: {
-      handler(value?: string, oldValue?: string) {
+      handler(value?: boolean, oldValue?: boolean) {
         if (value !== oldValue) {
-          this.state.readonly = value == 'true';
+          this.state.readonly = value;
           this.$forceUpdate();
         }
       },
