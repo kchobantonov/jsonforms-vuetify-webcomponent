@@ -25,6 +25,7 @@ import { type ValidationMode } from '@jsonforms/core';
 import { type JsonFormsChangeEvent } from '@jsonforms/vue';
 import { defineComponent, watch, type PropType } from 'vue';
 import VuetifyJsonForms from '../components/VuetifyJsonForms.vue';
+import isPlainObject from 'lodash/isPlainObject';
 
 const vuetifyFormWc = defineComponent({
   components: {
@@ -176,6 +177,23 @@ const vuetifyFormWc = defineComponent({
         }
       },
     },
+    vuetifyOptions: {
+      type: String,
+      default: () => {
+        return '{}';
+      },
+      validator: function (value) {
+        try {
+          const options = typeof value == 'string' ? JSON.parse(value) : value;
+
+          return (
+            options !== undefined && options !== null && isPlainObject(options)
+          );
+        } catch (e) {
+          return false;
+        }
+      },
+    },
   },
   provide() {
     return {
@@ -193,6 +211,15 @@ const vuetifyFormWc = defineComponent({
     appStore.rtl = props.rtl;
     appStore.dark = props.dark;
     appStore.locale = props.locale;
+    if (props.vuetifyOptions) {
+      try {
+        const options = JSON.parse(props.vuetifyOptions);
+        if (isPlainObject(options)) {
+          appStore.defaults = options.defaults;
+          appStore.blueprint = options.blueprint;
+        }
+      } catch (e) {}
+    }
 
     watch(
       () => props.rtl,
@@ -210,6 +237,27 @@ const vuetifyFormWc = defineComponent({
       () => props.locale,
       (value) => {
         appStore.locale = value;
+      },
+    );
+    watch(
+      () => props.vuetifyOptions,
+      (value) => {
+        if (value) {
+          try {
+            const options = JSON.parse(value);
+            if (isPlainObject(options)) {
+              appStore.defaults = options.defaults;
+              appStore.blueprint = options.blueprint;
+              if (options.icons?.defaultSet) {
+                appStore.iconset = options.icons.defaultSet;
+              }
+            }
+          } catch (e) {}
+        } else {
+          appStore.defaults = {};
+          appStore.blueprint = 'md1';
+          appStore.iconset = 'mdi';
+        }
       },
     );
 

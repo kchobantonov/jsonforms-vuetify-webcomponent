@@ -8,11 +8,11 @@ import { bg, de, en } from 'vuetify/locale';
 import 'vuetify/styles';
 // just make sure that the locales are loaded
 
+import { faIconAliases, mdiIconAliases } from '@jsonforms/vue-vuetify';
 import dayjs from 'dayjs';
 import { watch } from 'vue';
 import { fa, aliases as faAliases } from 'vuetify/iconsets/fa';
 import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
-import { mdiIconAliases, faIconAliases } from '@jsonforms/vue-vuetify';
 import { aliases as appFaAliases } from '../icons/fa';
 import { aliases as appMdiAliases } from '../icons/mdi';
 import { useAppStore } from '../store';
@@ -269,6 +269,8 @@ export function buildVuetify() {
         delete vuetify.defaults.value?.VNumberInput?.variant;
         delete vuetify.defaults.value?.VDateInput?.variant;
       }
+
+      appStore.forceUpdateFlag++;
     },
   );
 

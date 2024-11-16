@@ -1,26 +1,42 @@
 <script setup lang="ts">
+import type { ExampleDescription } from '@/core/types';
+import {
+  createTranslator,
+  FormContextKey,
+  ResolvedJsonForms,
+  TemplateComponentsKey,
+  type ActionEvent,
+  type JsonFormsProps,
+} from '@chobantonov/jsonforms-vuetify-renderers';
 import type { JsonFormsChangeEvent } from '@jsonforms/vue';
+import {
+  defaultStyles,
+  mergeStyles,
+  ValidationIcon,
+} from '@jsonforms/vue-vuetify';
 import type { ErrorObject } from 'ajv';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {
+  computed,
+  inject,
   markRaw,
   onMounted,
   provide,
   reactive,
   ref,
   shallowRef,
+  unref,
   watch,
+  type InjectionKey,
   type Reactive,
+  type Ref,
   type ShallowRef,
 } from 'vue';
-import {
-  ValidationIcon,
-  defaultStyles,
-  mergeStyles,
-} from '@jsonforms/vue-vuetify';
+import type { DefaultsInstance, VuetifyOptions } from 'vuetify';
 import MonacoEditor from '../components/MonacoEditor.vue';
+import VuetifyJsonFormsWrapper from '../components/VuetifyJsonFormsWrapper.vue';
 import {
   configureDataValidation,
   configureJsonSchemaValidation,
@@ -30,16 +46,6 @@ import {
 import type { MonacoApi } from '../core/monaco';
 import { examples } from '../examples';
 import { useAppStore } from '../store';
-import {
-  createTranslator,
-  ResolvedJsonForms,
-  type JsonFormsProps,
-  TemplateComponentsKey,
-  FormContextKey,
-  type ActionEvent,
-} from '@chobantonov/jsonforms-vuetify-renderers';
-import type { ExampleDescription } from '@/core/types';
-import VuetifyJsonFormsWrapper from '../components/VuetifyJsonFormsWrapper.vue';
 
 // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
 const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
@@ -463,6 +469,25 @@ watch(
     }
   },
 );
+
+const DefaultsSymbol: InjectionKey<Ref<DefaultsInstance>> =
+  Symbol.for('vuetify:defaults');
+
+const IconSymbol: InjectionKey<VuetifyOptions['icons']> =
+  Symbol.for('vuetify:icons');
+
+const vuetifyDefaults = inject(DefaultsSymbol);
+const vuetifyIcons = inject(IconSymbol);
+
+const vuetifyOptions = computed(() => {
+  return JSON.stringify({
+    defaults: unref(vuetifyDefaults),
+    blueprint: appStore.blueprint,
+    icons: {
+      defaultSet: vuetifyIcons?.defaultSet,
+    },
+  } as Partial<VuetifyOptions>);
+});
 </script>
 
 <template>
@@ -524,6 +549,7 @@ watch(
                       ? JSON.stringify(state.i18n?.translations)
                       : '{}'
                   "
+                  :vuetify-options="vuetifyOptions"
                   @change="onWebComponentChange"
                   @handleAction="onWebComponentHandleAction"
                 ></vuetify-json-forms-wrapper>
@@ -731,6 +757,7 @@ watch(
             ? JSON.stringify(state.i18n?.translations)
             : '{}'
         "
+        :vuetify-options="vuetifyOptions"
         @change="onWebComponentChange"
         @handleAction="onWebComponentHandleAction"
       ></vuetify-json-forms-wrapper>

@@ -32,7 +32,7 @@ const theme = computed(() => {
 <template>
   <v-locale-provider :rtl="appStore.rtl" :locale="appStore.jsonforms.locale">
     <v-theme-provider :theme="theme">
-      <v-app>
+      <v-app :key="appStore.forceUpdateFlag">
         <example-app-bar></example-app-bar>
         <example-drawer></example-drawer>
         <example-settings></example-settings>

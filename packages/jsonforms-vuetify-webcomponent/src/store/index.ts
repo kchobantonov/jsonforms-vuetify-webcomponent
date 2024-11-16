@@ -12,7 +12,6 @@ const appstore = reactive({
   rtl: false,
   dark: false,
   theme: 'light',
-  variant: '',
   iconset: 'mdi',
   blueprint: 'md1',
   locale: 'en',

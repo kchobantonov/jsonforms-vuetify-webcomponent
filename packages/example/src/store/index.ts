@@ -2,6 +2,8 @@ import type { ValidationMode } from '@jsonforms/core';
 import { reactive, ref, watch } from 'vue';
 
 const appstore = reactive({
+  // forceUpdateFlag is a hack to force reload the whole UI when vuetify defaults (variants) are changed
+  forceUpdateFlag: 0,
   exampleName: useHistoryHash(''),
   rtl: false,
   formOnly: false,

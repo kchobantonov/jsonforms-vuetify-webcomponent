@@ -79,42 +79,9 @@ function toBlueprint(value: string): Blueprint {
 function createVuetifyInstance(
   dark: boolean,
   blueprint: string,
-  variant: string,
   iconset: string,
   locale: string,
 ) {
-  const defaults = variant
-    ? {
-        VField: {
-          variant: variant,
-        },
-        VTextField: {
-          variant: variant,
-        },
-        VCombobox: {
-          variant: variant,
-        },
-        VSelect: {
-          variant: variant,
-        },
-        VAutocomplete: {
-          variant: variant,
-        },
-        VTextarea: {
-          variant: variant,
-        },
-        VNumberInput: {
-          variant: variant,
-        },
-        VDateInput: {
-          variant: variant,
-        },
-        VCheckbox: { color: 'primary' },
-      }
-    : {
-        VCheckbox: { color: 'primary' },
-      };
-
   dayjs.locale(locale);
 
   const theme = {
@@ -145,7 +112,6 @@ function createVuetifyInstance(
       aliases: toIconSetAliases(iconset),
     },
     theme: theme,
-    defaults: defaults,
   });
 }
 
@@ -154,7 +120,6 @@ export function buildVuetify() {
   const vuetify = createVuetifyInstance(
     appStore.dark,
     appStore.blueprint,
-    appStore.variant,
     appStore.iconset,
     appStore.locale,
   );
@@ -164,59 +129,6 @@ export function buildVuetify() {
     (locale: string) => {
       vuetify.locale.current.value = locale;
       dayjs.locale(locale);
-    },
-  );
-
-  // Watch for changes in the variant and update Vuetify
-  watch(
-    () => appStore.variant,
-    (variant: string) => {
-      if (variant) {
-        vuetify.defaults.value = {
-          ...vuetify.defaults.value,
-          VField: {
-            ...vuetify.defaults.value?.VField,
-            variant: variant,
-          },
-          VTextField: {
-            ...vuetify.defaults.value?.VTextField,
-            variant: variant,
-          },
-          VCombobox: {
-            ...vuetify.defaults.value?.VCombobox,
-            variant: variant,
-          },
-          VSelect: {
-            ...vuetify.defaults.value?.VSelect,
-            variant: variant,
-          },
-          VAutocomplete: {
-            ...vuetify.defaults.value?.VAutocomplete,
-            variant: variant,
-          },
-          VTextarea: {
-            ...vuetify.defaults.value?.VTextarea,
-            variant: variant,
-          },
-          VNumberInput: {
-            ...vuetify.defaults.value?.VNumberInput,
-            variant: variant,
-          },
-          VDateInput: {
-            ...vuetify.defaults.value?.VDateInput,
-            variant: variant,
-          },
-        };
-      } else {
-        delete vuetify.defaults.value?.VField?.variant;
-        delete vuetify.defaults.value?.VTextField?.variant;
-        delete vuetify.defaults.value?.VCombobox?.variant;
-        delete vuetify.defaults.value?.VSelect?.variant;
-        delete vuetify.defaults.value?.VAutocomplete?.variant;
-        delete vuetify.defaults.value?.VTextarea?.variant;
-        delete vuetify.defaults.value?.VNumberInput?.variant;
-        delete vuetify.defaults.value?.VDateInput?.variant;
-      }
     },
   );
 
