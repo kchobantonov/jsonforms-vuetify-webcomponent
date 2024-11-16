@@ -11,7 +11,6 @@ type DefaultsOptions = Partial<DefaultsInstance>;
 const appstore = reactive({
   rtl: false,
   dark: false,
-  theme: 'light',
   iconset: 'mdi',
   blueprint: 'md1',
   locale: 'en',

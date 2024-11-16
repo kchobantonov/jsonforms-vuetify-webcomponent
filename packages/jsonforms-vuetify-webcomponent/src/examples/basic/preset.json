@@ -28,6 +28,6 @@
     "VCheckbox": { "color": "primary" }
   },
   "theme": {
-    "defaultTheme": "dark"
+    "dark": true
   }
 }

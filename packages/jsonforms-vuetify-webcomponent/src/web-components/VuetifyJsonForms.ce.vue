@@ -251,8 +251,8 @@ const vuetifyFormWc = defineComponent({
               if (options.icons?.defaultSet) {
                 appStore.iconset = options.icons.defaultSet;
               }
-              if (options.theme?.defaultTheme) {
-                appStore.dark = options.theme?.defaultTheme == 'dark';
+              if (options.theme) {
+                appStore.dark = options.theme.dark === true;
               }
             }
           } catch (e) {}
