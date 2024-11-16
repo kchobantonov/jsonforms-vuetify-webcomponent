@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <div ref="root">
+    <div>
       <custom-style type="text/css" id="vuetify-theme-stylesheet">
         {{ vuetifyThemeCss }}
       </custom-style>
