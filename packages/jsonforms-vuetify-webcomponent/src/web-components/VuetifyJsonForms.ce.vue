@@ -251,6 +251,9 @@ const vuetifyFormWc = defineComponent({
               if (options.icons?.defaultSet) {
                 appStore.iconset = options.icons.defaultSet;
               }
+              if (options.theme?.defaultTheme) {
+                appStore.dark = options.theme?.defaultTheme == 'dark';
+              }
             }
           } catch (e) {}
         } else {

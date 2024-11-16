@@ -98,8 +98,8 @@ const showWebview = async (
   const pathPrefix = schemaPath.endsWith("/schema.json") // no prefix if the file is called schema.json
     ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
     : schemaPath.endsWith(".schema.json")
-    ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
-    : schemaPath.substring(0, schemaPath.length - "json".length);
+      ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
+      : schemaPath.substring(0, schemaPath.length - "json".length);
 
   const uischemaPath = pathPrefix + "uischema.json";
   const uischemasPath = pathPrefix + "uischemas.json";
@@ -366,7 +366,7 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
       form.setAttribute('translations', i18n);
     }
     if (preset) {
-      form.setAttribute('default-preset', preset);
+      form.setAttribute('vuetify-options', preset);
     }
     if (onChange) {
       form.addEventListener('change', onChange);
