@@ -1,4 +1,5 @@
 import type { ValidationMode } from '@jsonforms/core';
+import { useLocalStorage } from '@vueuse/core';
 import { reactive, ref, watch } from 'vue';
 
 const appstore = reactive({
@@ -6,8 +7,8 @@ const appstore = reactive({
   forceUpdateFlag: 0,
   exampleName: useHistoryHash(''),
   rtl: false,
-  formOnly: false,
-  useWebComponentView: false,
+  formOnly: useHistoryHashQuery('form-only', false),
+  useWebComponentView: useHistoryHashQuery('use-webcomponent', false),
   dark: useLocalStorage('vuetify-example-dark', false),
   theme: useLocalStorage('vuetify-example-theme', 'light'),
   drawer: true,
@@ -39,12 +40,13 @@ export const useAppStore = () => {
   return appstore;
 };
 
-export function useHistoryHash(initialValue: string) {
+function useHistoryHash(initialValue: string) {
   const data = ref(initialValue);
 
   // Function to update data based on URL hash
   const updateDataFromHash = () => {
-    const hash = window.location.hash.slice(1);
+    const hashAndQuery = window.location.hash.slice(1); // Remove the leading '#'
+    const [hash, _] = hashAndQuery.split('?'); // Split hash and query string
     if (hash) {
       try {
         data.value = decodeURIComponent(hash);
@@ -54,61 +56,73 @@ export function useHistoryHash(initialValue: string) {
     }
   };
 
-  // Update data from URL hash on component mount
+  // Initial update from URL hash
   updateDataFromHash();
 
-  watch(
-    data,
-    (newValue) => {
-      const encodedData = encodeURIComponent(newValue);
-      window.history.replaceState(null, '', `#${encodedData}`);
-    },
-    { deep: true },
-  );
+  watch(data, (newValue) => {
+    const encodedData = encodeURIComponent(newValue);
+
+    const currentHash = window.location.hash.slice(1);
+    const [, currentQueryString] = currentHash.split('?'); // Extract the query part after ?
+
+    window.history.replaceState(
+      null,
+      '',
+      `#${encodedData}${currentQueryString ? '?' + currentQueryString : ''}`, // Keep the query parameters intact
+    );
+  });
 
   return data;
 }
 
-export function useLocalStorage(
-  key: string,
-  initialValue: string | boolean | number | Record<string, any>,
+function useHistoryHashQuery<T extends string | boolean>(
+  queryParam: string,
+  initialValue: T,
 ) {
-  // Read from localStorage
-  const storedValueAsString = localStorage.getItem(key);
+  const data = ref<T>(initialValue);
 
-  let storedValue;
-  if (storedValueAsString) {
-    if (typeof initialValue === 'string') {
-      storedValue = storedValueAsString;
-    } else if (typeof initialValue === 'number') {
-      storedValue = parseFloat(storedValueAsString);
-    } else if (typeof initialValue === 'boolean') {
-      storedValue = storedValueAsString === 'true';
-    } else {
-      storedValue = JSON.parse(storedValueAsString);
-    }
-  }
+  // Function to update data based on URL hash
+  const updateDataFromHash = () => {
+    const hashAndQuery = window.location.hash.slice(1); // Remove the leading '#'
+    const [_, query] = hashAndQuery.split('?'); // Split hash and query string
 
-  const data = ref(storedValue ?? initialValue);
+    const searchParams = new URLSearchParams(query);
+    if (searchParams) {
+      try {
+        const value = searchParams.get(queryParam);
 
-  // Watch for changes to data and update localStorage
-  watch(
-    data,
-    (newValue) => {
-      if (newValue === undefined || newValue === null) {
-        localStorage.removeItem(key);
-      } else if (
-        typeof newValue === 'string' ||
-        typeof newValue === 'boolean' ||
-        typeof newValue === 'number'
-      ) {
-        localStorage.setItem(key, newValue + '');
-      } else {
-        localStorage.setItem(key, JSON.stringify(newValue));
+        // Convert the value based on the type of initialValue
+        if (typeof initialValue === 'boolean') {
+          // Handle boolean conversion
+          data.value = (value === 'true') as T;
+        } else if (typeof initialValue === 'string') {
+          // Handle string conversion
+          data.value = value as T;
+        }
+      } catch (error) {
+        console.error('Error parsing hash:', error);
       }
-    },
-    { deep: true },
-  );
+    }
+  };
+
+  // Initial update from URL hash
+  updateDataFromHash();
+
+  watch(data, (newValue) => {
+    const encodedData = encodeURIComponent(newValue);
+
+    const hashAndQuery = window.location.hash.slice(1); // Remove the leading '#'
+    const [hash, query] = hashAndQuery.split('?'); // Split hash and query string
+
+    const searchParams = new URLSearchParams(query);
+    searchParams.set(queryParam, encodedData);
+
+    window.history.replaceState(
+      null,
+      '',
+      `#${hash}${'?' + searchParams}`, // Keep the query parameters intact
+    );
+  });
 
   return data;
 }
