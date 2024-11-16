@@ -115,12 +115,18 @@ function useHistoryHashQuery<T extends string | boolean>(
     const [hash, query] = hashAndQuery.split('?'); // Split hash and query string
 
     const searchParams = new URLSearchParams(query);
-    searchParams.set(queryParam, encodedData);
+
+    if (newValue === initialValue) {
+      // it is the default value so no need to preserve the query paramter
+      searchParams.delete(queryParam);
+    } else {
+      searchParams.set(queryParam, encodedData);
+    }
 
     window.history.replaceState(
       null,
       '',
-      `#${hash}${'?' + searchParams}`, // Keep the query parameters intact
+      `#${hash}${searchParams.size > 0 ? '?' + searchParams : ''}`, // Keep the query parameters intact
     );
   });
 
