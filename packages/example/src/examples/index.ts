@@ -25,6 +25,7 @@ import { input as ifThenElse } from './if-then-else';
 import { input as listWithDetails } from './list-with-details';
 import { input as listWithDetailsAndReorder } from './list-with-details-and-reorder';
 import { input as listWithDetailsRestrict } from './list-with-details-restrict';
+import { input as job } from './job';
 import { input as login } from './login';
 import { input as main } from './main';
 import { input as monacoEditor } from './monaco-editor';
@@ -77,6 +78,11 @@ export const examples: ExampleDescription[] = [
     name: 'monaco-editor',
     label: 'Monaco Editor',
     input: monacoEditor,
+  },
+  {
+    name: 'job',
+    label: 'Job Application',
+    input: job,
   },
   {
     name: 'file',
