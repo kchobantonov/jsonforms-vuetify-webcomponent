@@ -7,17 +7,20 @@ const appstore = reactive({
   forceUpdateFlag: 0,
   exampleName: useHistoryHash(''),
   rtl: false,
-  formOnly: useHistoryHashQuery('form-only', false),
-  useWebComponentView: useHistoryHashQuery('use-webcomponent', false),
+  formOnly: useHistoryHashQuery('form-only', false as boolean),
+  useWebComponentView: useHistoryHashQuery(
+    'use-webcomponent',
+    false as boolean,
+  ),
   dark: useLocalStorage('vuetify-example-dark', false),
   theme: useLocalStorage('vuetify-example-theme', 'light'),
-  drawer: true,
+  drawer: useHistoryHashQuery('drawer', true as boolean),
   settings: false,
   variant: useLocalStorage('vuetify-example-variant', ''),
   iconset: useLocalStorage('vuetify-example-iconset', 'mdi'),
   blueprint: useLocalStorage('vuetify-example-blueprint', 'md1'),
   jsonforms: {
-    readonly: false,
+    readonly: useHistoryHashQuery('read-only', false as boolean),
     validationMode: 'ValidateAndShow' as ValidationMode,
     config: {
       restrict: true,
@@ -89,7 +92,9 @@ function useHistoryHashQuery<T extends string | boolean>(
     const searchParams = new URLSearchParams(query);
     if (searchParams) {
       try {
-        const value = searchParams.get(queryParam);
+        const value = searchParams.has(queryParam)
+          ? searchParams.get(queryParam)
+          : `${initialValue}`;
 
         // Convert the value based on the type of initialValue
         if (typeof initialValue === 'boolean') {

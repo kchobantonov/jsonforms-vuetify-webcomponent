@@ -27,14 +27,19 @@ const appStore = useAppStore();
           <v-col>
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
-                <v-btn
-                  icon
+                <v-btn-toggle
+                  density="compact"
                   v-bind="props"
-                  :disabled="!appStore.exampleName"
-                  @click="appStore.formOnly = !appStore.formOnly"
+                  :model-value="appStore.formOnly"
+                  v-if="appStore.exampleName"
                 >
-                  <v-icon size="30" color="primary">$formOnly</v-icon>
-                </v-btn>
+                  <v-btn
+                    :value="true"
+                    @click="appStore.formOnly = !appStore.formOnly"
+                  >
+                    <v-icon size="30" color="primary">$formOnly</v-icon>
+                  </v-btn>
+                </v-btn-toggle>
               </template>
               {{
                 appStore.formOnly ? `Show Form Wrapper` : `Hide Form Wrapper`
@@ -44,19 +49,22 @@ const appStore = useAppStore();
           <v-col>
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
-                <v-btn
-                  icon
+                <v-btn-toggle
+                  density="compact"
                   v-bind="props"
-                  :disabled="!appStore.exampleName"
-                  :variant="
-                    appStore.useWebComponentView ? 'outlined' : undefined
-                  "
-                  @click="
-                    appStore.useWebComponentView = !appStore.useWebComponentView
-                  "
+                  :model-value="appStore.useWebComponentView"
+                  v-if="appStore.exampleName"
                 >
-                  <v-img height="24" width="24" :src="webComponentUrl" />
-                </v-btn>
+                  <v-btn
+                    :value="true"
+                    @click="
+                      appStore.useWebComponentView =
+                        !appStore.useWebComponentView
+                    "
+                  >
+                    <v-img height="24" width="24" :src="webComponentUrl" />
+                  </v-btn>
+                </v-btn-toggle>
               </template>
               {{
                 appStore.useWebComponentView
