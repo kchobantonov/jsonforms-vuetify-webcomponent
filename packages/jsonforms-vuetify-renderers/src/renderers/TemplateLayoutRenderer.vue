@@ -66,6 +66,7 @@ import {
 import { useFormContext } from '../util';
 
 import * as defaultComponents from 'vuetify/components';
+import * as defaultDirectives from 'vuetify/directives';
 
 export interface TemplateLayout extends Layout {
   type: 'TemplateLayout';
@@ -101,6 +102,7 @@ const templateLayoutRenderer = defineComponent({
       templateError,
       context,
       defaultComponents,
+      defaultDirectives,
     };
   },
   errorCaptured: function (
@@ -135,8 +137,6 @@ const templateLayoutRenderer = defineComponent({
       );
     },
     componentDirectives(): Record<string, Directive> {
-      const defaultDirective = {};
-
       const override = unref(
         inject<Record<string, Directive> | undefined>(
           TemplateDirectivesKey,
@@ -144,7 +144,12 @@ const templateLayoutRenderer = defineComponent({
         ),
       );
 
-      return override ? { ...defaultDirective, ...override } : defaultDirective;
+      return override
+        ? {
+            ...(this.defaultDirectives as Record<string, Directive>),
+            ...override,
+          }
+        : (this.defaultDirectives as Record<string, Directive>);
     },
     componentComputed(): ComputedOptions {
       const defaultComputed = {} as ComputedOptions;
