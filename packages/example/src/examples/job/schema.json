@@ -145,6 +145,7 @@
         "description": "Individual skill name."
       },
       "minItems": 1,
+      "maxItems": 20,
       "uniqueItems": true
     },
     "experience": {
@@ -185,7 +186,8 @@
           }
         },
         "required": ["companyName", "role", "startDate"]
-      }
+      },
+      "maxItems": 20
     },
     "preferences": {
       "type": "object",
@@ -204,7 +206,20 @@
         },
         "workType": {
           "type": "string",
-          "enum": ["Full-time", "Part-time", "Contract"],
+          "oneOf": [
+            {
+              "const": "FULL_TIME",
+              "title": "Full time"
+            },
+            {
+              "const": "PART_TIME",
+              "title": "Part time"
+            },
+            {
+              "const": "CONTRACT",
+              "title": "Contract"
+            }
+          ],
           "title": "Preferred Work Type",
           "description": "The type of work the applicant prefers."
         }
@@ -256,7 +271,8 @@
             "description": "Relation to the applicant."
           }
         }
-      }
+      },
+      "maxItems": 20
     }
   },
   "required": [
