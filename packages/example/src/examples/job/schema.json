@@ -3,7 +3,19 @@
   "title": "Job Application",
   "description": "A schema for a job application form capturing personal details, job preferences, experience, and other necessary information.",
   "type": "object",
+  "dynamicDefaults": {
+    "now": {
+      "func": "date",
+      "args": {
+        "date": "now"
+      }
+    }
+  },
   "properties": {
+    "now": {
+      "type": "string",
+      "format": "date"
+    },
     "applicant": {
       "type": "object",
       "properties": {
@@ -34,7 +46,8 @@
         },
         "dateOfBirth": {
           "type": "string",
-          "format": "date"
+          "format": "date",
+          "formatMaximum": { "$data": "/now" }
         },
         "email": {
           "type": "string",
