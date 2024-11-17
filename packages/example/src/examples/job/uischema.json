@@ -36,6 +36,80 @@
               ]
             }
           ]
+        },
+        {
+          "type": "Category",
+          "label": "Skills",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/skills"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "Experience",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "ListWithDetail",
+                  "scope": "#/properties/experience",
+                  "options": {
+                    "detail": {
+                      "type": "VerticalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/companyName"
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/role"
+                        },
+                        {
+                          "type": "HorizontalLayout",
+                          "elements": [
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/startDate"
+                            },
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/endDate"
+                            }
+                          ],
+                          "options": {
+                            "vuetify": {
+                              "v-container": {
+                                "class": "pa-0"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/description",
+                          "options": {
+                            "multi": true
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       ],
       "options": {
