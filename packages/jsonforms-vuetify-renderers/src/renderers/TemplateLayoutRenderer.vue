@@ -1,21 +1,26 @@
 <template>
-  <div v-if="templateError !== null" class="error">
-    Template Error: {{ templateError }}
-  </div>
-
-  <template-compiler
-    v-else-if="layout.visible"
-    :template="template"
-    :parent="parentComponent"
-    :elements="namedElements"
-    :componentComputed="componentComputed"
-    :componentDirectives="componentDirectives"
-    :componentMethods="componentMethods"
-    :componentFilters="componentFilters"
-    :componentComponents="componentComponents"
-    :layout="layout"
+  <v-defaults-provider
+    :disabled="!vuetifyProps('defaults')"
+    :defaults="vuetifyProps('defaults')"
   >
-  </template-compiler>
+    <div v-if="templateError !== null" class="error">
+      Template Error: {{ templateError }}
+    </div>
+
+    <template-compiler
+      v-else-if="layout.visible"
+      :template="template"
+      :parent="parentComponent"
+      :elements="namedElements"
+      :componentComputed="componentComputed"
+      :componentDirectives="componentDirectives"
+      :componentMethods="componentMethods"
+      :componentFilters="componentFilters"
+      :componentComponents="componentComponents"
+      :layout="layout"
+    >
+    </template-compiler>
+  </v-defaults-provider>
 </template>
 
 <script lang="ts">
@@ -72,8 +77,10 @@ export interface TemplateLayout extends Layout {
 
 const templateLayoutRenderer = defineComponent({
   name: 'template-layout-renderer',
+  inheritAttrs: false,
   components: {
     TemplateCompiler,
+    VDefaultsProvider: defaultComponents.VDefaultsProvider,
   },
   props: {
     ...rendererProps<TemplateLayout>(),
