@@ -143,16 +143,11 @@ const errorMessage = computed(() => {
   return message;
 });
 
-const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
-  ...props.state,
-  schema: resolvedSchema.schema ?? props.state.schema,
-  ajv: props.state.ajv ?? createAjv(),
-}));
-
 const jsonforms = inject<JsonFormsSubStates | undefined>(
   'jsonforms',
   undefined,
 );
+
 const defaultContext: FormContext = {
   schemaUrl: props.state.schemaUrl,
 
@@ -166,6 +161,12 @@ const defaultContext: FormContext = {
   errors: jsonforms?.core?.errors,
   additionalErrors: jsonforms?.core?.additionalErrors,
 };
+
+const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
+  ...props.state,
+  schema: resolvedSchema.schema ?? props.state.schema,
+  ajv: props.state.ajv ?? createAjv(props.state.i18n?.locale),
+}));
 
 watch(
   () => jsonforms,
