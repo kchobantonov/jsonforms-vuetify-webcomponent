@@ -11,7 +11,6 @@ export const createAjv = (
     useDefaults: true,
     $data: true,
     discriminator: true,
-    addUsedSchema: false,
   };
 
   const ajv = createDefaultAjv(options);
