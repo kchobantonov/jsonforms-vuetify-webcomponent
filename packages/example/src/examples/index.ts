@@ -8,6 +8,7 @@ import { input as array } from './array';
 import { input as arrayRestrict } from './array-restrict';
 import { input as arrayWithReorder } from './array-with-reorder';
 import { input as basic } from './basic';
+import { input as button } from './button';
 import { input as categorization } from './categorization';
 import { input as categorizationStepper } from './categorization-stepper';
 import { input as categorizationStepperNav } from './categorization-stepper-nav';
@@ -88,6 +89,11 @@ export const examples: ExampleDescription[] = [
     name: 'file',
     label: 'File',
     input: file,
+  },
+  {
+    name: 'button',
+    label: 'Button',
+    input: button,
   },
   {
     name: 'datetime',
