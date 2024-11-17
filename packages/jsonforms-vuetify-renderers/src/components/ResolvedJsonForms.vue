@@ -160,6 +160,8 @@ const defaultContext: FormContext = {
   uischema: jsonforms?.core?.uischema,
   errors: jsonforms?.core?.errors,
   additionalErrors: jsonforms?.core?.additionalErrors,
+
+  uidata: reactive({}),
 };
 
 const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
@@ -182,6 +184,7 @@ watch(
         uischema: newJsonforms.core?.uischema,
         errors: newJsonforms.core?.errors,
         additionalErrors: newJsonforms.core?.additionalErrors,
+        uidata: defaultContext.value.uidata,
       };
     }
   },

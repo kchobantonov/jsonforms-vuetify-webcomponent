@@ -19,6 +19,7 @@ import type {
   Directive,
   InjectionKey,
   MethodOptions,
+  Reactive,
   Ref,
   SetupContext,
 } from 'vue';
@@ -66,6 +67,8 @@ export interface FormContext {
   uischema?: UISchemaElement;
   errors?: ErrorObject[];
   additionalErrors?: ErrorObject[];
+
+  uidata?: Reactive<Record<string, any>>;
 }
 
 export type ActionEvent = {

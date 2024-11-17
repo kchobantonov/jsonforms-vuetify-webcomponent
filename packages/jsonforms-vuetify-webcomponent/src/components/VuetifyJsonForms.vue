@@ -258,7 +258,7 @@ const vuetifyFormWc = defineComponent({
     let additionalErrorsToUse: ErrorObject[] = [];
     let translationsToUse: Record<string, any> = {};
 
-    let uidataToUse: Record<string, any> = {};
+    let uidataToUse = reactive<Record<string, any>>({});
 
     try {
       try {
@@ -338,8 +338,9 @@ const vuetifyFormWc = defineComponent({
       }
 
       try {
-        uidataToUse =
-          typeof props.uidata === 'string' ? JSON.parse(props.uidata) : {};
+        uidataToUse = reactive(
+          typeof props.uidata === 'string' ? JSON.parse(props.uidata) : {},
+        );
       } catch (e) {
         error = `UIData Error: ${e}`;
         console.log(e);
@@ -532,7 +533,9 @@ const vuetifyFormWc = defineComponent({
     uidata: {
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
-          this.uidataToUse = typeof value === 'string' ? JSON.parse(value) : {};
+          this.uidataToUse = reactive(
+            typeof value === 'string' ? JSON.parse(value) : {},
+          );
           this.context.uidata = this.uidataToUse;
           this.$forceUpdate();
         }
