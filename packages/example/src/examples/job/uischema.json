@@ -130,13 +130,35 @@
                     },
                     {
                       "type": "Control",
-                      "scope": "#/properties/preferences/properties/relocation"
+                      "scope": "#/properties/preferences/properties/relocation",
+                      "options": {
+                        "toggle": true
+                      }
                     }
                   ]
                 },
                 {
                   "type": "Control",
                   "scope": "#/properties/preferences/properties/workType"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "Agreements",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/agreements/properties/termsAccepted"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/agreements/properties/subscribeNewsletter"
                 }
               ]
             }

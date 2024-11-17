@@ -235,7 +235,7 @@
           "type": "boolean",
           "title": "I accept the terms and conditions",
           "description": "Mandatory field for the applicant to accept the terms and conditions.",
-          "const": true
+          "enum": [true]
         },
         "subscribeNewsletter": {
           "type": "boolean",
