@@ -173,6 +173,7 @@
           "endDate": {
             "type": "string",
             "format": "date",
+            "formatMinimum": { "$data": "1/startDate" },
             "title": "End Date",
             "description": "The end date of the applicant's employment in this role. If still employed, leave blank."
           },
