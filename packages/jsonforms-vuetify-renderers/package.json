@@ -106,5 +106,8 @@
     "vue-eslint-parser": "^9.4.2",
     "vue-tsc": "^2.0.11",
     "vuetify": "^3.6.6"
+  },
+  "dependencies": {
+    "ajv-i18n": "^4.2.0"
   }
 }

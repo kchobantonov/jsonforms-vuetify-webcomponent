@@ -108,7 +108,7 @@
     "tester": "(jsonSchema, schemaPath, path) => { return NOT_APPLICABLE; }",
     "uischema": {
       "type": "Group",
-      "label": "Address Information",
+      "label": "static-text.group.address-information",
       "name": "applicantAddress",
       "elements": [
         {

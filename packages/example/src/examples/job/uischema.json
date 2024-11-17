@@ -10,6 +10,7 @@
         {
           "type": "Button",
           "label": "EN",
+          "i18n": "static-text.btn.en",
           "action": "changeLang",
           "params": {
             "lang": "en"
@@ -26,6 +27,7 @@
         {
           "type": "Button",
           "label": "BG",
+          "i18n": "static-text.btn.bg",
           "action": "changeLang",
           "params": {
             "lang": "bg"
@@ -46,7 +48,7 @@
       "elements": [
         {
           "type": "Category",
-          "label": "Personal Information",
+          "label": "static-text.category.personal-information",
           "elements": [
             {
               "type": "TemplateLayout",
@@ -62,7 +64,7 @@
         },
         {
           "type": "Category",
-          "label": "Position Information",
+          "label": "static-text.category.position-information",
           "elements": [
             {
               "type": "TemplateLayout",
@@ -78,7 +80,7 @@
         },
         {
           "type": "Category",
-          "label": "Skills",
+          "label": "static-text.category.skills",
           "elements": [
             {
               "type": "TemplateLayout",
@@ -94,7 +96,7 @@
         },
         {
           "type": "Category",
-          "label": "Experience",
+          "label": "static-text.category.experience",
           "elements": [
             {
               "type": "TemplateLayout",
@@ -152,7 +154,7 @@
         },
         {
           "type": "Category",
-          "label": "Job Preferences",
+          "label": "static-text.category.job-preferences",
           "elements": [
             {
               "type": "VerticalLayout",
@@ -186,7 +188,7 @@
         },
         {
           "type": "Category",
-          "label": "Agreements",
+          "label": "static-text.category.agreements",
           "elements": [
             {
               "type": "VerticalLayout",
@@ -205,7 +207,7 @@
         },
         {
           "type": "Category",
-          "label": "Resume",
+          "label": "static-text.category.resume",
           "elements": [
             {
               "type": "VerticalLayout",
@@ -228,7 +230,7 @@
         },
         {
           "type": "Category",
-          "label": "References",
+          "label": "static-text.category.references",
           "elements": [
             {
               "type": "VerticalLayout",

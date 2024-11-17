@@ -29,20 +29,7 @@
         },
         "gender": {
           "type": "string",
-          "oneOf": [
-            {
-              "const": "male",
-              "title": "Male"
-            },
-            {
-              "const": "female",
-              "title": "Female"
-            },
-            {
-              "const": "prefer_not_to_say",
-              "title": "Prefer not to say"
-            }
-          ]
+          "enum": ["male", "female", "prefer_not_to_say"]
         },
         "dateOfBirth": {
           "type": "string",
@@ -161,20 +148,7 @@
         },
         "workType": {
           "type": "string",
-          "oneOf": [
-            {
-              "const": "FULL_TIME",
-              "title": "Full time"
-            },
-            {
-              "const": "PART_TIME",
-              "title": "Part time"
-            },
-            {
-              "const": "CONTRACT",
-              "title": "Contract"
-            }
-          ]
+          "enum": ["FULL_TIME", "PART_TIME", "CONTRACT"]
         }
       },
       "required": ["workType"]

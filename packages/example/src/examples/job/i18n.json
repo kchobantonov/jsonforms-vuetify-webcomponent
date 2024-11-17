@@ -13,7 +13,10 @@
       },
       "gender": {
         "label": "Gender",
-        "description": "The gender of the applicant."
+        "description": "The gender of the applicant.",
+        "male": "Male",
+        "female": "Female",
+        "prefer_not_to_say": "Prefer not to say"
       },
       "dateOfBirth": {
         "label": "Date of Birth",
@@ -117,9 +120,9 @@
       "workType": {
         "label": "Preferred Work Type",
         "description": "The type of work the applicant prefers.",
-        "Full time": "Full time",
-        "Part time": "Part time",
-        "Contract": "Contract"
+        "FULL_TIME": "Full time",
+        "PART_TIME": "Part time",
+        "CONTRACT": "Contract"
       }
     },
     "agreements": {
@@ -142,6 +145,8 @@
     "references": {
       "label": "References",
       "description": "List of references for the applicant.",
+      "addTooltip": "Add Reference",
+      "removeTooltip": "Delete Reference",
       "name": {
         "label": "Name",
         "description": "Reference name."
@@ -153,6 +158,29 @@
       "relation": {
         "label": "Relation",
         "description": "Relation to the applicant."
+      }
+    },
+    "static-text": {
+      "btn": {
+        "en": {
+          "label": "EN"
+        },
+        "bg": {
+          "label": "BG"
+        }
+      },
+      "group": {
+        "address-information": "Address Information"
+      },
+      "category": {
+        "personal-information": "Personal Information",
+        "position-information": "Position Information",
+        "skills": "Skills",
+        "experience": "Experience",
+        "job-preferences": "Job Preferences",
+        "agreements": "Agreements",
+        "resume": "Resume",
+        "references": "References"
       }
     }
   },
@@ -170,7 +198,10 @@
       },
       "gender": {
         "label": "Пол",
-        "description": "Пол на кандидата."
+        "description": "Пол на кандидата.",
+        "male": "Мъж",
+        "female": "Жена",
+        "prefer_not_to_say": "Предпочитам да не казвам"
       },
       "dateOfBirth": {
         "label": "Дата на раждане",
@@ -274,9 +305,9 @@
       "workType": {
         "label": "Предпочитан тип работа",
         "description": "Типът работа, който кандидатът предпочита.",
-        "Full time": "Пълно работно време",
-        "Part time": "Частично работно време",
-        "Contract": "Договор"
+        "FULL_TIME": "Пълно работно време",
+        "PART_TIME": "Частично работно време",
+        "CONTRACT": "Договор"
       }
     },
     "agreements": {
@@ -299,6 +330,9 @@
     "references": {
       "label": "Препоръки",
       "description": "Списък с препоръки за кандидата.",
+      "addTooltip": "Добави препоръка",
+      "removeTooltip": "Изтрий препоръка",
+      "noDataMessage": "Няма данни",
       "name": {
         "label": "Име",
         "description": "Име на препоръчителя."
@@ -313,6 +347,28 @@
       }
     },
     "Job Application": "Кандидатстване за работа",
-    "Address Information": "Информация за адреса"
+    "static-text": {
+      "btn": {
+        "en": {
+          "label": "EN"
+        },
+        "bg": {
+          "label": "БГ"
+        }
+      },
+      "group": {
+        "address-information": "Информация за адреса"
+      },
+      "category": {
+        "personal-information": "Лична информация",
+        "position-information": "Информация за позицията",
+        "skills": "Умения",
+        "experience": "Опит",
+        "job-preferences": "Предпочитания за работа",
+        "agreements": "Съгласия",
+        "resume": "Автобиография",
+        "references": "Препоръки"
+      }
+    }
   }
 }
