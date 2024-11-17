@@ -15,6 +15,11 @@ export const createTranslator = (
       dashIndex > 0 ? translations[locale.substring(0, dashIndex)] : undefined;
   }
 
+  if (!localeTranslations) {
+    // default to en if the locale is not supported
+    localeTranslations = translations ? translations['en'] : undefined;
+  }
+
   const translate = (
     id: string,
     defaultMessage: string | undefined,
