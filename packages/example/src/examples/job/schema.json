@@ -249,6 +249,7 @@
       "type": "string",
       "title": "Resume",
       "description": "Upload the resume as a PDF file, encoded in base64.",
+      "format": "binary",
       "contentMediaType": "application/pdf",
       "contentEncoding": "base64"
     },
@@ -270,7 +271,8 @@
             "type": "string",
             "description": "Relation to the applicant."
           }
-        }
+        },
+        "minProperties": 1
       },
       "maxItems": 20
     }

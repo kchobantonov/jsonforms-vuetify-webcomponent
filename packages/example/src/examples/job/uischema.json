@@ -163,6 +163,45 @@
               ]
             }
           ]
+        },
+        {
+          "type": "Category",
+          "label": "Resume",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/resume",
+                  "options": {
+                    "formatMaximum": "512000",
+                    "vuetify": {
+                      "v-file-input": {
+                        "showSize": true
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "References",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/references",
+                  "options": {}
+                }
+              ]
+            }
+          ]
         }
       ],
       "options": {
