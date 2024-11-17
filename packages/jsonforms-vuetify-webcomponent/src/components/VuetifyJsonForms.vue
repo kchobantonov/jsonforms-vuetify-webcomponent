@@ -43,19 +43,18 @@ import { useAppStore } from '@/store';
 import {
   createTranslator,
   type FormContext,
+  FormContextKey,
   type JsonFormsProps,
+  parseAndTransformUISchemaRegistryEntries,
   ResolvedJsonForms,
   TemplateComponentsKey,
-  FormContextKey,
   VMonacoEditor,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import {
   defaultMiddleware,
   type JsonFormsUISchemaRegistryEntry,
-  NOT_APPLICABLE,
   type Translator,
   type UISchemaElement,
-  type UISchemaTester,
   type ValidationMode,
 } from '@jsonforms/core';
 import { type JsonFormsChangeEvent } from '@jsonforms/vue';
@@ -79,9 +78,9 @@ import {
 import { type ThemeInstance } from 'vuetify';
 import {
   VApp,
+  VDefaultsProvider,
   VLocaleProvider,
   VThemeProvider,
-  VDefaultsProvider,
 } from 'vuetify/components';
 import { extractAndInjectFonts } from '../util/inject-fonts';
 
@@ -93,45 +92,6 @@ const CustomStyle = defineComponent({
     return () => h('style', slots.default ? slots.default() : []);
   },
 });
-
-const transformUISchemas = (
-  uischemas?: string,
-): JsonFormsUISchemaRegistryEntry[] => {
-  const uischemasMap: {
-    tester: string;
-    uischema: UISchemaElement;
-  }[] = typeof uischemas === 'string' ? JSON.parse(uischemas) : [];
-
-  return uischemasMap
-    .map((elem, index) => {
-      if (elem.tester) {
-        const action: UISchemaTester = (jsonSchema, schemaPath, path) => {
-          try {
-            const tester = new Function(
-              'jsonSchema, schemaPath, path',
-              `const NOT_APPLICABLE = -1; const tester = ${elem.tester}; return tester(jsonSchema, schemaPath, path);`,
-            );
-            const result = tester(jsonSchema, schemaPath, path);
-            if (typeof result !== 'number') {
-              console.error(
-                `Error at uischema tester[${index}]: invalid result type, expected number but got ${typeof result}`,
-              );
-            }
-            return typeof result === 'number' ? result : NOT_APPLICABLE;
-          } catch (e) {
-            console.error(`Error at uischema tester[${index}]: ${e}`);
-            return NOT_APPLICABLE;
-          }
-        };
-        return {
-          tester: action,
-          uischema: elem.uischema,
-        };
-      }
-      return null;
-    })
-    .filter((x) => !!x) as JsonFormsUISchemaRegistryEntry[];
-};
 
 const vuetifyFormWc = defineComponent({
   components: {
@@ -359,7 +319,9 @@ const vuetifyFormWc = defineComponent({
       }
 
       try {
-        uischemasToUse = transformUISchemas(props.uischemas);
+        uischemasToUse = parseAndTransformUISchemaRegistryEntries(
+          props.uischemas,
+        );
       } catch (e) {
         error = `UISchemas Error: ${e}`;
         console.log(e);
@@ -508,7 +470,8 @@ const vuetifyFormWc = defineComponent({
     uischemas: {
       handler(value?: string, oldValue?: string) {
         if (value !== oldValue) {
-          this.state.uischemas = transformUISchemas(value);
+          this.state.uischemas =
+            parseAndTransformUISchemaRegistryEntries(value);
           this.$forceUpdate();
         }
       },

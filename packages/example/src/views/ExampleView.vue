@@ -3,6 +3,7 @@ import type { ExampleDescription } from '@/core/types';
 import {
   createTranslator,
   FormContextKey,
+  parseAndTransformUISchemaRegistryEntries,
   ResolvedJsonForms,
   TemplateComponentsKey,
   type ActionEvent,
@@ -255,7 +256,14 @@ const reloadMonacoUiSchemas = () => {
     uischemasModel.value = getMonacoModelForUri(
       monaco.Uri.parse(toUiSchemasUri(example.name)),
       example.input.uischemas
-        ? JSON.stringify(example.input.uischemas, null, 2)
+        ? JSON.stringify(
+            example.input.uischemas.map((item) => ({
+              ...item,
+              tester: item.tester.toString(),
+            })),
+            null,
+            2,
+          )
         : '',
     );
     toast('Original example UI schemas loaded. Apply it to take effect.');
@@ -266,7 +274,9 @@ const saveMonacoUiSchemas = () => {
   saveMonacoModel(
     uischemasModel,
     (modelValue) =>
-      (state.uischemas = modelValue ? JSON.parse(modelValue) : undefined),
+      (state.uischemas = modelValue
+        ? parseAndTransformUISchemaRegistryEntries(modelValue)
+        : undefined),
     'New UI schemas applied',
   );
 };
@@ -401,7 +411,14 @@ const updateMonacoModels = (example: ExampleDescription) => {
   uischemasModel.value = getMonacoModelForUri(
     monaco.Uri.parse(toUiSchemasUri(example.name)),
     example.input.uischemas
-      ? JSON.stringify(example.input.uischemas, null, 2)
+      ? JSON.stringify(
+          example.input.uischemas.map((item) => ({
+            ...item,
+            tester: item.tester.toString(),
+          })),
+          null,
+          2,
+        )
       : '',
   );
 
@@ -533,7 +550,12 @@ const vuetifyOptions = computed(() => {
                   "
                   :uischemas="
                     state.uischemas
-                      ? JSON.stringify(state.uischemas)
+                      ? JSON.stringify(
+                          state.uischemas.map((item) => ({
+                            ...item,
+                            tester: item.tester.toString(),
+                          })),
+                        )
                       : undefined
                   "
                   :config="
@@ -744,7 +766,14 @@ const vuetifyOptions = computed(() => {
         :schema="state.schema ? JSON.stringify(state.schema) : undefined"
         :uischema="state.uischema ? JSON.stringify(state.uischema) : undefined"
         :uischemas="
-          state.uischemas ? JSON.stringify(state.uischemas) : undefined
+          state.uischemas
+            ? JSON.stringify(
+                state.uischemas.map((item) => ({
+                  ...item,
+                  tester: item.tester.toString(),
+                })),
+              )
+            : undefined
         "
         :config="state.config ? JSON.stringify(state.config) : undefined"
         :validationMode="state.validationMode"
