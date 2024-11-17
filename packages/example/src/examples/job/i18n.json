@@ -1,9 +1,318 @@
 {
   "en": {
+    "applicant": {
+      "label": "Applicant Information",
+      "description": "Details about the applicant, including personal and contact information.",
+      "firstName": {
+        "label": "First Name",
+        "description": "Applicant's first name."
+      },
+      "lastName": {
+        "label": "Last Name",
+        "description": "Applicant's last name."
+      },
+      "gender": {
+        "label": "Gender",
+        "description": "The gender of the applicant."
+      },
+      "dateOfBirth": {
+        "label": "Date of Birth",
+        "description": "The applicant's date of birth. Must be a valid date in the past."
+      },
+      "email": {
+        "label": "Email Address",
+        "description": "Applicant's email address for communication."
+      },
+      "phoneNumber": {
+        "label": "Phone Number",
+        "description": "Applicant's phone number"
+      },
+      "address": {
+        "label": "Address",
+        "description": "Applicant's home address.",
+        "street": {
+          "label": "Street",
+          "description": "Street address, including apartment or unit number if applicable."
+        },
+        "city": {
+          "label": "City",
+          "description": "City of residence."
+        },
+        "state": {
+          "label": "State",
+          "description": "State of residence."
+        },
+        "zipCode": {
+          "label": "ZIP Code",
+          "description": "ZIP or postal code, in 5-digit or ZIP+4 format."
+        }
+      },
+      "profilePicture": {
+        "label": "Profile Picture",
+        "description": "A base64-encoded image of the applicant's profile picture. Should be an image with a file size of 50 KB or less."
+      }
+    },
+    "jobDetails": {
+      "label": "Job Information",
+      "description": "Details about the job the applicant is applying for.",
+      "position": {
+        "label": "Position Applied For",
+        "description": "The title or role the applicant is applying for."
+      },
+      "salaryExpectation": {
+        "label": "Salary Expectation",
+        "description": "The expected annual salary in USD, within the range of $30,000 to $200,000."
+      },
+      "availableStartDate": {
+        "label": "Available Start Date",
+        "description": "The date on which the applicant is available to start work."
+      },
+      "availableStartTime": {
+        "label": "Preferred Start Time",
+        "description": "The preferred time of day for the applicant to start work."
+      },
+      "availableStartDateTime": {
+        "label": "Start Date and Time (Optional)",
+        "description": "If applicable, the exact date and time the applicant is available to start work."
+      }
+    },
+    "skills": {
+      "label": "Skills",
+      "description": "A list of skills or areas of expertise that the applicant possesses."
+    },
+    "experience": {
+      "label": "Previous Job Experience",
+      "companyName": {
+        "label": "Company Name",
+        "description": "Name of the company where the applicant previously worked."
+      },
+      "role": {
+        "label": "Role/Position",
+        "description": "The role or position held by the applicant."
+      },
+      "startDate": {
+        "label": "Start Date",
+        "description": "The start date of the applicant's employment in this role."
+      },
+      "endDate": {
+        "label": "End Date",
+        "description": "The end date of the applicant's employment in this role. If still employed, leave blank."
+      },
+      "description": {
+        "label": "Job Description",
+        "description": "Brief description of the applicant's responsibilities and achievements."
+      }
+    },
+    "preferences": {
+      "label": "Job Preferences",
+      "description": "Preferences regarding the job location, work type, and more.",
+      "remoteWork": {
+        "label": "Open to Remote Work",
+        "description": "Indicates if the applicant is open to working remotely."
+      },
+      "relocation": {
+        "label": "Willing to Relocate",
+        "description": "Indicates if the applicant is willing to relocate for the job."
+      },
+      "workType": {
+        "label": "Preferred Work Type",
+        "description": "The type of work the applicant prefers.",
+        "Full time": "Full time",
+        "Part time": "Part time",
+        "Contract": "Contract"
+      }
+    },
     "agreements": {
+      "label": "Agreements",
+      "description": "Applicant agreements and consent options.",
       "termsAccepted": {
+        "label": "I accept the terms and conditions",
+        "description": "Mandatory field for the applicant to accept the terms and conditions.",
         "true": "Yes"
+      },
+      "subscribeNewsletter": {
+        "label": "Subscribe to company newsletter",
+        "description": "Optional field for subscribing to company newsletters."
+      }
+    },
+    "resume": {
+      "label": "Resume",
+      "description": "Upload the resume as a PDF file, encoded in base64."
+    },
+    "references": {
+      "label": "References",
+      "description": "List of references for the applicant.",
+      "name": {
+        "label": "Name",
+        "description": "Reference name."
+      },
+      "contact": {
+        "label": "Contact",
+        "description": "Contact information for the reference."
+      },
+      "relation": {
+        "label": "Relation",
+        "description": "Relation to the applicant."
       }
     }
+  },
+  "bg": {
+    "applicant": {
+      "label": "Информация за кандидата",
+      "description": "Данни за кандидата, включително лична информация и контактни данни.",
+      "firstName": {
+        "label": "Първо име",
+        "description": "Първо име на кандидата."
+      },
+      "lastName": {
+        "label": "Фамилно име",
+        "description": "Фамилно име на кандидата."
+      },
+      "gender": {
+        "label": "Пол",
+        "description": "Пол на кандидата."
+      },
+      "dateOfBirth": {
+        "label": "Дата на раждане",
+        "description": "Дата на раждане на кандидата. Трябва да бъде валидна дата в миналото."
+      },
+      "email": {
+        "label": "Имейл адрес",
+        "description": "Имейл адрес на кандидата за връзка."
+      },
+      "phoneNumber": {
+        "label": "Телефонен номер",
+        "description": "Телефонен номер на кандидата."
+      },
+      "address": {
+        "label": "Адрес",
+        "description": "Адрес на дома на кандидата.",
+        "street": {
+          "label": "Улица",
+          "description": "Уличен адрес, включително номер на апартамент или единица, ако има такъв."
+        },
+        "city": {
+          "label": "Град",
+          "description": "Град на местоживеене."
+        },
+        "state": {
+          "label": "Щат",
+          "description": "Щат на местоживеене."
+        },
+        "zipCode": {
+          "label": "Пощенски код",
+          "description": "Пощенски или ZIP код, в 5-цифров или ZIP+4 формат."
+        }
+      },
+      "profilePicture": {
+        "label": "Профилна снимка",
+        "description": "Изображение на профилната снимка на кандидата, кодирано в base64. Трябва да е с размер на файла не по-голям от 50 KB."
+      }
+    },
+    "jobDetails": {
+      "label": "Информация за работата",
+      "description": "Данни за работата, за която кандидатства кандидатът.",
+      "position": {
+        "label": "Позиция, за която кандидатства",
+        "description": "Заглавие или роля, за която кандидатът кандидатства."
+      },
+      "salaryExpectation": {
+        "label": "Очаквано заплащане",
+        "description": "Очакваното годишно заплащане в щатски долари, в рамките на $30,000 до $200,000."
+      },
+      "availableStartDate": {
+        "label": "Дата на започване",
+        "description": "Дата, на която кандидатът е готов да започне работа."
+      },
+      "availableStartTime": {
+        "label": "Предпочитан час за започване",
+        "description": "Предпочитаното време на деня за започване на работа."
+      },
+      "availableStartDateTime": {
+        "label": "Дата и час за започване (по избор)",
+        "description": "Ако е приложимо, точната дата и час, на които кандидатът е готов да започне работа."
+      }
+    },
+    "skills": {
+      "label": "Умения",
+      "description": "Списък с умения или области на експертиза, които кандидатът притежава."
+    },
+    "experience": {
+      "label": "Предишен опит",
+      "companyName": {
+        "label": "Име на компанията",
+        "description": "Име на компанията, в която кандидатът е работил преди."
+      },
+      "role": {
+        "label": "Роля/Позиция",
+        "description": "Ролята или позицията, заемана от кандидата."
+      },
+      "startDate": {
+        "label": "Дата на започване",
+        "description": "Дата на започване на работата на кандидата в тази роля."
+      },
+      "endDate": {
+        "label": "Дата на приключване",
+        "description": "Дата на приключване на работата на кандидата в тази роля. Ако все още работи, оставете празно."
+      },
+      "description": {
+        "label": "Описание на работата",
+        "description": "Кратко описание на отговорностите и постиженията на кандидата."
+      }
+    },
+    "preferences": {
+      "label": "Предпочитания за работа",
+      "description": "Предпочитания относно местоположението на работата, тип работа и други.",
+      "remoteWork": {
+        "label": "Отворен за дистанционна работа",
+        "description": "Индикация дали кандидатът е отворен за дистанционна работа."
+      },
+      "relocation": {
+        "label": "Готов за преместване",
+        "description": "Индикация дали кандидатът е готов да се премести за работа."
+      },
+      "workType": {
+        "label": "Предпочитан тип работа",
+        "description": "Типът работа, който кандидатът предпочита.",
+        "Full time": "Пълно работно време",
+        "Part time": "Частично работно време",
+        "Contract": "Договор"
+      }
+    },
+    "agreements": {
+      "label": "Споразумения",
+      "description": "Споразумения и опции за съгласие на кандидата.",
+      "termsAccepted": {
+        "label": "Приех условията",
+        "description": "Задължително поле за кандидата да приеме условията.",
+        "true": "Да"
+      },
+      "subscribeNewsletter": {
+        "label": "Абониране за бюлетин на компанията",
+        "description": "Опционално поле за абонамент за бюлетини на компанията."
+      }
+    },
+    "resume": {
+      "label": "Автобиография",
+      "description": "Качете автобиографията като PDF файл, кодирана в base64."
+    },
+    "references": {
+      "label": "Препоръки",
+      "description": "Списък с препоръки за кандидата.",
+      "name": {
+        "label": "Име",
+        "description": "Име на препоръчителя."
+      },
+      "contact": {
+        "label": "Контакт",
+        "description": "Контактна информация на препоръчителя."
+      },
+      "relation": {
+        "label": "Отношение",
+        "description": "Отношение към кандидата."
+      }
+    },
+    "Job Application": "Кандидатстване за работа",
+    "Address Information": "Информация за адреса"
   }
 }

@@ -1,7 +1,46 @@
 {
   "type": "TemplateLayout",
-  "template": "<v-card flat><v-card-title>Job Application</v-card-title><v-container style=\"pa-0\" fluid><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container></v-card>",
+  "template": "<v-card flat><slot name=\"toolbar\"></slot><v-container style=\"pa-0\" fluid><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot v-if=\"element.name != 'toolbar'\" :name=\"element.name\"></slot></v-col></v-row></v-container></v-card>",
   "elements": [
+    {
+      "type": "TemplateLayout",
+      "template": "<v-toolbar><v-toolbar-title>{{translate('Job Application', 'Job Application')}}</v-toolbar-title><slot v-for=\"element in elements\" :key=\"element.name\" :name=\"element.name\"></slot></v-toolbar>",
+      "name": "toolbar",
+      "elements": [
+        {
+          "type": "Button",
+          "label": "EN",
+          "action": "changeLang",
+          "params": {
+            "lang": "en"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        },
+        {
+          "type": "Button",
+          "label": "BG",
+          "action": "changeLang",
+          "params": {
+            "lang": "bg"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        }
+      ]
+    },
     {
       "type": "Categorization",
       "elements": [

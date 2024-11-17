@@ -6,25 +6,17 @@
   "properties": {
     "applicant": {
       "type": "object",
-      "title": "Applicant Information",
-      "description": "Details about the applicant, including personal and contact information.",
       "properties": {
         "firstName": {
           "type": "string",
-          "title": "First Name",
-          "description": "Applicant's first name.",
           "maxLength": 50
         },
         "lastName": {
           "type": "string",
-          "title": "Last Name",
-          "description": "Applicant's last name.",
           "maxLength": 50
         },
         "gender": {
           "type": "string",
-          "title": "Gender",
-          "description": "The gender of the applicant.",
           "oneOf": [
             {
               "const": "male",
@@ -42,46 +34,30 @@
         },
         "dateOfBirth": {
           "type": "string",
-          "format": "date",
-          "title": "Date of Birth",
-          "description": "The applicant's date of birth. Must be a valid date in the past."
+          "format": "date"
         },
         "email": {
           "type": "string",
-          "format": "email",
-          "title": "Email Address",
-          "description": "Applicant's email address for communication."
+          "format": "email"
         },
         "phoneNumber": {
           "type": "string",
-          "title": "Phone Number",
-          "description": "Applicant's phone number",
           "pattern": "^\\+?[1-9]\\d{0,2}[-\\s]?\\(?\\d{1,4}\\)?[-\\s]?\\d{1,4}[-\\s]?\\d{1,9}$"
         },
         "address": {
           "type": "object",
-          "title": "Address",
-          "description": "Applicant's home address.",
           "properties": {
             "street": {
-              "type": "string",
-              "title": "Street",
-              "description": "Street address, including apartment or unit number if applicable."
+              "type": "string"
             },
             "city": {
-              "type": "string",
-              "title": "City",
-              "description": "City of residence."
+              "type": "string"
             },
             "state": {
-              "type": "string",
-              "title": "State",
-              "description": "State of residence."
+              "type": "string"
             },
             "zipCode": {
               "type": "string",
-              "title": "ZIP Code",
-              "description": "ZIP or postal code, in 5-digit or ZIP+4 format.",
               "pattern": "^\\d{5}(-\\d{4})?$"
             }
           },
@@ -89,8 +65,6 @@
         },
         "profilePicture": {
           "type": "string",
-          "title": "Profile Picture",
-          "description": "A base64-encoded image of the applicant's profile picture. Should be a 200x200 pixel image with a file size of 50 KB or less.",
           "format": "uri",
           "contentMediaType": "image/*",
           "contentEncoding": "base64"
@@ -100,46 +74,32 @@
     },
     "jobDetails": {
       "type": "object",
-      "title": "Job Information",
-      "description": "Details about the job the applicant is applying for.",
       "properties": {
         "position": {
-          "type": "string",
-          "title": "Position Applied For",
-          "description": "The title or role the applicant is applying for."
+          "type": "string"
         },
         "salaryExpectation": {
           "type": "number",
-          "title": "Salary Expectation",
-          "description": "The expected annual salary in USD, within the range of $30,000 to $200,000.",
           "minimum": 30000,
           "maximum": 200000
         },
         "availableStartDate": {
           "type": "string",
-          "format": "date",
-          "title": "Available Start Date",
-          "description": "The date on which the applicant is available to start work."
+          "format": "date"
         },
         "availableStartTime": {
           "type": "string",
-          "pattern": "^([01]?[0-9]|2[0-3]):([0-5][0-9])$",
-          "title": "Preferred Start Time",
-          "description": "The preferred time of day for the applicant to start work."
+          "pattern": "^([01]?[0-9]|2[0-3]):([0-5][0-9])$"
         },
         "availableStartDateTime": {
           "type": "string",
-          "format": "date-time",
-          "title": "Start Date and Time (Optional)",
-          "description": "If applicable, the exact date and time the applicant is available to start work."
+          "format": "date-time"
         }
       },
       "required": ["position", "salaryExpectation", "availableStartDate"]
     },
     "skills": {
       "type": "array",
-      "title": "Skills",
-      "description": "A list of skills or areas of expertise that the applicant possesses.",
       "items": {
         "type": "string",
         "description": "Individual skill name."
@@ -150,38 +110,26 @@
     },
     "experience": {
       "type": "array",
-      "title": "Previous Job Experience",
-      "description": "Details of the applicant's previous job experience.",
       "items": {
         "type": "object",
         "properties": {
           "companyName": {
-            "type": "string",
-            "title": "Company Name",
-            "description": "Name of the company where the applicant previously worked."
+            "type": "string"
           },
           "role": {
-            "type": "string",
-            "title": "Role/Position",
-            "description": "The role or position held by the applicant."
+            "type": "string"
           },
           "startDate": {
             "type": "string",
-            "format": "date",
-            "title": "Start Date",
-            "description": "The start date of the applicant's employment in this role."
+            "format": "date"
           },
           "endDate": {
             "type": "string",
             "format": "date",
-            "formatMinimum": { "$data": "1/startDate" },
-            "title": "End Date",
-            "description": "The end date of the applicant's employment in this role. If still employed, leave blank."
+            "formatMinimum": { "$data": "1/startDate" }
           },
           "description": {
             "type": "string",
-            "title": "Job Description",
-            "description": "Brief description of the applicant's responsibilities and achievements.",
             "maxLength": 1000
           }
         },
@@ -191,18 +139,12 @@
     },
     "preferences": {
       "type": "object",
-      "title": "Job Preferences",
-      "description": "Preferences regarding the job location, work type, and more.",
       "properties": {
         "remoteWork": {
-          "type": "boolean",
-          "title": "Open to Remote Work",
-          "description": "Indicates if the applicant is open to working remotely."
+          "type": "boolean"
         },
         "relocation": {
-          "type": "boolean",
-          "title": "Willing to Relocate",
-          "description": "Indicates if the applicant is willing to relocate for the job."
+          "type": "boolean"
         },
         "workType": {
           "type": "string",
@@ -219,57 +161,43 @@
               "const": "CONTRACT",
               "title": "Contract"
             }
-          ],
-          "title": "Preferred Work Type",
-          "description": "The type of work the applicant prefers."
+          ]
         }
       },
       "required": ["workType"]
     },
     "agreements": {
       "type": "object",
-      "title": "Agreements",
-      "description": "Applicant agreements and consent options.",
       "properties": {
         "termsAccepted": {
           "type": "boolean",
-          "title": "I accept the terms and conditions",
-          "description": "Mandatory field for the applicant to accept the terms and conditions.",
           "enum": [true]
         },
         "subscribeNewsletter": {
-          "type": "boolean",
-          "title": "Subscribe to company newsletter",
-          "description": "Optional field for subscribing to company newsletters."
+          "type": "boolean"
         }
       },
       "required": ["termsAccepted"]
     },
     "resume": {
       "type": "string",
-      "title": "Resume",
-      "description": "Upload the resume as a PDF file, encoded in base64.",
       "format": "binary",
       "contentMediaType": "application/pdf",
       "contentEncoding": "base64"
     },
     "references": {
       "type": "array",
-      "description": "List of references for the applicant.",
       "items": {
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "description": "Reference name."
+            "type": "string"
           },
           "contact": {
-            "type": "string",
-            "description": "Contact information for the reference."
+            "type": "string"
           },
           "relation": {
-            "type": "string",
-            "description": "Relation to the applicant."
+            "type": "string"
           }
         },
         "minProperties": 1
