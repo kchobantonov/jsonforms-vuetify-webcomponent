@@ -110,6 +110,37 @@
               ]
             }
           ]
+        },
+        {
+          "type": "Category",
+          "label": "Job Preferences",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/preferences/properties/remoteWork",
+                      "options": {
+                        "toggle": true
+                      }
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/preferences/properties/relocation"
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/preferences/properties/workType"
+                }
+              ]
+            }
+          ]
         }
       ],
       "options": {

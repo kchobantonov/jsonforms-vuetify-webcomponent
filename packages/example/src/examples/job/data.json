@@ -47,7 +47,7 @@
   "preferences": {
     "remoteWork": true,
     "relocation": false,
-    "workType": "Full-time"
+    "workType": "FULL_TIME"
   },
   "agreements": {
     "termsAccepted": true,
