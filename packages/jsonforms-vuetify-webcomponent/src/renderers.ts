@@ -36,6 +36,18 @@ import {
   OneOfTabRenderer,
 } from '@jsonforms/vue-vuetify';
 
+import {
+  TemplateLabelRenderer,
+  TemplateLayoutRenderer,
+  TemplateRenderer,
+  SlotRenderer,
+  FileRenderer,
+  DataProviderRenderer,
+  DataProviderSelectRenderer,
+  ButtonRenderer,
+  MonacoRenderer,
+} from '@chobantonov/jsonforms-vuetify-renderers';
+
 export const renderers = [
   ArrayLayoutRenderer,
   CategorizationRenderer,
@@ -72,4 +84,14 @@ export const renderers = [
   OneOfTabRenderer,
   LabelRenderer,
   ListWithDetailRenderer,
+
+  TemplateLabelRenderer,
+  TemplateLayoutRenderer,
+  TemplateRenderer,
+  SlotRenderer,
+  FileRenderer,
+  DataProviderRenderer,
+  DataProviderSelectRenderer,
+  ButtonRenderer,
+  MonacoRenderer,
 ];

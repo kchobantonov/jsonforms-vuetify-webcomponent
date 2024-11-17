@@ -1,1 +1,54 @@
-{}
+{
+  "type": "TemplateLayout",
+  "template": "<v-card flat><v-card-title>Job Application</v-card-title><v-container style=\"pa-0\" fluid><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container></v-card>",
+  "elements": [
+    {
+      "type": "Categorization",
+      "elements": [
+        {
+          "type": "Category",
+          "label": "Personal Information",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "Template",
+                  "name": "applicant"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "Position Information",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "Template",
+                  "name": "jobDetails"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "options": {
+        "vertical": false,
+        "variant": "stepper",
+        "showNavButtons": true,
+        "vuetify": {
+          "v-stepper": {
+            "alt-labels": false,
+            "flat": true
+          }
+        }
+      }
+    }
+  ]
+}
