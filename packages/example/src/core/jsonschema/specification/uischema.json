@@ -92,6 +92,9 @@
         "label": {
           "type": "string"
         },
+        "i18n": {
+          "type": "string"
+        },
         "scope": {
           "$ref": "#/definitions/scope"
         },
@@ -116,7 +119,7 @@
           "scope": "Control should have an object property \"scope\"",
           "type": "Control should have a string property \"type\""
         },
-        "additionalProperties": "Control should not have properties other than type, label, scope, options, suggestion and rule"
+        "additionalProperties": "Control should not have properties other than type, label, scope, i18n, options, suggestion and rule"
       }
     },
     "label": {
@@ -132,6 +135,9 @@
           "default": "Label"
         },
         "text": {
+          "type": "string"
+        },
+        "i18n": {
           "type": "string"
         },
         "options": {
@@ -151,7 +157,7 @@
         "required": {
           "type": "Label should have a string property \"type\""
         },
-        "additionalProperties": "Label should not have properties other than type, text, options, and rule"
+        "additionalProperties": "Label should not have properties other than type, text, i18n, options, and rule"
       }
     },
     "horizontallayout": {
@@ -470,6 +476,9 @@
           "const": "Button",
           "default": "Button"
         },
+        "i18n": {
+          "type": "string"
+        },
         "params": {
           "type": "object",
           "additionalProperties": true
@@ -491,7 +500,7 @@
           "name": "Button should have an string property \"label\"",
           "type": "Button should have a string property \"type\""
         },
-        "additionalProperties": "Button should not have properties other than type, label, action, script, icon, color, params, options and rule"
+        "additionalProperties": "Button should not have properties other than type, label, action, script, icon, color, params, i18n, options and rule"
       }
     },
     "rule": {
