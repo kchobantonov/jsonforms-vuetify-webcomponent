@@ -10,9 +10,9 @@ The example application is based on [JSON Forms Vuetify Renderers](https://githu
 
 See [jsonforms.io](https://jsonforms.io/) and the [main repository](https://github.com/eclipsesource/jsonforms) for more information about JSON Forms.
 
-## Vue2 Vuetify renderer set
+## Vue Vuetify renderer set
 
-See the [README](https://github.com/eclipsesource/jsonforms-vuetify-renderers/blob/main/vue2-vuetify/README.md) of the Vue 2 Vuetify renderer set for detailed instructions on how to consume and use the JSON Forms Vue 2 Vuetify renderer set.
+See the [README](https://github.com/eclipsesource/jsonforms/blob/master/packages/vue-vuetify/README.md) of the Vue Vuetify renderer set for detailed instructions on how to consume and use the JSON Forms Vue Vuetify renderer set.
 
 ## Developer documentation
 
