@@ -1,24 +1,24 @@
 import {
-  JsonFormsUISchemaRegistryEntry,
+  type JsonFormsUISchemaRegistryEntry,
   NOT_APPLICABLE,
-  UISchemaElement,
-  UISchemaTester,
+  type UISchemaElement,
+  type UISchemaTester,
 } from '@jsonforms/core';
 
 export const createJsonFormsUISchemaRegistryEntry = (
   testerString: string,
-  uischema: UISchemaElement
+  uischema: UISchemaElement,
 ): JsonFormsUISchemaRegistryEntry => {
   const action: UISchemaTester = (jsonSchema, schemaPath, path) => {
     try {
       const tester = new Function(
         'jsonSchema, schemaPath, path',
-        `var NOT_APPLICABLE = ${NOT_APPLICABLE}; var tester = ${testerString}; return tester(jsonSchema, schemaPath, path);`
+        `var NOT_APPLICABLE = ${NOT_APPLICABLE}; var tester = ${testerString}; return tester(jsonSchema, schemaPath, path);`,
       );
       const result = tester(jsonSchema, schemaPath, path);
       if (typeof result !== 'number') {
         console.error(
-          `Invalid result type, expected number but got ${typeof result}`
+          `Invalid result type, expected number but got ${typeof result}`,
         );
       }
       return typeof result === 'number' ? result : NOT_APPLICABLE;

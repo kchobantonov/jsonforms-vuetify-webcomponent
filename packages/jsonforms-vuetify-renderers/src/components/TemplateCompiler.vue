@@ -1,5 +1,5 @@
 <template>
-  <component :is="compiled" v-if="compiled">
+  <component v-if="component" :is="component" :="$attrs">
     <template v-if="defaultElement" v-slot:default>
       <slot>
         <dispatch-renderer
@@ -30,23 +30,21 @@
 </template>
 
 <script lang="ts">
-import { DispatchRenderer, useJsonFormsLayout } from '@jsonforms/vue2';
+import { DispatchRenderer, type LayoutProps } from '@jsonforms/vue';
 import merge from 'lodash/merge';
-import Vue, { defineComponent, PropType, unref } from 'vue';
-import { CompiledResultFunctions } from 'vue-template-compiler';
-import { DirectiveFunction, DirectiveOptions } from 'vue/types/umd';
-import { ComputedOptions, MethodOptions } from 'vue/types/v3-component-options';
 import {
-  Components,
-  NamedUISchemaElement,
-} from '../core/types';
-const compileToFunctions = () =>
-  import('vue-template-compiler').then((module) => {
-    const { compileToFunctions } = module;
-    return compileToFunctions;
-  });
-
-type LayoutType = ReturnType<typeof useJsonFormsLayout>['layout'];
+  defineComponent,
+  unref,
+  type Component,
+  type ComponentPublicInstance,
+  type ComputedOptions,
+  type Directive,
+  type MethodOptions,
+  type PropType,
+  markRaw,
+  compile,
+} from 'vue';
+import type { NamedUISchemaElement } from '../core/types';
 
 const templateCompiler = defineComponent({
   name: 'template-compiler',
@@ -57,7 +55,7 @@ const templateCompiler = defineComponent({
 
   props: {
     parent: {
-      type: [Object] as PropType<Vue>,
+      type: [Object] as PropType<ComponentPublicInstance>,
     },
 
     template: {
@@ -66,14 +64,12 @@ const templateCompiler = defineComponent({
     },
 
     layout: {
-      type: Object as PropType<LayoutType>,
+      type: Object as PropType<LayoutProps>,
       required: true,
     },
 
     componentDirectives: {
-      type: [Object] as PropType<
-        Record<string, DirectiveFunction | DirectiveOptions>
-      >,
+      type: [Object] as PropType<Record<string, Directive>>,
     },
 
     componentComputed: {
@@ -89,7 +85,7 @@ const templateCompiler = defineComponent({
     },
 
     componentComponents: {
-      type: [Object] as PropType<Components>,
+      type: [Object] as PropType<Component>,
     },
 
     elements: {
@@ -98,7 +94,7 @@ const templateCompiler = defineComponent({
   },
   data() {
     return {
-      compiled: null as CompiledResultFunctions | null,
+      component: null as Component | null,
     };
   },
 
@@ -124,16 +120,16 @@ const templateCompiler = defineComponent({
       };
     },
 
-    parentComponent(): Vue {
-      return (this.parent as Vue) || this.$parent;
+    parentComponent(): ComponentPublicInstance | null {
+      return this.parent || this.$parent;
     },
 
     parentData() {
-      return (this.parentComponent as any as Vue).$data || {};
+      return this.parentComponent?.$data || {};
     },
 
     parentProps() {
-      return (this.parentComponent as any as Vue).$props || {};
+      return this.parentComponent?.$props || {};
     },
 
     defaultElement(): NamedUISchemaElement | undefined {
@@ -142,16 +138,19 @@ const templateCompiler = defineComponent({
         : undefined;
     },
   },
-  async created() {
-    await this.compile();
-  },
-  methods: {
-    async compile() {
-      const compile = await compileToFunctions();
-      const component = compile(this.template);
-      const compiled = merge(component, unref(this.componentProps));
-      this.compiled = compiled;
-    },
+  created() {
+    const render = compile(this.template);
+
+    this.component = markRaw(
+      defineComponent(
+        merge(
+          {
+            render: render,
+          },
+          unref(this.componentProps),
+        ),
+      ),
+    );
   },
 });
 

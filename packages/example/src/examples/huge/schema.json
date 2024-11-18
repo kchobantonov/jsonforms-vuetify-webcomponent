@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/schema#",
-
   "definitions": {
     "confidenceTypes": {
       "type": "string",

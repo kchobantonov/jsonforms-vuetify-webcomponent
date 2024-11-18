@@ -1,37 +1,24 @@
-import {
+import type { ActionEvent } from '@chobantonov/jsonforms-vuetify-renderers';
+import type {
   UISchemaElement,
   JsonSchema,
   JsonFormsRendererRegistryEntry,
   JsonFormsUISchemaRegistryEntry,
 } from '@jsonforms/core';
 
-export type Example = {
-  id: string;
-  title: string;
+export type ExampleDescription = {
+  name: string;
+  label: string;
   note?: string;
-  input: {
-    schema?: JsonSchema;
-    uischema?: UISchemaElement;
-    uischemas?: JsonFormsUISchemaRegistryEntry[];
-    data: string | number | boolean | any[] | Record<string, any>;
-    i18n?: Record<string, any>;
-    renderers?: JsonFormsRendererRegistryEntry[];
-  };
+  input: ExampleInputDescription;
 };
 
-export type JsonExampleInput = Omit<Example['input'], 'uischemas'> & {
-  uischemas?: {
-    tester: string;
-    uischema: UISchemaElement;
-  }[];
-};
-
-export type JsonExample = Omit<Example, 'input'> & {
-  input: JsonExampleInput;
-};
-
-export type ResolvedSchema = {
+export type ExampleInputDescription = {
   schema?: JsonSchema;
-  resolved: boolean;
-  error?: string;
+  uischema?: UISchemaElement;
+  uischemas?: JsonFormsUISchemaRegistryEntry[];
+  data: string | number | boolean | any[] | Record<string, any>;
+  i18n?: Record<string, any>;
+  renderers?: JsonFormsRendererRegistryEntry[];
+  onHandleAction?: (event: ActionEvent) => void;
 };

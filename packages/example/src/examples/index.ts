@@ -1,4 +1,4 @@
-import { JsonExample } from '@/core/types';
+import type { ExampleDescription } from '@/core/types';
 import { input as allOf } from './allOf';
 import { input as allOfWithProps } from './allOf-with-props';
 import { input as anyOf } from './anyOf';
@@ -8,6 +8,7 @@ import { input as array } from './array';
 import { input as arrayRestrict } from './array-restrict';
 import { input as arrayWithReorder } from './array-with-reorder';
 import { input as basic } from './basic';
+import { input as button } from './button';
 import { input as categorization } from './categorization';
 import { input as categorizationStepper } from './categorization-stepper';
 import { input as categorizationStepperNav } from './categorization-stepper-nav';
@@ -25,6 +26,7 @@ import { input as ifThenElse } from './if-then-else';
 import { input as listWithDetails } from './list-with-details';
 import { input as listWithDetailsAndReorder } from './list-with-details-and-reorder';
 import { input as listWithDetailsRestrict } from './list-with-details-restrict';
+import { input as job } from './job';
 import { input as login } from './login';
 import { input as main } from './main';
 import { input as monacoEditor } from './monaco-editor';
@@ -52,266 +54,276 @@ import { input as timeExample } from './time';
 import { input as verticalLayout } from './vertical-layout';
 import { input as file } from './file';
 
-export const examples: JsonExample[] = [
+export const examples: ExampleDescription[] = [
   {
-    id: 'main',
-    title: 'Main',
+    name: 'main',
+    label: 'Main',
     input: main,
   },
   {
-    id: 'basic',
-    title: 'Basic',
+    name: 'basic',
+    label: 'Basic',
     input: basic,
   },
   {
-    id: 'control',
-    title: 'Control',
+    name: 'control',
+    label: 'Control',
     input: control,
   },
   {
-    id: 'control-options',
-    title: 'Control Options',
+    name: 'control-options',
+    label: 'Control Options',
     input: controlOptions,
   },
   {
-    id: 'monaco-editor',
-    title: 'Monaco Editor',
+    name: 'monaco-editor',
+    label: 'Monaco Editor',
     input: monacoEditor,
   },
   {
-    id: 'file',
-    title: 'File',
+    name: 'job',
+    label: 'Job Application',
+    input: job,
+  },
+  {
+    name: 'file',
+    label: 'File',
     input: file,
   },
   {
-    id: 'datetime',
-    title: 'Datetime',
+    name: 'button',
+    label: 'Button',
+    input: button,
+  },
+  {
+    name: 'datetime',
+    label: 'Datetime',
     input: dateTimeExample,
   },
   {
-    id: 'date',
-    title: 'Date',
+    name: 'date',
+    label: 'Date',
     input: dateExample,
   },
   {
-    id: 'time',
-    title: 'Time',
+    name: 'time',
+    label: 'Time',
     input: timeExample,
   },
   {
-    id: 'enum',
-    title: 'Enum',
+    name: 'enum',
+    label: 'Enum',
     input: enumExample,
   },
   {
-    id: 'enum-in-array',
-    title: 'Enum In Array',
+    name: 'enum-in-array',
+    label: 'Enum In Array',
     input: enumInArray,
   },
   {
-    id: 'multi-array',
-    title: 'Multi Enum',
+    name: 'multi-array',
+    label: 'Multi Enum',
     input: multiEnum,
   },
   {
-    id: 'categorization',
-    title: 'Categorization',
+    name: 'categorization',
+    label: 'Categorization',
     input: categorization,
   },
   {
-    id: 'categorization-stepper',
-    title: 'Categorization Stepper',
+    name: 'categorization-stepper',
+    label: 'Categorization Stepper',
     input: categorizationStepper,
   },
   {
-    id: 'categorization-stepper-nav',
-    title: 'Categorization Stepper With Navigation',
+    name: 'categorization-stepper-nav',
+    label: 'Categorization Stepper With Navigation',
     input: categorizationStepperNav,
   },
   {
-    id: 'custom-renderer',
-    title: 'Custom Renderer',
+    name: 'custom-renderer',
+    label: 'Custom Renderer',
     input: customRenderer,
   },
   {
-    id: 'horizontal-layout',
-    title: 'Horizontal Layout',
+    name: 'horizontal-layout',
+    label: 'Horizontal Layout',
     input: horizontalLayout,
   },
   {
-    id: 'vertical-layout',
-    title: 'Vertical Layout',
+    name: 'vertical-layout',
+    label: 'Vertical Layout',
     input: verticalLayout,
   },
   {
-    id: 'group-layout',
-    title: 'Group Layout',
+    name: 'group-layout',
+    label: 'Group Layout',
     input: groupLayout,
   },
   {
-    id: 'nested-layout',
-    title: 'Nested Layout',
+    name: 'nested-layout',
+    label: 'Nested Layout',
     input: nestedLayout,
   },
   {
-    id: 'template-layout',
-    title: 'Template Layout',
+    name: 'template-layout',
+    label: 'Template Layout',
     input: templateLayout,
   },
   {
-    id: 'template-slot',
-    title: 'Template/Slot Layout',
+    name: 'template-slot',
+    label: 'Template/Slot Layout',
     input: templateSlot,
   },
   {
-    id: 'array',
-    title: 'Array',
+    name: 'array',
+    label: 'Array',
     input: array,
   },
   {
-    id: 'array-restrict',
-    title: 'Array Min/Max Items',
+    name: 'array-restrict',
+    label: 'Array Min/Max Items',
     input: arrayRestrict,
   },
   {
-    id: 'array-with-reorder',
-    title: 'Array With Reorder',
+    name: 'array-with-reorder',
+    label: 'Array With Reorder',
     input: arrayWithReorder,
   },
   {
-    id: 'nested-array',
-    title: 'Nested Array',
+    name: 'nested-array',
+    label: 'Nested Array',
     input: nestedArray,
   },
   {
-    id: 'nested-array-restrict',
-    title: 'Nested Array Min/Max Items',
+    name: 'nested-array-restrict',
+    label: 'Nested Array Min/Max Items',
     input: nestedArrayRestrict,
   },
   {
-    id: 'nested-array-with-reorder',
-    title: 'Nested Array With Reorder',
+    name: 'nested-array-with-reorder',
+    label: 'Nested Array With Reorder',
     input: nestedArrayWithReorder,
   },
   {
-    id: 'rule',
-    title: 'Rule',
+    name: 'rule',
+    label: 'Rule',
     input: rule,
   },
   {
-    id: 'login',
-    title: 'Login',
+    name: 'login',
+    label: 'Login',
     input: login,
   },
   {
-    id: 'radio',
-    title: 'Radio',
+    name: 'radio',
+    label: 'Radio',
     input: radio,
   },
   {
-    id: 'radio-group',
-    title: 'Radio Group',
+    name: 'radio-group',
+    label: 'Radio Group',
     input: radioGroup,
   },
   {
-    id: 'object',
-    title: 'Object',
+    name: 'object',
+    label: 'Object',
     input: object,
   },
   {
-    id: 'object-nested',
-    title: 'Object (Nested)',
+    name: 'object-nested',
+    label: 'Object (Nested)',
     input: objectNested,
   },
   {
-    id: 'root-object',
-    title: 'Root Object',
+    name: 'root-object',
+    label: 'Root Object',
     note: 'Change `return NOT_APPLICABLE;` to `return 1;` in UI Schemas tab, and then save, to see the difference in the Demo tab',
     input: rootObject,
   },
   {
-    id: 'additional-properties',
-    title: 'Additional Properties',
+    name: 'additional-properties',
+    label: 'Additional Properties',
     input: additionalProperties,
   },
   {
-    id: 'no-ui-schema',
-    title: 'Generate UI Schema',
+    name: 'no-ui-schema',
+    label: 'Generate UI Schema',
     input: noUISchema,
   },
   {
-    id: 'no-schemas',
-    title: 'Generate Both Schemas',
+    name: 'no-schemas',
+    label: 'Generate Both Schemas',
     input: noSchemas,
   },
   {
-    id: 'one-of',
-    title: 'Combinators oneOf',
+    name: 'one-of',
+    label: 'Combinators oneOf',
     input: oneOf,
   },
   {
-    id: 'one-of-with-props',
-    title: 'Combinators oneOf with props',
+    name: 'one-of-with-props',
+    label: 'Combinators oneOf with props',
     input: oneOfWithProps,
   },
   {
-    id: 'one-of-tab',
-    title: 'Combinators oneOf tab',
+    name: 'one-of-tab',
+    label: 'Combinators oneOf tab',
     input: oneOfTab,
   },
   {
-    id: 'one-of-recursive',
-    title: 'Combinators oneOf recursive',
+    name: 'one-of-recursive',
+    label: 'Combinators oneOf recursive',
     input: oneOfRecursive,
   },
   {
-    id: 'any-of',
-    title: 'Combinators anyOf',
+    name: 'any-of',
+    label: 'Combinators anyOf',
     input: anyOf,
   },
   {
-    id: 'any-of-with-props',
-    title: 'Combinators anyOf with props',
+    name: 'any-of-with-props',
+    label: 'Combinators anyOf with props',
     input: anyOfWithProps,
   },
   {
-    id: 'any-of-simple',
-    title: 'Combinators anyOf simple',
+    name: 'any-of-simple',
+    label: 'Combinators anyOf simple',
     input: anyOfSimple,
   },
   {
-    id: 'all-of',
-    title: 'Combinators allOf',
+    name: 'all-of',
+    label: 'Combinators allOf',
     input: allOf,
   },
   {
-    id: 'all-of-with-props',
-    title: 'Combinators allOf with props',
+    name: 'all-of-with-props',
+    label: 'Combinators allOf with props',
     input: allOfWithProps,
   },
   {
-    id: 'list-with-details',
-    title: 'List With Details',
+    name: 'list-with-details',
+    label: 'List With Details',
     input: listWithDetails,
   },
   {
-    id: 'list-with-details-restrict',
-    title: 'List With Details Min/Max Items',
+    name: 'list-with-details-restrict',
+    label: 'List With Details Min/Max Items',
     input: listWithDetailsRestrict,
   },
   {
-    id: 'list-with-details-reorder',
-    title: 'List With Details And Reorder',
+    name: 'list-with-details-reorder',
+    label: 'List With Details And Reorder',
     input: listWithDetailsAndReorder,
   },
   {
-    id: 'if-then-else',
-    title: 'If Then Else',
+    name: 'if-then-else',
+    label: 'If Then Else',
     input: ifThenElse,
   },
   {
-    id: 'huge',
-    title: 'Huge',
+    name: 'huge',
+    label: 'Huge',
     input: huge,
   },
 ];

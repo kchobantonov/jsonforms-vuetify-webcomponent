@@ -3,8 +3,8 @@
   "displayName": "JSONForms Vuetify Tooling",
   "author": "Krasimir Chobantonov",
   "publisher": "kchobantonov",
-  "description": "VSCode extension for JSONForms tooling using Vue2 Vuetify renderer set",
-  "version": "0.0.6",
+  "description": "VSCode extension for JSONForms tooling using Vue3 Vuetify renderer set",
+  "version": "0.0.7",
   "private": true,
   "preview": true,
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
@@ -15,8 +15,6 @@
   },
   "keywords": [
     "vue",
-    "vue2",
-    "vue 2",
     "vuetify",
     "form",
     "forms",
@@ -103,6 +101,7 @@
     }
   },
   "scripts": {
+    "clean": "rimraf dist",
     "vscode:prepublish": "npm run package",
     "build": "webpack",
     "watch": "webpack --watch",
@@ -121,19 +120,21 @@
     "@types/vscode": "^1.76.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
-    "@chobantonov/jsonforms-vuetify-webcomponent": "3.1.0-alpha.3",
+    "@chobantonov/jsonforms-vuetify-webcomponent": "workspace:*",
     "@vscode/test-electron": "^2.2.3",
     "@vscode/vsce": "^2.18.0",
     "copy-webpack-plugin": "^6.4.1",
     "eslint": "^6.7.2",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
+    "rimraf": "^4.4.1",
     "ts-loader": "^8.4.0",
     "typescript": "^4.7.3",
     "webpack": "^4.0.0",
     "webpack-cli": "^4.0.0"
   },
   "dependencies": {
+    "ajv": "^8.6.1",
     "chokidar": "^3.5.3",
     "util": "^0.12.5"
   }

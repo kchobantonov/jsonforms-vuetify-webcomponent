@@ -9,20 +9,21 @@ import {
   getRenderers,
   getTranslator,
   hasShowRule,
-  Internationalizable,
   isInherentlyEnabled,
   isVisible,
-  JsonFormsState,
-  OwnPropsOfRenderer,
-  UISchemaElement,
+  type Internationalizable,
+  type JsonFormsState,
+  type OwnPropsOfRenderer,
+  type UISchemaElement,
 } from '@jsonforms/core';
-import { RendererProps, useControl } from '@jsonforms/vue2';
-import { useStyles } from '@jsonforms/vue2-vuetify';
+import { useControl, type RendererProps } from '@jsonforms/vue';
+import { useStyles } from '@jsonforms/vue-vuetify';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isPlainObject from 'lodash/isPlainObject';
 import merge from 'lodash/merge';
-import { computed } from 'vue';
+import { computed, inject, type Ref } from 'vue';
+import { FormContextKey, type FormContext } from '../core';
 
 export interface ButtonElement extends UISchemaElement, Internationalizable {
   type: 'Button';
@@ -44,7 +45,7 @@ export interface OwnPropsOfButton extends OwnPropsOfRenderer {
 
 export const mapStateToButtonProps = (
   state: JsonFormsState,
-  ownProps: OwnPropsOfButton
+  ownProps: OwnPropsOfButton,
 ) => {
   const rootData = getData(state);
   const { uischema } = ownProps;
@@ -60,7 +61,7 @@ export const mapStateToButtonProps = (
   const params = uischema.params;
   const t = getTranslator()(state);
   const i18nKeyPrefix = getI18nKeyPrefixBySchema(undefined, uischema);
-  const i18nKey = i18nKeyPrefix ? `${i18nKeyPrefix}.label` : label ?? '';
+  const i18nKey = i18nKeyPrefix ? `${i18nKeyPrefix}.label` : (label ?? '');
   const i18nText = t(i18nKey, label, { uischema });
 
   const config = getConfig(state);
@@ -70,7 +71,7 @@ export const mapStateToButtonProps = (
     uischema,
     undefined, // layouts have no associated schema
     rootData,
-    config
+    config,
   );
 
   return {
@@ -99,8 +100,8 @@ export const useVuetifyButton = <I extends { button: any }>(input: I) => {
     merge(
       {},
       cloneDeep(input.button.value.config),
-      cloneDeep(input.button.value.uischema.options)
-    )
+      cloneDeep(input.button.value.uischema.options),
+    ),
   );
   const vuetifyProps = (path: string) => {
     const props = get(appliedOptions.value?.vuetify, path);
@@ -116,7 +117,7 @@ export const useVuetifyButton = <I extends { button: any }>(input: I) => {
 };
 
 export const useElementArrayControl = <I extends { control: any }>(
-  input: I
+  input: I,
 ) => {
   const childUiSchema = computed(() =>
     findUISchema(
@@ -126,8 +127,8 @@ export const useElementArrayControl = <I extends { control: any }>(
       input.control.value.path,
       undefined,
       input.control.value.uischema,
-      input.control.value.rootSchema
-    )
+      input.control.value.rootSchema,
+    ),
   );
 
   return {
@@ -135,4 +136,16 @@ export const useElementArrayControl = <I extends { control: any }>(
     childUiSchema,
     composePaths,
   };
+};
+
+export const useFormContext = () => {
+  const formContext = inject<Ref<FormContext>>(FormContextKey);
+
+  if (!formContext) {
+    throw new Error(
+      "'formContext' couldn't be injected. Are you within JsonForms?",
+    );
+  }
+
+  return formContext;
 };

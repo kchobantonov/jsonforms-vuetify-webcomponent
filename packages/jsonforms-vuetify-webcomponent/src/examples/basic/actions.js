@@ -31,7 +31,7 @@ const saveData = async (event) => {
     uidata.errorDialog.title = event.jsonforms.i18n.translate('Error', 'Error');
     uidata.errorDialog.text = event.jsonforms.i18n.translate(
       'You have errors. Fix those before saving data.',
-      'You have errors. Fix those before saving data.'
+      'You have errors. Fix those before saving data.',
     );
     uidata.errorDialog.show = true;
   } else {

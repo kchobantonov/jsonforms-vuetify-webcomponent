@@ -1,15 +1,8 @@
-import editorApi from 'monaco-editor/esm/vs/editor/editor.api';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { JsonSchema } from '@jsonforms/core';
+import type { JsonSchema } from '@jsonforms/core';
+import monaco, { type MonacoApi } from './monaco';
 
-import {
-  jsonSchemaDraft7,
-  ruleSchema,
-  uiSchema,
-  uiSchemas,
-} from '../core/jsonschema';
-
-export type EditorApi = typeof editorApi;
+import isEqual from 'lodash/isEqual';
+import { jsonSchemaDraft7, ruleSchema, uiSchema } from '../core/jsonschema';
 
 /**
  * Register a new schema for the Json language, if it isn't already registered.
@@ -21,12 +14,12 @@ export type EditorApi = typeof editorApi;
  *  Schemas to register
  */
 export const addSchema = (
-  editor: EditorApi,
+  editor: MonacoApi,
   schemas: {
     uri: string;
     fileMatch?: string[];
     schema?: JsonSchema;
-  }[]
+  }[],
 ): void => {
   const registeredSchemas =
     editor.languages.json.jsonDefaults.diagnosticsOptions.schemas;
@@ -43,15 +36,26 @@ export const addSchema = (
     for (const schema of schemas) {
       const fileMatch = schema.fileMatch;
 
-      const gridSchema = registeredSchemas.find(
+      const existingSchemaIndex = registeredSchemas.findIndex(
         (registeredSchema) =>
-          registeredSchema.fileMatch === fileMatch &&
-          registeredSchema.uri === schema.uri
+          isEqual(registeredSchema.fileMatch, fileMatch) &&
+          isEqual(registeredSchema.uri, schema.uri),
       );
-      if (!gridSchema) {
+      if (existingSchemaIndex !== -1) {
+        registeredSchemas[existingSchemaIndex] = { ...schema };
+      } else {
         registeredSchemas.push({ ...schema });
       }
     }
+
+    editor.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      allowComments: false,
+      enableSchemaRequest: false,
+      schemaRequest: 'warning',
+      schemaValidation: 'error',
+      schemas: [...registeredSchemas],
+    });
   }
 };
 
@@ -59,8 +63,8 @@ export const addSchema = (
  * Configures the Monaco Editor to validate the input against JSON Schema Draft 7.
  */
 export const configureJsonSchemaValidation = (
-  editor: EditorApi,
-  fileMatch: string[]
+  editor: MonacoApi,
+  fileMatch: string[],
 ): void => {
   /** Note that the Monaco Editor only supports JSON Schema Draft 7 itself,
    * so if we also want to support a later standard we still have to formalize
@@ -72,8 +76,8 @@ export const configureJsonSchemaValidation = (
  * Configures the Monaco Editor to validate the input against the UI Schema meta-schema.
  */
 export const configureUISchemaValidation = (
-  editor: EditorApi,
-  fileMatch: string[]
+  editor: MonacoApi,
+  fileMatch: string[],
 ): void => {
   /** Note that the Monaco Editor only supports JSON Schema Draft 7 itself,
    * so if we also want to support a later standard we still have to formalize
@@ -86,30 +90,13 @@ export const configureUISchemaValidation = (
 };
 
 /**
- * Configures the Monaco Editor to validate the input against the UI Schemas meta-schema.
- */
-export const configureUISchemasValidation = (
-  editor: EditorApi,
-  fileMatch: string[]
-): void => {
-  /** Note that the Monaco Editor only supports JSON Schema Draft 7 itself,
-   * so if we also want to support a later standard we still have to formalize
-   * it in JSON Schema Draft 7*/
-  addSchema(editor, [
-    { ...jsonSchemaDraft7 },
-    { ...ruleSchema },
-    { ...uiSchema },
-    { ...uiSchemas, fileMatch },
-  ]);
-};
-/**
  * Configures the Monaco Editor to validate the input against JSON Schema model schema.
  */
 export const configureDataValidation = (
-  editor: EditorApi,
+  editor: MonacoApi,
   uri: string,
   fileMatch: string,
-  schema: JsonSchema
+  schema: JsonSchema,
 ): void => {
   /** Note that the Monaco Editor only supports JSON Schema Draft 7 itself,
    * so if we also want to support a later standard we still have to formalize
@@ -119,8 +106,8 @@ export const configureDataValidation = (
 
 export const getMonacoModelForUri = (
   modelUri: monaco.Uri,
-  initialValue: string | undefined
-): editorApi.editor.ITextModel => {
+  initialValue: string | undefined,
+): monaco.editor.ITextModel => {
   const value = initialValue ?? '';
   let model = monaco.editor.getModel(modelUri);
   if (model) {

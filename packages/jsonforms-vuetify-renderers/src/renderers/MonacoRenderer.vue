@@ -17,27 +17,25 @@
       :persistent-hint="persistentHint()"
       :required="control.required"
       :error-messages="control.errors"
-      :value="control.data"
+      :model-value="control.data"
       v-bind="vuetifyProps('v-monaco-editor')"
       :language="language"
-      @input="onChange"
-      @focus="isFocused = true"
-      @blur="isFocused = false"
+      @update:model-value="onChange"
+      @focus="handleFocus"
+      @blur="handleBlur"
     ></v-monaco-editor>
   </control-wrapper>
 </template>
 
 <script lang="ts">
 import isEmpty from 'lodash/isEmpty';
-import { VCard, VCardSubtitle, VHover } from 'vuetify/lib';
 
 import {
-  ControlElement,
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
+  type ControlElement,
+  type JsonFormsRendererRegistryEntry,
   Resolve,
-  Tester,
-  UISchemaElement,
+  type Tester,
+  type UISchemaElement,
   and,
   isStringControl,
   optionIs,
@@ -45,26 +43,24 @@ import {
   rankWith,
 } from '@jsonforms/core';
 import {
-  RendererProps,
+  type RendererProps,
   rendererProps,
   useJsonFormsControl,
-} from '@jsonforms/vue2';
+} from '@jsonforms/vue';
 import {
   ControlWrapper,
   DisabledIconFocus,
+  useJsonForms,
   useVuetifyControl,
-} from '@jsonforms/vue2-vuetify';
-import { defineComponent, inject } from 'vue';
-import VMonacoEditor from '../components/VMonacoEditor/VMonacoEditor';
+} from '@jsonforms/vue-vuetify';
+import { defineComponent } from 'vue';
+import VMonacoEditor from '../components/VMonacoEditor.vue';
 
 const controlRenderer = defineComponent({
   name: 'monaco-control-renderer',
   components: {
     ControlWrapper,
     VMonacoEditor,
-    VCard,
-    VHover,
-    VCardSubtitle,
   },
   directives: {
     DisabledIconFocus,
@@ -73,17 +69,13 @@ const controlRenderer = defineComponent({
     ...rendererProps<ControlElement>(),
   },
   setup(props: RendererProps<ControlElement>) {
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JsonForms?"
-      );
-    }
+    const jsonforms = useJsonForms();
 
     return {
       ...useVuetifyControl(
         useJsonFormsControl(props),
-        (value) => value || undefined
+        (value) => value || undefined,
+        300,
       ),
       jsonforms,
     };
@@ -123,8 +115,8 @@ export const entry: JsonFormsRendererRegistryEntry = {
     and(
       isStringControl,
       optionIs('format', 'code'),
-      or(hasOption('language'), hasOption(':language'))
-    )
+      or(hasOption('language'), hasOption(':language')),
+    ),
   ),
 };
 </script>

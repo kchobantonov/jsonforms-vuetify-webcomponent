@@ -1,8 +1,9 @@
-FROM node:14.21.3 as builder
+FROM node:18.19.0 as builder
 WORKDIR /usr/local/src/
 COPY . .
 
-RUN npm ci && npm run init && npm run build
+RUN npm -g pnpm@8
+RUN pnpm i --frozen-lockfile && pnpm build
 
 FROM nginx:latest
 

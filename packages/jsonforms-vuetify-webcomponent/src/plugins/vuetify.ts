@@ -1,63 +1,138 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
-import { VuetifyPreset } from 'vuetify/types/services/presets';
+import { createVuetify, type Blueprint, type ThemeDefinition } from 'vuetify';
+import { md1, md2, md3 } from 'vuetify/blueprints';
 
-// This is needed because of the json-ref resolution when the schema url is not specified or it is relative
-import * as process from 'process';
-window.process = process;
+import { bg, de, en } from 'vuetify/locale';
 
-Vue.use(Vuetify);
+// just make sure that the locales are loaded
 
-export const preset: Partial<VuetifyPreset> = {
-  icons: {
-    iconfont: 'mdi',
-    values: {},
-  },
-  theme: {
-    dark: false,
-    default: 'light',
-    disable: false,
-    options: {
-      cspNonce: undefined,
-      customProperties: true,
-      minifyTheme: undefined,
-      themeCache: undefined,
+import dayjs from 'dayjs';
+import { watch } from 'vue';
+import { fa, aliases as faAliases } from 'vuetify/iconsets/fa';
+import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
+import { mdiIconAliases, faIconAliases } from '@jsonforms/vue-vuetify';
+import { useAppStore } from '@/store';
+
+export function getCustomThemes(blueprint: string) {
+  const getThemeColors = (blueprint: string) => {
+    switch (blueprint) {
+      case 'md1':
+        return (md1.theme as any).themes.light.colors;
+      case 'md2':
+        return (md2.theme as any).themes.light.colors;
+      default:
+        return (md3.theme as any).themes.light.colors;
+    }
+  };
+
+  const customThemes: (ThemeDefinition & { name: string })[] = [
+    {
+      name: 'light',
+      dark: false,
+      colors: getThemeColors(blueprint),
     },
-    themes: {
-      light: {
-        primary: '#1976D2',
-        secondary: '#424242',
-        accent: '#82B1FF',
-        error: '#FF5252',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#FB8C00',
-      },
-      dark: {
+    {
+      name: 'dark',
+      dark: true,
+      colors: {
         primary: '#2196F3',
-        secondary: '#424242',
-        accent: '#FF4081',
-        error: '#FF5252',
+        secondary: '#54B6B2',
+        error: '#CF6679',
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FB8C00',
       },
     },
-  },
-};
+  ];
 
-const vuetify = new Vuetify({
-  preset,
-  rtl: false,
-  theme: { dark: false },
-});
+  return customThemes;
+}
 
-const theme = vuetify.framework.theme as any;
-// force vuetify to use checkOrCreateStyleElement
-theme.vueMeta = null;
-theme.checkOrCreateStyleElement = function () {
-  // do not update any style elements
-  return false;
-};
+function toIconSetAliases(iconset: string) {
+  // we can add vue-vuetify icons setoverrides here if needed or use the default provided base on the iconset
 
-export default vuetify;
+  if (iconset === 'fa') {
+    // override vuetify calendar to use fa-regular calendar instead of fa-solid
+    return {
+      ...{ ...faAliases, ...{ calendar: 'far fa-calendar' } },
+      ...faIconAliases,
+    };
+  }
+
+  // default
+  return { ...mdiAliases, ...mdiIconAliases };
+}
+
+function toBlueprint(value: string): Blueprint {
+  if (value === 'md1') {
+    return md1;
+  }
+  if (value === 'md2') {
+    return md2;
+  }
+  if (value === 'md3') {
+    return md3;
+  }
+  // default
+  return md1;
+}
+
+function createVuetifyInstance(
+  dark: boolean,
+  blueprint: string,
+  iconset: string,
+  locale: string,
+) {
+  dayjs.locale(locale);
+
+  const theme = {
+    isDisabled: true, // do not install styles since it is going to go into the head and not under the shadowdom
+    defaultTheme: dark ? 'dark' : 'light',
+    themes: getCustomThemes(blueprint).reduce(
+      (acc: Record<string, ThemeDefinition>, current) => {
+        acc[current.name] = current;
+        return acc;
+      },
+      {},
+    ),
+  };
+
+  return createVuetify({
+    blueprint: toBlueprint(blueprint),
+    locale: {
+      locale: locale,
+      fallback: 'en',
+      messages: { en, bg, de },
+    },
+    icons: {
+      defaultSet: iconset, // Set the default icon set
+      sets: {
+        mdi,
+        fa,
+      },
+      aliases: toIconSetAliases(iconset),
+    },
+    theme: theme,
+  });
+}
+
+export function buildVuetify() {
+  const appStore = useAppStore();
+  const vuetify = createVuetifyInstance(
+    appStore.dark,
+    appStore.blueprint,
+    appStore.iconset,
+    appStore.locale,
+  );
+
+  watch(
+    () => appStore.locale,
+    (locale: string) => {
+      vuetify.locale.current.value = locale;
+      dayjs.locale(locale);
+    },
+  );
+
+  return vuetify;
+}
+
+export default buildVuetify;

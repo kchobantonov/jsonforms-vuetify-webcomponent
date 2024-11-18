@@ -1,10 +1,10 @@
 <template>
   <dispatch-renderer
-    v-if="template"
+    v-if="templateUISchema"
     :visible="layout.visible"
     :enabled="layout.enabled"
     :schema="layout.schema"
-    :uischema="template"
+    :uischema="templateUISchema"
     :path="layout.path"
     :renderers="layout.renderers"
     :cells="layout.cells"
@@ -14,23 +14,30 @@
 <script lang="ts">
 import {
   and,
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
-  Layout,
+  type JsonFormsRendererRegistryEntry,
+  type Layout,
   rankWith,
-  UISchemaElement,
+  type UISchemaElement,
   uiTypeIs,
 } from '@jsonforms/core';
 import {
   DispatchRenderer,
   rendererProps,
-  RendererProps,
+  type RendererProps,
   useJsonFormsLayout,
-} from '@jsonforms/vue2';
+} from '@jsonforms/vue';
+import { useJsonForms, useVuetifyLayout } from '@jsonforms/vue-vuetify';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
-import { computed, defineComponent, inject, unref, provide } from 'vue';
-import { useVuetifyLayout } from '@jsonforms/vue2-vuetify';
+import {
+  computed,
+  defineComponent,
+  inject,
+  provide,
+  unref,
+  type ComputedRef,
+} from 'vue';
+import { TemplateRenderSlotContentsKey } from '../core';
 
 const templateRenderer = defineComponent({
   name: 'template-renderer',
@@ -43,35 +50,35 @@ const templateRenderer = defineComponent({
   setup(props: RendererProps<Layout>) {
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JsonForms?"
-      );
-    }
+    const jsonforms = useJsonForms();
 
     const elementTemplates = computed(() => {
       const elements =
         (unref(layout.layout).uischema as Layout)?.elements || [];
 
-      return elements.reduce(function (result, element) {
-        const name: string = (element as any).name;
-        if (name) {
-          result[name] = element;
-        }
-        return result;
-      }, {} as Record<string, UISchemaElement>);
+      return elements.reduce(
+        function (result, element) {
+          const name: string = (element as any).name;
+          if (name) {
+            result[name] = element;
+          }
+          return result;
+        },
+        {} as Record<string, UISchemaElement>,
+      );
     });
 
     const parentSlotContents = inject<
-      Record<string, UISchemaElement> | undefined
-    >('templateRendererSlotContents', undefined);
+      ComputedRef<Record<string, UISchemaElement>> | undefined
+    >(TemplateRenderSlotContentsKey, undefined);
 
-    const slotContents = parentSlotContents
-      ? Object.assign({}, parentSlotContents, elementTemplates.value)
-      : elementTemplates.value;
+    const slotContents = computed(() =>
+      parentSlotContents
+        ? { ...parentSlotContents.value, ...elementTemplates.value }
+        : elementTemplates.value,
+    );
 
-    provide('templateRendererSlotContents', slotContents);
+    provide(TemplateRenderSlotContentsKey, slotContents);
 
     return {
       ...layout,
@@ -82,7 +89,7 @@ const templateRenderer = defineComponent({
     name(): string {
       return (this.layout.uischema as any).name;
     },
-    template(): UISchemaElement | undefined {
+    templateUISchema(): UISchemaElement | undefined {
       const uischemas = this.jsonforms.uischemas;
 
       return uischemas
@@ -100,6 +107,6 @@ export const hasName = (uischema: any) =>
 
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: templateRenderer,
-  tester: rankWith(1, and(uiTypeIs('Template'), hasName)),
+  tester: rankWith(2, and(uiTypeIs('Template'), hasName)),
 };
 </script>

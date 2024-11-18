@@ -1,11 +1,11 @@
-import { Translator } from '@jsonforms/core';
+import { type Translator } from '@jsonforms/core';
 import get from 'lodash/get';
-import template from 'lodash/template';
 import memoize from 'lodash/memoize';
+import template from 'lodash/template';
 
 export const createTranslator = (
   locale: string,
-  translations?: Record<string, any>
+  translations?: Record<string, any>,
 ): Translator => {
   let localeTranslations = translations ? translations[locale] : undefined;
 
@@ -15,10 +15,15 @@ export const createTranslator = (
       dashIndex > 0 ? translations[locale.substring(0, dashIndex)] : undefined;
   }
 
+  if (!localeTranslations) {
+    // default to en if the locale is not supported
+    localeTranslations = translations ? translations['en'] : undefined;
+  }
+
   const translate = (
     id: string,
     defaultMessage: string | undefined,
-    values?: any
+    values?: any,
   ): string | undefined => {
     const message = localeTranslations
       ? get(localeTranslations, id)
@@ -37,7 +42,7 @@ const translateWithParams = memoize(templateToMessage);
 
 function templateToMessage(
   templateMessage: string,
-  params: Record<string, string | number> = {}
+  params: Record<string, string | number> = {},
 ): string {
   const compiled = template(templateMessage, {
     interpolate: /\${([\s\S]+?)}/g, // ${myVar}

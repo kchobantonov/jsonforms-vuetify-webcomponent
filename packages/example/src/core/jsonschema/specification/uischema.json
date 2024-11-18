@@ -30,6 +30,9 @@
     },
     {
       "$ref": "#/definitions/slot"
+    },
+    {
+      "$ref": "#/definitions/button"
     }
   ],
   "definitions": {
@@ -67,6 +70,9 @@
           },
           {
             "$ref": "#/definitions/slot"
+          },
+          {
+            "$ref": "#/definitions/button"
           }
         ]
       }
@@ -84,6 +90,9 @@
           "default": "Control"
         },
         "label": {
+          "type": "string"
+        },
+        "i18n": {
           "type": "string"
         },
         "scope": {
@@ -110,7 +119,7 @@
           "scope": "Control should have an object property \"scope\"",
           "type": "Control should have a string property \"type\""
         },
-        "additionalProperties": "Control should not have properties other than type, label, scope, options, suggestion and rule"
+        "additionalProperties": "Control should not have properties other than type, label, scope, i18n, options, suggestion and rule"
       }
     },
     "label": {
@@ -126,6 +135,9 @@
           "default": "Label"
         },
         "text": {
+          "type": "string"
+        },
+        "i18n": {
           "type": "string"
         },
         "options": {
@@ -145,7 +157,7 @@
         "required": {
           "type": "Label should have a string property \"type\""
         },
-        "additionalProperties": "Label should not have properties other than type, text, options, and rule"
+        "additionalProperties": "Label should not have properties other than type, text, i18n, options, and rule"
       }
     },
     "horizontallayout": {
@@ -363,10 +375,10 @@
           "type": "type should be equal to one of the allowed values"
         },
         "required": {
-          "template": "Layout should have an string property \"template\"",
-          "type": "Layout should have a string property \"type\""
+          "template": "TemplateLayout should have an string property \"template\"",
+          "type": "TemplateLayout should have a string property \"type\""
         },
-        "additionalProperties": "Layout should not have properties other than type, template, elements, options and rule"
+        "additionalProperties": "TemplateLayout should not have properties other than type, template, elements, options and rule"
       }
     },
     "template": {
@@ -398,10 +410,10 @@
           "type": "type should be equal to one of the allowed values"
         },
         "required": {
-          "name": "Layout should have an string property \"name\"",
-          "type": "Layout should have a string property \"type\""
+          "name": "Template should have an string property \"name\"",
+          "type": "Template should have a string property \"type\""
         },
-        "additionalProperties": "Layout should not have properties other than type, name, elements, options and rule"
+        "additionalProperties": "Template should not have properties other than type, name, elements, options and rule"
       }
     },
     "slot": {
@@ -434,10 +446,61 @@
           "type": "type should be equal to one of the allowed values"
         },
         "required": {
-          "name": "Layout should have an string property \"name\"",
-          "type": "Layout should have a string property \"type\""
+          "name": "Slot should have an string property \"name\"",
+          "type": "Slot should have a string property \"type\""
         },
-        "additionalProperties": "Layout should not have properties other than type, name, elements, options and rule"
+        "additionalProperties": "Slot should not have properties other than type, name, elements, options and rule"
+      }
+    },
+    "button": {
+      "type": "object",
+      "$id": "#button",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "script": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Button",
+          "default": "Button"
+        },
+        "i18n": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "label"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "name": "Button should have an string property \"label\"",
+          "type": "Button should have a string property \"type\""
+        },
+        "additionalProperties": "Button should not have properties other than type, label, action, script, icon, color, params, i18n, options and rule"
       }
     },
     "rule": {

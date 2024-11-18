@@ -32,7 +32,7 @@ Use the `vuetify-json-forms` webcomponent in your HTML page as follow.
         -moz-tab-size: 4;
         tab-size: 4;
       }
-      
+
       *,
       ::before,
       ::after {
@@ -40,20 +40,20 @@ Use the `vuetify-json-forms` webcomponent in your HTML page as follow.
         /* Set background-repeat: no-repeat to all elements and pseudo elements */
         box-sizing: inherit;
       }
-      
+
       ::before,
       ::after {
         text-decoration: inherit;
         /* Inherit text-decoration and vertical align to ::before and ::after pseudo elements */
         vertical-align: inherit;
       }
-      
+
       * {
         padding: 0;
         /* Reset padding and margin of all elements */
         margin: 0;
       }
-    </style>    
+    </style>
   </head>
   <body>
     <script type="text/javascript">
@@ -90,13 +90,15 @@ Use the `vuetify-json-forms` webcomponent in your HTML page as follow.
       };
     </script>
 
-    <vuetify-json-forms id="vuetify-json-forms">
-    </vuetify-json-forms>
+    <vuetify-json-forms id="vuetify-json-forms"> </vuetify-json-forms>
 
     <script>
       let form = document.getElementById('vuetify-json-forms');
 
-      form.setAttribute('custom-style', '.v-application--wrap { min-height: 0px; }');
+      form.setAttribute(
+        'custom-style',
+        '.v-application__wrap { min-height: 0px; }',
+      );
       form.setAttribute('data', JSON.stringify(data));
       form.setAttribute('schema', JSON.stringify(schema));
       form.setAttribute('uischema', JSON.stringify(uischema));
@@ -114,6 +116,7 @@ Use the `vuetify-json-forms` webcomponent in your HTML page as follow.
 ```
 
 The above HTML page assumes that `vuetify-json-forms.min.js` is in the same folder.
+
 ## License
 
 The JSONForms project is licensed under the MIT License. See the [LICENSE file](https://github.com/eclipsesource/jsonforms/blob/master/LICENSE) for more information.

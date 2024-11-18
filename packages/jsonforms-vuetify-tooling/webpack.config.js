@@ -57,14 +57,8 @@ const extensionConfig = {
         {
           context:
             "node_modules/@chobantonov/jsonforms-vuetify-webcomponent/dist/",
-          from: "*.min.js*",
+          from: "**/*", // Matches all files and subdirectories
           to: "./js",
-        },
-        {
-          context:
-            "node_modules/@chobantonov/jsonforms-vuetify-webcomponent/dist/fonts",
-          from: "*",
-          to: "./js/fonts",
         },
       ],
     }),

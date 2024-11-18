@@ -1,34 +1,246 @@
+<script setup lang="ts">
+import type { JsonFormsSubStates, JsonSchema } from '@jsonforms/core';
+import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
+import type { Ajv } from 'ajv';
+import { normalizeId } from 'ajv/dist/compile/resolve';
+import * as JsonRefs from 'json-refs';
+import _get from 'lodash/get';
+import {
+  computed,
+  inject,
+  onMounted,
+  provide,
+  reactive,
+  watch,
+  type Ref,
+  type SetupContext,
+} from 'vue';
+import {
+  VAlert,
+  VCol,
+  VContainer,
+  VProgressLinear,
+  VRow,
+} from 'vuetify/components';
+import {
+  FormContextKey,
+  HandleActionEmitterKey,
+  createAjv,
+  type FormContext,
+  type JsonFormsProps,
+  type ResolvedSchema,
+} from '../core';
+
+const props = defineProps<{
+  state: JsonFormsProps;
+}>();
+
+const resolvedSchema = reactive<ResolvedSchema>({
+  schema: undefined,
+  resolved: false,
+  error: undefined,
+});
+
+const emits = defineEmits(['change', 'handle-action']);
+
+const onChange = (event: JsonFormsChangeEvent): void => {
+  emits('change', event);
+};
+
+watch(
+  () => props.state.schema,
+  async (schema) => {
+    await resolveSchema(schema, props.state.schemaUrl);
+  },
+);
+watch(
+  () => props.state.schemaUrl,
+  async (schemaUrl) => {
+    await resolveSchema(props.state.schema, schemaUrl);
+  },
+);
+
+const resolveSchema = async (schema?: JsonSchema, schemaUrl?: string) => {
+  resolvedSchema.schema = undefined;
+  resolvedSchema.resolved = false;
+  resolvedSchema.error = undefined;
+
+  if (schema) {
+    // have custom filter
+    // if not using resolve ref  then the case
+    //   { "$ref": "#/definitions/state" }
+    //   "definitions": {
+    //    "state": { "type": "string", "enum": ["CA", "NY", "FL"] }
+    //   }
+    // then state won't be renderer automatically - needs to have a specified control
+    //
+    // if using a resolve ref but then it points to definition with $id if we resolve those then we will get
+    // Error: reference "{ref}" resolves to more than one schema
+    const refFilter = (refDetails: any, _path: string): boolean => {
+      if (refDetails.type === 'local') {
+        let uri: string | undefined = refDetails?.uriDetails?.fragment;
+        uri = uri ? uri.replace(/\//g, '.') : uri;
+        if (uri?.startsWith('.')) {
+          uri = uri.substring(1);
+        }
+        if (uri && (_get(schema, uri) as any)?.$id) {
+          // do not resolve ref that points to def with $id
+          return false;
+        }
+      }
+      return true;
+    };
+
+    try {
+      const resolveResult = await JsonRefs.resolveRefs(schema, {
+        location: schemaUrl,
+        filter: refFilter,
+      });
+
+      resolvedSchema.schema = resolveResult.resolved;
+
+      resolvedSchema.resolved = true;
+    } catch (err) {
+      resolvedSchema.resolved = true;
+      resolvedSchema.error = err instanceof Error ? err.message : String(err);
+    }
+  } else {
+    // nothing to resolve
+    resolvedSchema.resolved = true;
+  }
+};
+
+onMounted(async () => {
+  await resolveSchema(props.state.schema, props.state.schemaUrl);
+});
+
+const resolvingSchemaMessage = computed(() => {
+  const message = 'Resolving Schema...';
+  if (props.state.i18n?.translate) {
+    return props.state.i18n.translate(message, message);
+  }
+  return message;
+});
+
+const errorMessage = computed(() => {
+  const message = 'Error resolving schema';
+  if (props.state.i18n?.translate) {
+    return props.state.i18n.translate(message, message);
+  }
+  return message;
+});
+
+const jsonforms = inject<JsonFormsSubStates | undefined>(
+  'jsonforms',
+  undefined,
+);
+
+const defaultContext: FormContext = {
+  schemaUrl: props.state.schemaUrl,
+
+  jsonforms: jsonforms,
+  locale: jsonforms?.i18n?.locale,
+  translate: jsonforms?.i18n?.translate,
+
+  data: jsonforms?.core?.data,
+  schema: jsonforms?.core?.schema,
+  uischema: jsonforms?.core?.uischema,
+  errors: jsonforms?.core?.errors,
+  additionalErrors: jsonforms?.core?.additionalErrors,
+
+  uidata: reactive({}),
+};
+
+const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
+  ...props.state,
+  schema: resolvedSchema.schema ?? props.state.schema,
+  ajv: props.state.ajv ?? createAjv(props.state.i18n?.locale),
+}));
+
+watch(
+  () => properties.value.schema,
+  (schema) => {
+    if (schema) {
+      // clear previous schemas in AVJ - schema with key or id "${id}" already exists
+      const { schemaId } = properties.value.ajv.opts;
+      let id = (schema as any)[schemaId];
+      if (id) {
+        id = normalizeId(id);
+        if (id && !id.startsWith('#')) {
+          if (properties.value.ajv.getSchema(id)) {
+            // schema exists and we are going to add it again so clear it before it throws schema already exists
+            properties.value.ajv.removeSchema(id);
+          }
+        }
+      }
+
+      // register the current schema using $id equal to '/' so that it can be used by condition schema rules
+      const currentSchemaId = '/';
+      // remove the previously current schema
+      properties.value.ajv.removeSchema(currentSchemaId);
+
+      const registeredSchema = { ...schema, [schemaId]: currentSchemaId };
+      properties.value.ajv.addSchema(registeredSchema);
+    }
+  },
+);
+
+watch(
+  () => jsonforms,
+  (newJsonforms) => {
+    if (newJsonforms) {
+      defaultContext.value = {
+        schemaUrl: props.state.schemaUrl,
+        jsonforms: newJsonforms,
+        locale: newJsonforms.i18n?.locale,
+        translate: newJsonforms.i18n?.translate,
+        data: newJsonforms.core?.data,
+        schema: newJsonforms.core?.schema,
+        uischema: newJsonforms.core?.uischema,
+        errors: newJsonforms.core?.errors,
+        additionalErrors: newJsonforms.core?.additionalErrors,
+        uidata: defaultContext.value.uidata,
+      };
+    }
+  },
+  { immediate: true },
+);
+
+const overrideContext = inject<Ref<FormContext> | undefined>(
+  FormContextKey,
+  undefined,
+);
+
+const context = computed(() =>
+  overrideContext
+    ? {
+        ...defaultContext,
+        ...overrideContext.value,
+      }
+    : defaultContext,
+);
+
+provide(FormContextKey, context);
+
+const handleActionEmitter = inject<SetupContext['emit'] | undefined>(
+  HandleActionEmitterKey,
+  undefined,
+);
+if (!handleActionEmitter) {
+  provide(HandleActionEmitterKey, emits as SetupContext['emit']);
+}
+</script>
+
 <template>
   <div>
     <json-forms
-      v-if="resolved && error === undefined"
-      :data="data"
-      :schema="schemaToUse"
-      :uischema="uischema"
-      :renderers="renderers"
-      :cells="cells"
-      :config="config"
-      :readonly="readonly"
-      :uischemas="uischemas"
-      :validationMode="validationMode"
-      :ajv="ajv"
-      :i18n="i18n"
-      :additionalErrors="additionalErrors"
+      v-if="resolvedSchema.resolved && resolvedSchema.error === undefined"
+      v-bind="properties"
       @change="onChange"
     ></json-forms>
     <v-container v-else style="height: 400px">
       <v-row
-        v-if="error !== undefined"
-        class="fill-height"
-        align-content="center"
-        justify="center"
-      >
-        <v-col class="text-subtitle-1 text-center" cols="12">
-          <v-alert color="red" dark>{{ errorMessage }}: {{ error }}</v-alert>
-        </v-col>
-      </v-row>
-      <v-row
-        v-else-if="!resolved"
+        v-if="!resolvedSchema.resolved"
         class="fill-height"
         align-content="center"
         justify="center"
@@ -44,242 +256,18 @@
           ></v-progress-linear>
         </v-col>
       </v-row>
+      <v-row
+        v-else-if="resolvedSchema.error !== undefined"
+        class="fill-height"
+        align-content="center"
+        justify="center"
+      >
+        <v-col class="text-subtitle-1 text-center" cols="12">
+          <v-alert color="red" dark>
+            {{ errorMessage }}: {{ resolvedSchema.error }}
+          </v-alert>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
-
-<script lang="ts">
-import {
-  JsonFormsCellRendererRegistryEntry,
-  JsonFormsI18nState,
-  JsonFormsRendererRegistryEntry,
-  JsonFormsUISchemaRegistryEntry,
-  JsonSchema,
-  UISchemaElement,
-  ValidationMode,
-} from '@jsonforms/core';
-import {
-  JsonForms,
-  JsonFormsChangeEvent,
-  MaybeReadonly,
-} from '@jsonforms/vue2';
-import Ajv, { ErrorObject } from 'ajv';
-import { normalizeId } from 'ajv/dist/compile/resolve';
-
-import _get from 'lodash/get';
-import { defineComponent, inject, PropType, Ref, ref } from 'vue';
-import { VAlert, VCol, VContainer, VProgressLinear, VRow } from 'vuetify/lib';
-import { createAjv, FormContext, resolveRefs } from '../core';
-import { vuetifyRenderers } from '../renderers/index';
-
-const resolvedJsonForms = defineComponent({
-  name: 'resolved-json-forms',
-  components: {
-    JsonForms,
-    VContainer,
-    VRow,
-    VCol,
-    VAlert,
-    VProgressLinear,
-  },
-  emits: ['change'],
-  props: {
-    data: {
-      required: true,
-      type: [String, Number, Boolean, Array, Object] as PropType<any>,
-    },
-    schema: {
-      required: false,
-      type: [Object, Boolean] as PropType<JsonSchema>,
-      default: undefined,
-    },
-    schemaUrl: {
-      required: false,
-      type: String,
-      default: undefined,
-    },
-    uischema: {
-      required: false,
-      type: Object as PropType<UISchemaElement>,
-      default: undefined,
-    },
-    renderers: {
-      required: false,
-      type: Array as PropType<MaybeReadonly<JsonFormsRendererRegistryEntry[]>>,
-      default: () => vuetifyRenderers,
-    },
-    cells: {
-      required: false,
-      type: Array as PropType<
-        MaybeReadonly<JsonFormsCellRendererRegistryEntry[]>
-      >,
-      default: () => vuetifyRenderers,
-    },
-    config: {
-      required: false,
-      type: Object as PropType<any>,
-      default: undefined,
-    },
-    readonly: {
-      required: false,
-      type: Boolean,
-      default: false,
-    },
-    uischemas: {
-      required: false,
-      type: Array as PropType<MaybeReadonly<JsonFormsUISchemaRegistryEntry[]>>,
-      default: () => [],
-    },
-    validationMode: {
-      required: false,
-      type: String as PropType<ValidationMode>,
-      default: 'ValidateAndShow',
-    },
-    ajv: {
-      required: false,
-      type: Object as PropType<Ajv>,
-      default: () => createAjv(),
-    },
-    i18n: {
-      required: false,
-      type: Object as PropType<JsonFormsI18nState>,
-      default: undefined,
-    },
-    additionalErrors: {
-      required: false,
-      type: Array as PropType<ErrorObject[]>,
-      default: () => [],
-    },
-  },
-  setup(props) {
-    const resolved = ref(false);
-    const error = ref<any>(undefined);
-    let context: Ref<FormContext> | undefined = undefined;
-
-    const schemaToUse = ref<JsonSchema | undefined>(undefined);
-
-    const parentContext = inject<FormContext | undefined>(
-      'formContext',
-      undefined
-    );
-    if (parentContext) {
-      context = ref(parentContext);
-      if (!context.value.schemaUrl && props.schemaUrl) {
-        context.value.schemaUrl = props.schemaUrl;
-      }
-    } else {
-      context = ref({
-        schemaUrl: props.schemaUrl,
-      });
-    }
-
-    return {
-      resolved,
-      error,
-      schemaToUse,
-      context,
-    };
-  },
-  mounted() {
-    this.resolveSchema(this.schema, this.schemaUrl);
-  },
-  provide() {
-    return {
-      formContext: this.context,
-    };
-  },
-  watch: {
-    async schema(newSchema) {
-      this.resolveSchema(newSchema, this.schemaUrl);
-    },
-    async schemaUrl(newSchemaUrl) {
-      this.resolveSchema(this.schema, newSchemaUrl);
-    },
-  },
-  methods: {
-    onChange(event: JsonFormsChangeEvent): void {
-      this.$emit('change', event);
-    },
-    async resolveSchema(
-      schema?: JsonSchema,
-      schemaUrl?: string
-    ): Promise<void> {
-      this.resolved = false;
-      this.error = undefined;
-
-      try {
-        this.schemaToUse = schema;
-
-        if (schema) {
-          // have custom filter
-          // if not using resolve ref  then the case
-          //   { "$ref": "#/definitions/state" }
-          //   "definitions": {
-          //    "state": { "type": "string", "enum": ["CA", "NY", "FL"] }
-          //   }
-          // then state won't be renderer automatically - needs to have a specified control
-          //
-          // if using a resolve ref but then it points to definition with $id if we resolve those then we will get
-          // Error: reference "{ref}" resolves to more than one schema
-          const refFilter = (refDetails: any, _path: string): boolean => {
-            if (refDetails.type === 'local') {
-              let uri: string | undefined = refDetails?.uriDetails?.fragment;
-              uri = uri ? uri.replace(/\//g, '.') : uri;
-              if (uri?.startsWith('.')) {
-                uri = uri.substring(1);
-              }
-              if (uri && (_get(schema, uri) as any)?.$id) {
-                // do not resolve ref that points to def with $id
-                return false;
-              }
-            }
-            return true;
-          };
-          const resolveResult = await resolveRefs(schema, {
-            location: schemaUrl,
-            filter: refFilter,
-          });
-
-          this.schemaToUse = resolveResult.resolved;
-
-          // clear previous schemas in AVJ - schema with key or id "${id}" already exists
-          const { schemaId } = this.ajv.opts;
-          let id = (schema as any)[schemaId];
-          if (id) {
-            id = normalizeId(id);
-            if (id && !id.startsWith('#')) {
-              if (this.ajv.getSchema(id)) {
-                // schema exists and we are going to add it again so clear it before it throws schema already exists
-                this.ajv.removeSchema(id);
-              }
-            }
-          }
-        }
-      } catch (err) {
-        console.log(err);
-        this.error = (err as Error).message;
-      } finally {
-        this.resolved = true;
-      }
-    },
-  },
-  computed: {
-    resolvingSchemaMessage(): string {
-      const message = 'Resolving Schema...';
-      if (this.i18n && this.i18n.translate) {
-        return this.i18n.translate(message, message);
-      }
-      return message;
-    },
-    errorMessage(): string {
-      const message = 'Error resolving schema';
-      if (this.i18n && this.i18n.translate) {
-        return this.i18n.translate(message, message);
-      }
-      return message;
-    },
-  },
-});
-
-export default resolvedJsonForms;
-</script>

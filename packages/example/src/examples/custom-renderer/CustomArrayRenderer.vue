@@ -3,17 +3,17 @@
     <template v-slot:toolbar-elements>{{ null }}</template>
     <template v-slot:actions="actionsProps">
       <v-tooltip bottom>
-        <template v-slot:activator="{ on: onTooltip }">
+        <template v-slot:activator="{ props }">
           <v-btn
             color="primary"
             rounded
             :aria-label="actionsProps.labels.add"
-            v-on="onTooltip"
+            v-bind="props"
             :class="actionsProps.styles.arrayList.addButton"
             :disabled="actionsProps.addDisabled"
             @click="actionsProps.addClick"
           >
-            <v-icon>mdi-plus</v-icon> {{ actionsProps.labels.add }}
+            <v-icon>$plus</v-icon> {{ actionsProps.labels.add }}
           </v-btn>
         </template>
         {{ actionsProps.labels.add }}
@@ -24,16 +24,16 @@
 
 <script lang="ts">
 import {
-  ControlElement,
-  JsonFormsRendererRegistryEntry,
+  type ControlElement,
+  type JsonFormsRendererRegistryEntry,
   withIncreasedRank,
 } from '@jsonforms/core';
-import { rendererProps } from '@jsonforms/vue2';
+import { rendererProps } from '@jsonforms/vue';
 import {
   ArrayLayoutRenderer,
   arrayLayoutRendererEntry,
-} from '@jsonforms/vue2-vuetify';
-import { VTooltip, VIcon, VBtn } from 'vuetify/lib';
+} from '@jsonforms/vue-vuetify';
+import { VTooltip, VIcon, VBtn } from 'vuetify/components';
 import { defineComponent } from 'vue';
 
 const controlRenderer = defineComponent({

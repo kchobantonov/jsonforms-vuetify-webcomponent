@@ -1,5 +1,33 @@
 {
+  "blueprint": "md1",
+  "defaults": {
+    "VField": {
+      "variant": "outlined"
+    },
+    "VTextField": {
+      "variant": "outlined"
+    },
+    "VCombobox": {
+      "variant": "outlined"
+    },
+    "VSelect": {
+      "variant": "outlined"
+    },
+    "VAutocomplete": {
+      "variant": "outlined"
+    },
+    "VTextarea": {
+      "variant": "outlined"
+    },
+    "VNumberInput": {
+      "variant": "outlined"
+    },
+    "VDateInput": {
+      "variant": "outlined"
+    },
+    "VCheckbox": { "color": "primary" }
+  },
   "theme": {
-    "dark": false
+    "dark": true
   }
 }

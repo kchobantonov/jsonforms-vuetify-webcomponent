@@ -15,24 +15,26 @@
 
 <script lang="ts">
 import {
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
   rankWith,
   uiTypeIs,
+  type JsonFormsRendererRegistryEntry,
 } from '@jsonforms/core';
-import { rendererProps, RendererProps } from '@jsonforms/vue2';
-import { useTranslator } from '@jsonforms/vue2-vuetify';
+import { rendererProps, type RendererProps } from '@jsonforms/vue';
+import { useJsonForms, useTranslator } from '@jsonforms/vue-vuetify';
 import isFunction from 'lodash/isFunction';
-import { defineComponent, inject, ref, unref } from 'vue';
-import { EmitFn } from 'vue/types/v3-setup-context';
-import { VBtn, VIcon } from 'vuetify/lib';
+import { defineComponent, inject, ref, type SetupContext } from 'vue';
+import { VBtn, VIcon } from 'vuetify/components';
 import {
-  ActionEvent,
-  FormContext,
   AsyncFunction,
-  TemplateFormContext,
+  HandleActionEmitterKey,
+  type ActionEvent,
 } from '../core';
-import { ButtonElement, useJsonFormsButton, useVuetifyButton } from '../util';
+import {
+  useFormContext,
+  useJsonFormsButton,
+  useVuetifyButton,
+  type ButtonElement,
+} from '../util';
 
 const buttonRenderer = defineComponent({
   name: 'button-renderer',
@@ -47,26 +49,13 @@ const buttonRenderer = defineComponent({
     const t = useTranslator();
     const button = useVuetifyButton(useJsonFormsButton(props));
 
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JSON Forms?"
-      );
-    }
+    const jsonforms = useJsonForms();
+    const formContext = useFormContext();
 
-    const formContext = inject<FormContext>('formContext');
-    if (!formContext) {
-      throw new Error(
-        "'formContext' couldn't be injected. Are you within JsonForms?"
-      );
-    }
-
-    const handleActionEmitter = inject<EmitFn | undefined>(
-      'handleActionEmitter',
-      undefined
+    const handleActionEmitter = inject<SetupContext['emit'] | undefined>(
+      HandleActionEmitterKey,
+      undefined,
     );
-
-    const scopeData = inject<any>('scopeData', null);
 
     const loading = ref(false);
 
@@ -75,27 +64,9 @@ const buttonRenderer = defineComponent({
       t,
       jsonforms,
       formContext,
-      scopeData,
       loading,
       handleActionEmitter,
     };
-  },
-  computed: {
-    context(): TemplateFormContext {
-      return {
-        ...unref(this.formContext),
-        jsonforms: this.jsonforms,
-        locale: this.jsonforms.i18n?.locale,
-        translate: this.jsonforms.i18n?.translate,
-
-        data: this.jsonforms.core?.data,
-        schema: this.jsonforms.core?.schema,
-        uischema: this.jsonforms.core?.uischema,
-        errors: this.jsonforms.core?.errors,
-        additionalErrors: this.jsonforms.core?.additionalErrors,
-        scopeData: this.scopeData,
-      };
-    },
   },
   methods: {
     async click() {
@@ -104,7 +75,7 @@ const buttonRenderer = defineComponent({
       const source: ActionEvent = {
         action: this.button.action,
         jsonforms: this.jsonforms,
-        context: this.context,
+        context: this.formContext,
         // the action parameters passes from the UI schema
         params: this.button.params ? { ...this.button.params } : {},
         $el: this.$el,
@@ -114,7 +85,9 @@ const buttonRenderer = defineComponent({
           if (this.handleActionEmitter) {
             this.handleActionEmitter('handle-action', source);
           } else {
-            this.$root.$emit('handle-action', source);
+            this.$root
+              ? this.$root.$emit('handle-action', source)
+              : this.$emit('handle-action', source);
           }
 
           if (isFunction(source.callback)) {

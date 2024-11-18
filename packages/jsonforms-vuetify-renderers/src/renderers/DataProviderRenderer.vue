@@ -1,42 +1,36 @@
 <template>
-  <data-provider :url="expandedUrl" v-if="expandedUrl">
-    <div slot-scope="{ fetch }">
-      <template v-for="(element, index) in elements">
-        <data-dispatch-renderer
-          :key="`${layout.path}-${index}`"
-          :schema="layout.schema"
-          :uischema="element"
-          :path="layout.path"
-          :enabled="layout.enabled"
-          :renderers="layout.renderers"
-          :cells="layout.cells"
-          :data="fetch"
-        />
-      </template>
-    </div>
-  </data-provider>
+  <template
+    v-for="(element, index) in elements"
+    :key="`${layout.path}-${index}`"
+  >
+    <dispatch-renderer
+      :schema="layout.schema"
+      :uischema="element"
+      :path="layout.path"
+      :enabled="layout.enabled"
+      :renderers="layout.renderers"
+      :cells="layout.cells"
+    />
+  </template>
 </template>
 
 <script lang="ts">
 import {
-  JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
-  Layout,
   rankWith,
-  UISchemaElement,
   uiTypeIs,
+  type JsonFormsRendererRegistryEntry,
+  type Layout,
 } from '@jsonforms/core';
 import {
+  DispatchRenderer,
   rendererProps,
-  RendererProps,
   useJsonFormsLayout,
-} from '@jsonforms/vue2';
-import { useTranslator, useVuetifyLayout } from '@jsonforms/vue2-vuetify';
-import { defineComponent, inject, unref, ref } from 'vue';
-import DataProvider from '../components/DataProvider.vue';
-import { template as templateFn } from '../core/template';
-import { FormContext } from '../core/types';
-import DataDispatchRenderer from './DataDispatchRenderer.vue';
+  type RendererProps,
+} from '@jsonforms/vue';
+import { useJsonForms, useVuetifyLayout } from '@jsonforms/vue-vuetify';
+import { computed, defineComponent, onMounted, provide, reactive } from 'vue';
+import { DataProviderKey, template as templateFn } from '../core';
+import { useFormContext } from '../util';
 
 interface DataProviderElement extends Layout {
   type: 'DataProvider';
@@ -49,65 +43,59 @@ interface DataProviderElement extends Layout {
 const dataProviderRenderer = defineComponent({
   name: 'data-provider-renderer',
   components: {
-    DataDispatchRenderer,
-    DataProvider,
+    DispatchRenderer,
   },
   props: {
     ...rendererProps<Layout>(),
   },
   setup(props: RendererProps<Layout>) {
-    const t = useTranslator();
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
-    const jsonforms = inject<JsonFormsSubStates>('jsonforms');
-    if (!jsonforms) {
-      throw new Error(
-        "'jsonforms' couldn't be injected. Are you within JsonForms?"
-      );
-    }
+    const jsonforms = useJsonForms();
+    const formContext = useFormContext();
 
-    const formContext = inject<FormContext>('formContext');
+    const data = computed(() => jsonforms.core?.data);
+    const dataProvider = reactive({
+      loading: true,
+      data: undefined as any,
+      error: undefined as any,
+    });
 
-    if (!formContext) {
-      throw new Error(
-        "'formContext' couldn't be injected. Are you within JsonForms?"
-      );
-    }
-
-    const templateError = ref<string | null>(null);
-
-    return {
-      ...layout,
-      t,
-      jsonforms,
-      parentComponent: this,
-      templateError,
-      formContext,
-    };
-  },
-  computed: {
-    data(): any {
-      return this.jsonforms.core?.data;
-    },
-    context(): FormContext {
-      return unref(this.formContext);
-    },
-    expandedUrl(): string | undefined {
-      const url = (this.layout.uischema as DataProviderElement).url;
+    const url = computed(() => {
+      const url = (layout.layout.value.uischema as DataProviderElement).url;
       if (url) {
         return templateFn(url, {
           imports: {
-            data: this.data,
-            context: this.context,
-            config: this.config,
+            data: data,
+            context: formContext,
+            config: layout.layout.value.config,
           },
         })();
       }
       return url;
-    },
-    elements(): UISchemaElement[] {
-      return (this.layout.uischema as DataProviderElement).elements;
-    },
+    });
+
+    const elements = computed(
+      () => (layout.layout.value.uischema as DataProviderElement).elements,
+    );
+
+    onMounted(async () => {
+      try {
+        const response = await fetch(url.value);
+        dataProvider.data = await response.json();
+      } catch (e) {
+        dataProvider.error = e;
+      } finally {
+        dataProvider.loading = false;
+      }
+    });
+
+    provide(DataProviderKey, dataProvider);
+
+    return {
+      ...layout,
+      elements,
+    };
   },
 });
 

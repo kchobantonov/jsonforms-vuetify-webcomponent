@@ -98,8 +98,8 @@ const showWebview = async (
   const pathPrefix = schemaPath.endsWith("/schema.json") // no prefix if the file is called schema.json
     ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
     : schemaPath.endsWith(".schema.json")
-    ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
-    : schemaPath.substring(0, schemaPath.length - "json".length);
+      ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
+      : schemaPath.substring(0, schemaPath.length - "json".length);
 
   const uischemaPath = pathPrefix + "uischema.json";
   const uischemasPath = pathPrefix + "uischemas.json";
@@ -176,7 +176,7 @@ const preparePreview = async (
   }
   const previewFolder = join(extensionPath, "dist", "js");
   const scriptPathOnDisk = editorInstance.Uri.file(
-    join(previewFolder, "vuetify-json-forms.min.js")
+    join(previewFolder, "vuetify-json-forms.js")
   );
 
   const webcomponentScriptPath = webView.webview.asWebviewUri(scriptPathOnDisk);
@@ -212,7 +212,7 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
 <html lang="en">
 <head>
   <title>JSONForms Vuetify Preview</title>
-  <script src="${webcomponentScriptPath}"></script>
+  <script type="module" src="${webcomponentScriptPath}"></script>
   <style>
     body {
       padding: 0;
@@ -333,6 +333,8 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
         ? JSON.stringify(files.preset.data).replace(/\//g, "\\/")
         : "''"
     };
+    //var onChange = null;
+    //var onHandleAction = null;
     ${
       files.actions && files.actions.data ? files.actions.data : "// no actions"
     };
@@ -364,7 +366,7 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
       form.setAttribute('translations', i18n);
     }
     if (preset) {
-      form.setAttribute('default-preset', preset);
+      form.setAttribute('vuetify-options', preset);
     }
     if (onChange) {
       form.addEventListener('change', onChange);

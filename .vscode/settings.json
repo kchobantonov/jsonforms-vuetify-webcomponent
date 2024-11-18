@@ -1,7 +1,7 @@
 {
   // apply eslint fixes on save
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "files.insertFinalNewline": true,
   // prettier extension setting
@@ -15,5 +15,8 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "jest.autoRun": "off"
+  "jest.autoRun": "off",
+  "files.associations": {
+    "plyconfig.json": "jsonc"
+  }
 }
