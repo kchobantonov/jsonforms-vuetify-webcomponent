@@ -333,8 +333,8 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
         ? JSON.stringify(files.preset.data).replace(/\//g, "\\/")
         : "''"
     };
-    var onChange = null;
-    var onHandleAction = null;
+    //var onChange = null;
+    //var onHandleAction = null;
     ${
       files.actions && files.actions.data ? files.actions.data : "// no actions"
     };
