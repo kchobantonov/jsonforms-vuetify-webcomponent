@@ -16,7 +16,7 @@ See the [README](https://github.com/eclipsesource/jsonforms-vuetify-renderers/bl
 
 ## Developer documentation
 
-Use Node 14.x
+Use Node 18.x
 
 ### Initial setup
 
