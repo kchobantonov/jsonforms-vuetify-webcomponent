@@ -99,19 +99,6 @@ const resolveSchema = async (schema?: JsonSchema, schemaUrl?: string) => {
 
       resolvedSchema.schema = resolveResult.resolved;
 
-      // clear previous schemas in AVJ - schema with key or id "${id}" already exists
-      const { schemaId } = properties.value.ajv.opts;
-      let id = (schema as any)[schemaId];
-      if (id) {
-        id = normalizeId(id);
-        if (id && !id.startsWith('#')) {
-          if (properties.value.ajv.getSchema(id)) {
-            // schema exists and we are going to add it again so clear it before it throws schema already exists
-            properties.value.ajv.removeSchema(id);
-          }
-        }
-      }
-
       resolvedSchema.resolved = true;
     } catch (err) {
       resolvedSchema.resolved = true;
@@ -169,6 +156,34 @@ const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
   schema: resolvedSchema.schema ?? props.state.schema,
   ajv: props.state.ajv ?? createAjv(props.state.i18n?.locale),
 }));
+
+watch(
+  () => properties.value.schema,
+  (schema) => {
+    if (schema) {
+      // clear previous schemas in AVJ - schema with key or id "${id}" already exists
+      const { schemaId } = properties.value.ajv.opts;
+      let id = (schema as any)[schemaId];
+      if (id) {
+        id = normalizeId(id);
+        if (id && !id.startsWith('#')) {
+          if (properties.value.ajv.getSchema(id)) {
+            // schema exists and we are going to add it again so clear it before it throws schema already exists
+            properties.value.ajv.removeSchema(id);
+          }
+        }
+      }
+
+      // register the current schema using $id equal to '/' so that it can be used by condition schema rules
+      const currentSchemaId = '/';
+      // remove the previously current schema
+      properties.value.ajv.removeSchema(currentSchemaId);
+
+      const registeredSchema = { ...schema, [schemaId]: currentSchemaId };
+      properties.value.ajv.addSchema(registeredSchema);
+    }
+  },
+);
 
 watch(
   () => jsonforms,

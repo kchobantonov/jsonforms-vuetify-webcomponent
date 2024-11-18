@@ -29,6 +29,16 @@
           "params": {
             "submittingMessage": "Please wait, action in progress...",
             "submittedMessage": "Action complete! Click OK to continue. Check your javascript console for the JSON data from your form."
+          },
+          "rule": {
+            "effect": "ENABLE",
+            "condition": {
+              "scope": "#/",
+              "schema": {
+                "$ref": "/#"
+              },
+              "failWhenUndefined": true
+            }
           }
         },
         {
