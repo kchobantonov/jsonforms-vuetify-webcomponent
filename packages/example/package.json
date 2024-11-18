@@ -18,9 +18,9 @@
   "dependencies": {
     "@chobantonov/jsonforms-vuetify-renderers": "workspace:*",
     "@chobantonov/jsonforms-vuetify-webcomponent": "workspace:*",
-    "@jsonforms/core": "3.4.0",
-    "@jsonforms/vue": "3.4.0",
-    "@jsonforms/vue-vuetify": "3.4.0",
+    "@jsonforms/core": "3.4.1",
+    "@jsonforms/vue": "3.4.1",
+    "@jsonforms/vue-vuetify": "3.4.1",
     "@vue/compiler-dom": "^3.4.21",
     "@vueuse/core": "^10.9.0",
     "ajv": "^8.6.1",
