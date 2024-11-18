@@ -26,16 +26,16 @@ Use Node 14.x
 
 - Build (all packages): `pnpm run build`
 - Build and watch the extended renderer set: `pnpm run renderers:watch`
-- Run webcomponent demo: `pnpm run wcserve`
-- Run example app: `pnpm run example:serve`
+- Run webcomponent demo: `pnpm run wc:dev`
+- Run example app: `pnpm run example:dev`
 - Build example app for production: `pnpm run example:build`
 - Build VS Code extension: `pnpm run tooling:build`
 - Create VSIX VS Code extension package for local deployment: `pnpm run tooling:vsix`
 
 Recommendations:
 
-- For development use `npm run renderers:watch` combined with `npm run example:serve`.
-- For webcomponent development use `npm run renderers:watch` combined with `npm run wc:serve`.
+- For development use `npm run renderers:watch` combined with `npm run example:dev`.
+- For webcomponent development use `npm run renderers:watch` combined with `npm run wc:dev`.
 - To test production use `npm run build` combined with `npm run example:build`.
   Then serve the built application from `example/dist` with a web server of your choice, e.g. `npx http-server example/dist`.
 
@@ -90,13 +90,6 @@ For example if we use version `3.1.0-alpha.3` of the webcomponent then using the
   type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.1.0-alpha.3/dist/vuetify-json-forms.min.js"
 ></script>
-```
-
-### Rebuild package-lock.json
-
-```bash
-rm -f package-lock.json packages/jsonforms-vuetify-tooling/package-lock.json
-docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app node:14.21.3 sh -c "npm install && npm run init && cd packages/jsonforms-vuetify-tooling && npm install"
 ```
 
 ### Continuous Integration
