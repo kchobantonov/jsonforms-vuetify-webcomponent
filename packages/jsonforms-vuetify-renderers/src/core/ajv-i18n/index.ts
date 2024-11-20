@@ -6,9 +6,21 @@ import { localize_bg } from './bg';
 function injectAdditionalLocales() {
   // add missing BG locale - https://github.com/ajv-validator/ajv-i18n/pull/312 until this is merged and released
   const bg = 'bg' as keyof typeof localize;
-  if (localize[bg] === undefined) {
+  if (!localize[bg]) {
     localize[bg] = localize_bg;
   }
+
+  // override the required message so that the missingProperty is not displayed as not translated text
+  localize[bg] = (errors) => {
+    if (!(errors && errors.length)) return;
+
+    localize_bg(errors);
+    for (const e of errors) {
+      if (e.keyword === 'required') {
+        e.message = 'полето е задължително';
+      }
+    }
+  };
 }
 
 export function enableErrorTranslations(
