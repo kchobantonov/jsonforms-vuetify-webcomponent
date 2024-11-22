@@ -8,6 +8,7 @@ const appstore = reactive({
   exampleName: useHistoryHash(''),
   rtl: false,
   formOnly: useHistoryHashQuery('form-only', false as boolean),
+  activeTab: useHistoryHashQuery('active-tab', 0 as number),
   useWebComponentView: useHistoryHashQuery(
     'use-webcomponent',
     false as boolean,
@@ -78,7 +79,7 @@ function useHistoryHash(initialValue: string) {
   return data;
 }
 
-function useHistoryHashQuery<T extends string | boolean>(
+function useHistoryHashQuery<T extends string | boolean | number>(
   queryParam: string,
   initialValue: T,
 ) {
@@ -100,6 +101,8 @@ function useHistoryHashQuery<T extends string | boolean>(
         if (typeof initialValue === 'boolean') {
           // Handle boolean conversion
           data.value = (value === 'true') as T;
+        } else if (typeof initialValue === 'number') {
+          data.value = value ? (parseFloat(value) as T) : 0;
         } else if (typeof initialValue === 'string') {
           // Handle string conversion
           data.value = value as T;

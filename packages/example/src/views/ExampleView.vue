@@ -73,7 +73,6 @@ const myStyles = mergeStyles(defaultStyles, {
 
 provide('styles', myStyles);
 
-const activeTab = ref(0);
 const errors = ref<
   ErrorObject<string, Record<string, any>, unknown>[] | undefined
 >(undefined);
@@ -513,7 +512,7 @@ const vuetifyOptions = computed(() => {
       <v-card>
         <v-card-title>{{ example.label }}</v-card-title>
         <v-card-text>
-          <v-tabs v-model="activeTab">
+          <v-tabs v-model="appStore.activeTab">
             <v-tab :key="0"
               >Demo<validation-icon
                 v-if="errors"
@@ -528,7 +527,7 @@ const vuetifyOptions = computed(() => {
             <v-tab :key="5">Internationalization</v-tab>
           </v-tabs>
         </v-card-text>
-        <v-window v-model="activeTab">
+        <v-window v-model="appStore.activeTab">
           <v-window-item :key="0">
             <v-card>
               <v-card-title>
