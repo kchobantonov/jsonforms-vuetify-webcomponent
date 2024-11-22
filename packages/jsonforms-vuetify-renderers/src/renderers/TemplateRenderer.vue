@@ -12,14 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  and,
-  type JsonFormsRendererRegistryEntry,
-  type Layout,
-  rankWith,
-  type UISchemaElement,
-  uiTypeIs,
-} from '@jsonforms/core';
+import { type Layout, type UISchemaElement } from '@jsonforms/core';
 import {
   DispatchRenderer,
   rendererProps,
@@ -28,7 +21,6 @@ import {
 } from '@jsonforms/vue';
 import { useJsonForms, useVuetifyLayout } from '@jsonforms/vue-vuetify';
 import find from 'lodash/find';
-import isEmpty from 'lodash/isEmpty';
 import {
   computed,
   defineComponent,
@@ -39,7 +31,7 @@ import {
 } from 'vue';
 import { TemplateRenderSlotContentsKey } from '../core';
 
-const templateRenderer = defineComponent({
+const controlRenderer = defineComponent({
   name: 'template-renderer',
   components: {
     DispatchRenderer,
@@ -100,13 +92,5 @@ const templateRenderer = defineComponent({
   },
 });
 
-export default templateRenderer;
-
-export const hasName = (uischema: any) =>
-  !isEmpty(uischema) && typeof uischema.name === 'string';
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: templateRenderer,
-  tester: rankWith(2, and(uiTypeIs('Template'), hasName)),
-};
+export default controlRenderer;
 </script>

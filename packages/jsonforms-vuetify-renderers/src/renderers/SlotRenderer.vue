@@ -12,13 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  type JsonFormsRendererRegistryEntry,
-  type Layout,
-  rankWith,
-  type UISchemaElement,
-  uiTypeIs,
-} from '@jsonforms/core';
+import { type Layout, type UISchemaElement } from '@jsonforms/core';
 import {
   DispatchRenderer,
   rendererProps,
@@ -29,7 +23,7 @@ import { useVuetifyLayout } from '@jsonforms/vue-vuetify';
 import { computed, defineComponent, inject, type ComputedRef } from 'vue';
 import { TemplateRenderSlotContentsKey } from '../core';
 
-const slotRenderer = defineComponent({
+const controlRenderer = defineComponent({
   name: 'slot-renderer',
   components: {
     DispatchRenderer,
@@ -65,10 +59,5 @@ const slotRenderer = defineComponent({
   },
 });
 
-export default slotRenderer;
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: slotRenderer,
-  tester: rankWith(2, uiTypeIs('Slot')),
-};
+export default controlRenderer;
 </script>

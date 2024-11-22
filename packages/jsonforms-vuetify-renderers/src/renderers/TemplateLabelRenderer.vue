@@ -34,7 +34,7 @@ import { VLabel } from 'vuetify/components';
 import { template as templateFn } from '../core/template';
 import { useFormContext } from '../util';
 
-const templateLabelRenderer = defineComponent({
+const controlRenderer = defineComponent({
   name: 'template-label-renderer',
   components: {
     VLabel,
@@ -103,10 +103,5 @@ const templateLabelRenderer = defineComponent({
   },
 });
 
-export default templateLabelRenderer;
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: templateLabelRenderer,
-  tester: rankWith(2, and(uiTypeIs('Label'), optionIs('template', true))),
-};
+export default controlRenderer;
 </script>

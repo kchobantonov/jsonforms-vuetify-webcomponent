@@ -49,14 +49,8 @@
 
 <script lang="ts">
 import {
-  and,
   getI18nKey,
-  isStringControl,
-  rankWith,
-  schemaMatches,
-  uiTypeIs,
   type ControlElement,
-  type JsonFormsRendererRegistryEntry,
   type JsonSchema,
 } from '@jsonforms/core';
 import {
@@ -203,7 +197,7 @@ const toBase64 = (
     reader.readAsDataURL(file);
   });
 
-const fileRenderer = defineComponent({
+const controlRenderer = defineComponent({
   name: 'file-control-renderer',
   components: {
     ControlWrapper,
@@ -392,22 +386,5 @@ const fileRenderer = defineComponent({
   },
 });
 
-export default fileRenderer;
-
-export const isBase64String = and(
-  uiTypeIs('Control'),
-  isStringControl,
-  schemaMatches(
-    (schema) =>
-      (Object.prototype.hasOwnProperty.call(schema, 'contentEncoding') &&
-        (schema as any).contentEncoding == 'base64') ||
-      schema.format === 'binary' ||
-      schema.format === 'byte',
-  ),
-);
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: fileRenderer,
-  tester: rankWith(2, isBase64String),
-};
+export default controlRenderer;
 </script>

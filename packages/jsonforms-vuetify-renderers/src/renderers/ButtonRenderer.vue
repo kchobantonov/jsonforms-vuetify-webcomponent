@@ -14,11 +14,6 @@
 </template>
 
 <script lang="ts">
-import {
-  rankWith,
-  uiTypeIs,
-  type JsonFormsRendererRegistryEntry,
-} from '@jsonforms/core';
 import { rendererProps, type RendererProps } from '@jsonforms/vue';
 import { useJsonForms, useTranslator } from '@jsonforms/vue-vuetify';
 import isFunction from 'lodash/isFunction';
@@ -36,7 +31,7 @@ import {
   type ButtonElement,
 } from '../util';
 
-const buttonRenderer = defineComponent({
+const controlRenderer = defineComponent({
   name: 'button-renderer',
   components: {
     VBtn,
@@ -105,10 +100,5 @@ const buttonRenderer = defineComponent({
   },
 });
 
-export default buttonRenderer;
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: buttonRenderer,
-  tester: rankWith(1, uiTypeIs('Button')),
-};
+export default controlRenderer;
 </script>

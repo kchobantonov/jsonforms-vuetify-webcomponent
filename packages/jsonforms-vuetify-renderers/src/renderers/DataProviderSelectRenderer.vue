@@ -34,14 +34,7 @@
 </template>
 
 <script lang="ts">
-import {
-  and,
-  type ControlElement,
-  isStringControl,
-  type JsonFormsRendererRegistryEntry,
-  optionIs,
-  rankWith,
-} from '@jsonforms/core';
+import { type ControlElement } from '@jsonforms/core';
 import {
   rendererProps,
   type RendererProps,
@@ -100,12 +93,4 @@ const controlRenderer = defineComponent({
 });
 
 export default controlRenderer;
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: controlRenderer,
-  tester: rankWith(
-    11,
-    and(isStringControl, optionIs('variant', 'data-provider-select')),
-  ),
-};
 </script>

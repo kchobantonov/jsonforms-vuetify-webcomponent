@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { clearAllIds } from '@jsonforms/core';
-import FileRenderer, {
-  entry as fileControlRendererEntry,
-} from '../../../src/renderers/FileRenderer.vue';
+import FileRenderer from '../../../src/renderers/FileRenderer.vue';
+import { entry as fileControlRendererEntry } from '../../../src/renderers/FileRenderer.entry';
+
 import { mountJsonForms } from '../util';
 
 describe('FileRenderer.vue', () => {

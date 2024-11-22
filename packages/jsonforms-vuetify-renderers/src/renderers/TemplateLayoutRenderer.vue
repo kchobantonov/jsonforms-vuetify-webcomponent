@@ -76,7 +76,7 @@ export interface TemplateLayout extends Layout {
   template: string;
 }
 
-const templateLayoutRenderer = defineComponent({
+const controlRenderer = defineComponent({
   name: 'template-layout-renderer',
   inheritAttrs: false,
   components: {
@@ -216,10 +216,5 @@ const templateLayoutRenderer = defineComponent({
   },
 });
 
-export default templateLayoutRenderer;
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: templateLayoutRenderer,
-  tester: rankWith(2, uiTypeIs('TemplateLayout')),
-};
+export default controlRenderer;
 </script>

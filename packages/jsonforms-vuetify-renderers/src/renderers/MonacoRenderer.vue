@@ -28,20 +28,7 @@
 </template>
 
 <script lang="ts">
-import isEmpty from 'lodash/isEmpty';
-
-import {
-  type ControlElement,
-  type JsonFormsRendererRegistryEntry,
-  Resolve,
-  type Tester,
-  type UISchemaElement,
-  and,
-  isStringControl,
-  optionIs,
-  or,
-  rankWith,
-} from '@jsonforms/core';
+import { type ControlElement, Resolve } from '@jsonforms/core';
 import {
   type RendererProps,
   rendererProps,
@@ -93,30 +80,4 @@ const controlRenderer = defineComponent({
 });
 
 export default controlRenderer;
-
-const hasOption =
-  (optionName: string): Tester =>
-  (uischema: UISchemaElement): boolean => {
-    if (isEmpty(uischema)) {
-      return false;
-    }
-    const options = uischema.options;
-    return (
-      (options &&
-        !isEmpty(options) &&
-        typeof options[optionName] === 'string') ||
-      false
-    );
-  };
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: controlRenderer,
-  tester: rankWith(
-    2,
-    and(
-      isStringControl,
-      optionIs('format', 'code'),
-      or(hasOption('language'), hasOption(':language')),
-    ),
-  ),
-};
 </script>

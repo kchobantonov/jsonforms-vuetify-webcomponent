@@ -15,12 +15,7 @@
 </template>
 
 <script lang="ts">
-import {
-  rankWith,
-  uiTypeIs,
-  type JsonFormsRendererRegistryEntry,
-  type Layout,
-} from '@jsonforms/core';
+import { type Layout } from '@jsonforms/core';
 import {
   DispatchRenderer,
   rendererProps,
@@ -40,7 +35,7 @@ interface DataProviderElement extends Layout {
   url: string;
 }
 
-const dataProviderRenderer = defineComponent({
+const controlRenderer = defineComponent({
   name: 'data-provider-renderer',
   components: {
     DispatchRenderer,
@@ -99,10 +94,5 @@ const dataProviderRenderer = defineComponent({
   },
 });
 
-export default dataProviderRenderer;
-
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: dataProviderRenderer,
-  tester: rankWith(1, uiTypeIs('DataProvider')),
-};
+export default controlRenderer;
 </script>

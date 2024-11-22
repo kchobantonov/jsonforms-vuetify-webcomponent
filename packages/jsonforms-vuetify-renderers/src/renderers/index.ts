@@ -1,39 +1,22 @@
-import {
-  entry as templateLabelRendererEntry,
-  default as TemplateLabelRenderer,
-} from './TemplateLabelRenderer.vue';
-import {
-  entry as templateLayoutRendererEntry,
-  default as TemplateLayoutRenderer,
-} from './TemplateLayoutRenderer.vue';
-import {
-  entry as templateRendererEntry,
-  default as TemplateRenderer,
-} from './TemplateRenderer.vue';
-import {
-  entry as slotRendererEntry,
-  default as SlotRenderer,
-} from './SlotRenderer.vue';
-import {
-  entry as fileRendererEntry,
-  default as FileRenderer,
-} from './FileRenderer.vue';
-import {
-  entry as dataProviderRendererEntry,
-  default as DataProviderRenderer,
-} from './DataProviderRenderer.vue';
-import {
-  entry as dataProviderSelectRendererEntry,
-  default as DataProviderSelectRenderer,
-} from './DataProviderSelectRenderer.vue';
-import {
-  entry as buttonRendererEntry,
-  default as ButtonRenderer,
-} from './ButtonRenderer.vue';
-import {
-  entry as monacoRendererEntry,
-  default as MonacoRenderer,
-} from './MonacoRenderer.vue';
+import { default as TemplateLabelRenderer } from './TemplateLabelRenderer.vue';
+import { default as TemplateLayoutRenderer } from './TemplateLayoutRenderer.vue';
+import { default as TemplateRenderer } from './TemplateRenderer.vue';
+import { default as SlotRenderer } from './SlotRenderer.vue';
+import { default as FileRenderer } from './FileRenderer.vue';
+import { default as DataProviderRenderer } from './DataProviderRenderer.vue';
+import { default as DataProviderSelectRenderer } from './DataProviderSelectRenderer.vue';
+import { default as ButtonRenderer } from './ButtonRenderer.vue';
+import { default as MonacoRenderer } from './MonacoRenderer.vue';
+
+import { entry as templateLabelRendererEntry } from './TemplateLabelRenderer.entry';
+import { entry as templateLayoutRendererEntry } from './TemplateLayoutRenderer.entry';
+import { entry as templateRendererEntry } from './TemplateRenderer.entry';
+import { entry as slotRendererEntry } from './SlotRenderer.entry';
+import { entry as fileRendererEntry } from './FileRenderer.entry';
+import { entry as dataProviderRendererEntry } from './DataProviderRenderer.entry';
+import { entry as dataProviderSelectRendererEntry } from './DataProviderSelectRenderer.entry';
+import { entry as buttonRendererEntry } from './ButtonRenderer.entry';
+import { entry as monacoRendererEntry } from './MonacoRenderer.entry';
 
 export const extraVuetifyRenderers = [
   buttonRendererEntry,
