@@ -6,6 +6,7 @@ import type {
   Name,
 } from 'ajv';
 import { _, stringify, getProperty } from 'ajv/dist/compile/codegen';
+
 import capitalizeFn from 'lodash/capitalize';
 import startCaseFn from 'lodash/startCase';
 
@@ -64,7 +65,7 @@ function _getDef(): CodeKeywordDefinition {
         () => {
           gen.assign(data, transformExpr(tNames.slice()));
           gen.assign(_`${parentData}[${parentDataProperty}]`, data);
-        }
+        },
       );
 
       function transformExpr(ts: string[]): Code {
@@ -75,7 +76,7 @@ function _getDef(): CodeKeywordDefinition {
         const func = gen.scopeValue('func', {
           ref: transform[t as TransformName],
           code: _`require("ajv-keywords/dist/definitions/transform").transform${getProperty(
-            t
+            t,
           )}`,
         });
         const arg = transformExpr(ts);
@@ -104,7 +105,7 @@ function getEnumCaseCfg(parentSchema: AnySchemaObject): TransformConfig {
     // requires all `enum` values have unique keys
     if (cfg.hash[k]) {
       throw new Error(
-        'transform: "toEnumCase" requires all lowercased "enum" values to be unique'
+        'transform: "toEnumCase" requires all lowercased "enum" values to be unique',
       );
     }
     cfg.hash[k] = v;

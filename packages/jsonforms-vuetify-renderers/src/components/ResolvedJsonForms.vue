@@ -154,7 +154,7 @@ const defaultContext: FormContext = {
 const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
   ...props.state,
   schema: resolvedSchema.schema ?? props.state.schema,
-  ajv: props.state.ajv ?? createAjv(props.state.i18n?.locale),
+  ajv: props.state.ajv ?? createAjv(props.state.i18n),
 }));
 
 watch(

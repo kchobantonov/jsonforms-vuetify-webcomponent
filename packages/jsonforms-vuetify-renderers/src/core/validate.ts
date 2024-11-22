@@ -1,11 +1,15 @@
 import { createAjv as createDefaultAjv } from '@jsonforms/vue-vuetify';
 import type { Options } from 'ajv';
-import { enableErrorTranslations } from './ajv-i18n';
+import { ajvTranslations } from './ajv-i18n';
 import { ajvKeywords } from './keywords';
-import type { ComputedRef, MaybeRef } from 'vue';
+import ajvErrors from 'ajv-errors';
+import { markRaw, type ComputedRef, type MaybeRef } from 'vue';
+import type { JsonFormsI18nState } from '@jsonforms/core';
 
 export const createAjv = (
-  locale: MaybeRef<string | undefined> | ComputedRef<string | undefined>,
+  i18n:
+    | MaybeRef<JsonFormsI18nState | undefined>
+    | ComputedRef<JsonFormsI18nState | undefined>,
 ) => {
   const options: Options = {
     useDefaults: true,
@@ -14,9 +18,12 @@ export const createAjv = (
   };
 
   const ajv = createDefaultAjv(options);
-  enableErrorTranslations(ajv, locale);
 
   ajvKeywords(ajv);
+  ajvErrors(ajv);
 
-  return ajv;
+  ajvTranslations(ajv, { i18n });
+
+  // when ajv is used in component properties do not make it reactive
+  return markRaw(ajv);
 };

@@ -38,6 +38,12 @@ importers:
       ajv:
         specifier: ^8.6.1
         version: 8.17.1
+      ajv-errors:
+        specifier: ^3.0.0
+        version: 3.0.0(ajv@8.17.1)
+      ajv-i18n:
+        specifier: ^4.2.0
+        version: 4.2.0(ajv@8.17.1)
       ajv-keywords:
         specifier: ^5.1.0
         version: 5.1.0(ajv@8.17.1)
@@ -111,6 +117,9 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.5.1
         version: 0.5.1
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
@@ -158,10 +167,6 @@ importers:
         version: 2.1.6(typescript@5.4.5)
 
   packages/jsonforms-vuetify-renderers:
-    dependencies:
-      ajv-i18n:
-        specifier: ^4.2.0
-        version: 4.2.0(ajv@8.17.1)
     devDependencies:
       '@jsonforms/core':
         specifier: 3.4.0
@@ -220,6 +225,12 @@ importers:
       ajv:
         specifier: ^8.6.1
         version: 8.17.1
+      ajv-errors:
+        specifier: ^3.0.0
+        version: 3.0.0(ajv@8.17.1)
+      ajv-i18n:
+        specifier: ^4.2.0
+        version: 4.2.0(ajv@8.17.1)
       ajv-keywords:
         specifier: ^5.1.0
         version: 5.1.0(ajv@8.17.1)
@@ -227,7 +238,7 @@ importers:
         specifier: ^3.9.1
         version: 3.38.1
       cross-env:
-        specifier: ^7.0.2
+        specifier: ^7.0.3
         version: 7.0.3
       dayjs:
         specifier: ^1.10.6
@@ -398,6 +409,12 @@ importers:
       ajv:
         specifier: ^8.6.1
         version: 8.17.1
+      ajv-errors:
+        specifier: ^3.0.0
+        version: 3.0.0(ajv@8.17.1)
+      ajv-i18n:
+        specifier: ^4.2.0
+        version: 4.2.0(ajv@8.17.1)
       ajv-keywords:
         specifier: ^5.1.0
         version: 5.1.0(ajv@8.17.1)
@@ -465,6 +482,9 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.5.1
         version: 0.5.1
+      cross-env:
+        specifier: ^7.0.3
+        version: 7.0.3
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
@@ -3443,6 +3463,13 @@ packages:
       ajv: 6.12.6
     dev: true
 
+  /ajv-errors@3.0.0(ajv@8.17.1):
+    resolution: {integrity: sha512-V3wD15YHfHz6y0KdhYFjyy9vWtEVALT9UrxfN3zqlI6dMioHnJrqOYfyPKol3oqrnCM9uwkcdCwkJ0WUcbLMTQ==}
+    peerDependencies:
+      ajv: ^8.0.1
+    dependencies:
+      ajv: 8.17.1
+
   /ajv-formats@2.1.1(ajv@8.17.1):
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
     peerDependencies:
@@ -3459,7 +3486,6 @@ packages:
       ajv: ^8.0.0-beta.0
     dependencies:
       ajv: 8.17.1
-    dev: false
 
   /ajv-keywords@3.5.2(ajv@6.12.6):
     resolution: {integrity: sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==}

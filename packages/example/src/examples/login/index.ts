@@ -2,5 +2,6 @@ import type { ExampleInputDescription } from '@/core/types';
 import data from './data.json';
 import schema from './schema.json';
 import uischema from './uischema.json';
+import i18n from './i18n.json';
 
-export const input: ExampleInputDescription = { schema, uischema, data };
+export const input: ExampleInputDescription = { schema, uischema, data, i18n };
