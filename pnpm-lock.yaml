@@ -141,6 +141,9 @@ importers:
       sass:
         specifier: ^1.75.0
         version: 1.79.3
+      splitpanes:
+        specifier: ^3.1.5
+        version: 3.1.5
       typescript:
         specifier: ~5.4.0
         version: 5.4.5
@@ -11223,6 +11226,10 @@ packages:
     resolution: {integrity: sha512-mTyOoPbrivtXnwnIxZRFYRrPNtEFKlpB2fvjSnCQUiAA6qAZzqwna5envK4uk6OIeP17CsdF3rSBGYVBsU0Tkg==}
     dependencies:
       through: 2.3.8
+    dev: true
+
+  /splitpanes@3.1.5:
+    resolution: {integrity: sha512-r3Mq2ITFQ5a2VXLOy4/Sb2Ptp7OfEO8YIbhVJqJXoFc9hc5nTXXkCvtVDjIGbvC0vdE7tse+xTM9BMjsszP6bw==}
     dev: true
 
   /sprintf-js@1.0.3:

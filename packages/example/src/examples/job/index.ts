@@ -1,11 +1,12 @@
 import type { ExampleInputDescription } from '@/core/types';
+import { NOT_APPLICABLE } from '@jsonforms/core';
+import { registerExamples } from '../register';
+import { onHandleAction } from './actions';
 import data from './data.json';
 import i18n from './i18n.json';
 import schema from './schema.json';
 import uischema from './uischema.json';
 import uischemas from './uischemas.json';
-import { NOT_APPLICABLE } from '@jsonforms/core';
-import { onHandleAction } from './actions';
 
 export const input: ExampleInputDescription = {
   schema,
@@ -20,3 +21,11 @@ export const input: ExampleInputDescription = {
   data,
   onHandleAction,
 };
+
+registerExamples([
+  {
+    name: 'job',
+    label: 'Job Application',
+    input,
+  },
+]);

@@ -41,22 +41,3 @@ export {
   ButtonRenderer,
   MonacoRenderer,
 };
-
-const renderers = [
-  TemplateLabelRenderer,
-  TemplateLayoutRenderer,
-  TemplateRenderer,
-  SlotRenderer,
-  FileRenderer,
-  DataProviderRenderer,
-  DataProviderSelectRenderer,
-  ButtonRenderer,
-  MonacoRenderer,
-];
-
-// trick to preserve the render function since vite will optimize and remove the render function
-// since our components are not registered as components nor used in templates directly
-for (const renderer of renderers) {
-  if (renderer.render) {
-  }
-}

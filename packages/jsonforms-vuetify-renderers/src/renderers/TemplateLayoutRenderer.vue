@@ -25,9 +25,6 @@
 
 <script lang="ts">
 import {
-  rankWith,
-  uiTypeIs,
-  type JsonFormsRendererRegistryEntry,
   type JsonFormsSubStates,
   type Layout,
   type UISchemaElement,

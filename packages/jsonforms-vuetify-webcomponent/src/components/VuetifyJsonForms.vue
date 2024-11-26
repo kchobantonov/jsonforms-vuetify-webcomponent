@@ -358,10 +358,8 @@ const vuetifyFormWc = defineComponent({
       schemaToUse.$id = '/';
     }
 
-    // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
     const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
 
-    // dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
     const { extraVuetifyRenderers } = await import(
       '@chobantonov/jsonforms-vuetify-renderers'
     );

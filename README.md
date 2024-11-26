@@ -34,9 +34,9 @@ Use Node 18.x
 
 Recommendations:
 
-- For development use `npm run renderers:watch` combined with `npm run example:dev`.
-- For webcomponent development use `npm run renderers:watch` combined with `npm run wc:dev`.
-- To test production use `npm run build` combined with `npm run example:build`.
+- For development use `pnpm run renderers:watch` combined with `pnpm run example:dev`.
+- For webcomponent development use `pnpm run renderers:watch` combined with `pnpm run wc:dev`.
+- To test production use `pnpm run build` combined with `pnpm run example:build`.
   Then serve the built application from `example/dist` with a web server of your choice, e.g. `npx http-server example/dist`.
 
 ### VS Code Extension

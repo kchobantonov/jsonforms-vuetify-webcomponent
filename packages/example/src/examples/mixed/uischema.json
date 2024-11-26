@@ -1,0 +1,86 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "HorizontalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/name",
+          "options": {
+            "vuetify": {
+              "v-container": {
+                "class": "d-flex"
+              }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/email",
+          "options": {
+            "vuetify": {
+              "v-container": {
+                "class": "d-flex"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Control",
+      "scope": "#/properties/phone",
+      "options": {
+        "detail": {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#",
+              "options": {
+                "placeholder": "(###)-###-####",
+                "mask": "(###)-###-####",
+                "returnMaskedValue": true,
+                "detail": {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#",
+                      "options": {
+                        "placeholder": "(###)-###-####",
+                        "mask": "(###)-###-####",
+                        "returnMaskedValue": true
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "HorizontalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/preferredContactMethod",
+          "options": {
+            "vuetify": {
+              "v-container": {
+                "class": "d-flex"
+              }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/newsletterSubscription"
+        }
+      ]
+    }
+  ]
+}

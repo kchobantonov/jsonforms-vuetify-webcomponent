@@ -1,9 +1,10 @@
 import type { ExampleInputDescription } from '@/core/types';
+import { NOT_APPLICABLE } from '@jsonforms/core';
+import { registerExamples } from '../register';
 import data from './data.json';
 import schema from './schema.json';
 import uischema from './uischema.json';
 import uischemas from './uischemas.json';
-import { NOT_APPLICABLE } from '@jsonforms/core';
 
 export const input: ExampleInputDescription = {
   schema,
@@ -16,3 +17,11 @@ export const input: ExampleInputDescription = {
   })),
   data,
 };
+
+registerExamples([
+  {
+    name: 'template-slot',
+    label: 'Template/Slot Layout',
+    input,
+  },
+]);

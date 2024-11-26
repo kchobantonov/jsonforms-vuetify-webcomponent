@@ -1,0 +1,8 @@
+{
+  "en": {
+    "string": "String",
+    "object": "Object",
+    "array": "Array",
+    "null": "Null"
+  }
+}

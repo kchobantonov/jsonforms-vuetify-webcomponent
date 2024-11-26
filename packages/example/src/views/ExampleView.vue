@@ -12,6 +12,7 @@ import {
 import type { JsonFormsChangeEvent } from '@jsonforms/vue';
 import {
   defaultStyles,
+  extendedVuetifyRenderers,
   mergeStyles,
   ValidationIcon,
 } from '@jsonforms/vue-vuetify';
@@ -19,6 +20,8 @@ import type { ErrorObject } from 'ajv';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { Pane, Splitpanes } from 'splitpanes';
+import 'splitpanes/dist/splitpanes.css';
 import {
   computed,
   inject,
@@ -45,16 +48,9 @@ import {
   getMonacoModelForUri,
 } from '../core/jsonSchemaValidation';
 import type { MonacoApi } from '../core/monaco';
-import { examples } from '../examples';
 import { useAppStore } from '../store';
 
-// dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
-const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
-
-// dynamically import renderers so vite vue will not do tree shaking and removing the renderer functions from our components in production mode
-const { extraVuetifyRenderers } = await import(
-  '@chobantonov/jsonforms-vuetify-renderers'
-);
+import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
 
 const vuetifyRenderers = [
   ...extendedVuetifyRenderers,
@@ -127,38 +123,15 @@ const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
   };
 };
 
-const reloadState = (state: Reactive<JsonFormsProps>): JsonFormsProps => {
-  return {
-    data: state.data,
-    schema: state.schema,
-    uischema: state.uischema,
-    renderers: renderers,
-    cells: undefined, // not defined
-    config: appStore.jsonforms.config,
-    readonly: appStore.jsonforms.readonly,
-    uischemas: state.uischemas,
-    validationMode: appStore.jsonforms.validationMode,
-    i18n: {
-      locale: appStore.jsonforms.locale,
-      translate: createTranslator(
-        appStore.jsonforms.locale,
-        state.i18n?.translations,
-      ),
-      translations: state.i18n?.translations,
-    },
-    additionalErrors: undefined,
-    middleware: undefined,
-  };
-};
-
 const state = reactive<JsonFormsProps>(initialState(props.example));
 
 const onChange = (event: JsonFormsChangeEvent): void => {
   if (props.example.name) {
     dataModel.value = getMonacoModelForUri(
       monaco.Uri.parse(toDataUri(props.example.name)),
-      event.data ? JSON.stringify(event.data, null, 2) : '',
+      event.data !== undefined ? JSON.stringify(event.data, null, 2) : '',
     );
+    state.data = event.data;
   }
   errors.value = event.errors;
 };
@@ -189,7 +162,7 @@ const onWebComponentHandleAction = (customEvent: CustomEvent): void => {
 
 const reloadMonacoSchema = () => {
   const example = find(
-    examples,
+    appStore.examples,
     (example) => example.name === appStore.exampleName,
   );
 
@@ -205,7 +178,9 @@ const reloadMonacoSchema = () => {
 const saveMonacoSchema = () => {
   saveMonacoModel(
     schemaModel,
-    (modelValue) => (state.schema = JSON.parse(modelValue)),
+    (modelValue) => {
+      state.schema = JSON.parse(modelValue);
+    },
     'New schema applied',
   );
 
@@ -221,7 +196,7 @@ const saveMonacoSchema = () => {
 
 const reloadMonacoUiSchema = () => {
   const example = find(
-    examples,
+    appStore.examples,
     (example) => example.name === appStore.exampleName,
   );
 
@@ -239,15 +214,16 @@ const reloadMonacoUiSchema = () => {
 const saveMonacoUiSchema = () => {
   saveMonacoModel(
     uischemaModel,
-    (modelValue) =>
-      (state.uischema = modelValue ? JSON.parse(modelValue) : undefined),
+    (modelValue) => {
+      state.uischema = modelValue ? JSON.parse(modelValue) : undefined;
+    },
     'New UI schema applied',
   );
 };
 
 const reloadMonacoUiSchemas = () => {
   const example = find(
-    examples,
+    appStore.examples,
     (example) => example.name === appStore.exampleName,
   );
 
@@ -272,24 +248,27 @@ const reloadMonacoUiSchemas = () => {
 const saveMonacoUiSchemas = () => {
   saveMonacoModel(
     uischemasModel,
-    (modelValue) =>
-      (state.uischemas = modelValue
+    (modelValue) => {
+      state.uischemas = modelValue
         ? parseAndTransformUISchemaRegistryEntries(modelValue)
-        : undefined),
+        : undefined;
+    },
     'New UI schemas applied',
   );
 };
 
 const reloadMonacoData = () => {
   const example = find(
-    examples,
+    appStore.examples,
     (example) => example.name === appStore.exampleName,
   );
 
   if (example) {
     dataModel.value = getMonacoModelForUri(
       monaco.Uri.parse(toDataUri(example.name)),
-      example.input.data ? JSON.stringify(example.input.data, null, 2) : '',
+      example.input.data !== undefined
+        ? JSON.stringify(example.input.data, null, 2)
+        : '',
     );
     toast('Original example data loaded. Apply it to take effect.');
   }
@@ -299,28 +278,7 @@ const saveMonacoData = () => {
   saveMonacoModel(
     dataModel,
     (modelValue) => {
-      if (state.schema?.type === 'number' || state.schema?.type === 'integer') {
-        try {
-          state.data = parseFloat(modelValue);
-        } catch {
-          // not able to convert the value - invalid data
-          state.data = modelValue;
-        }
-      } else if (state.schema?.type === 'boolean') {
-        state.data = modelValue == 'true';
-      } else if (
-        state.schema?.type === 'object' ||
-        state.schema?.type === 'array'
-      ) {
-        try {
-          state.data = JSON.parse(modelValue);
-        } catch {
-          // not able to convert the value - invalid data
-          state.data = modelValue;
-        }
-      } else {
-        state.data = modelValue;
-      }
+      state.data = modelValue === '' ? undefined : JSON.parse(modelValue);
     },
     'New data applied',
   );
@@ -328,7 +286,7 @@ const saveMonacoData = () => {
 
 const reloadMonacoI18N = () => {
   const example = find(
-    examples,
+    appStore.examples,
     (example) => example.name === appStore.exampleName,
   );
 
@@ -344,15 +302,16 @@ const reloadMonacoI18N = () => {
 const saveMonacoI18N = () => {
   saveMonacoModel(
     i18nModel,
-    (modelValue) =>
-      (state.i18n = {
+    (modelValue) => {
+      state.i18n = {
         locale: appStore.jsonforms.locale,
         translate: createTranslator(
           appStore.jsonforms.locale,
           modelValue ? JSON.parse(modelValue) : {},
         ),
         translations: modelValue ? JSON.parse(modelValue) : {},
-      }),
+      };
+    },
     'New i18n applied',
   );
 };
@@ -377,7 +336,7 @@ const saveMonacoModel = (
 const registerValidations = (editor: MonacoApi) => {
   configureJsonSchemaValidation(editor, ['*.schema.json']);
   configureUISchemaValidation(editor, ['*.uischema.json']);
-  for (const example of examples) {
+  for (const example of appStore.examples) {
     const schema = {
       ...example.input.schema,
       title: example.label,
@@ -423,9 +382,9 @@ const updateMonacoModels = (example: ExampleDescription) => {
 
   dataModel.value = getMonacoModelForUri(
     monaco.Uri.parse(toDataUri(example.name)),
-    Array.isArray(example.input.data) || typeof example.input.data === 'object'
+    example.input.data !== undefined
       ? JSON.stringify(example.input.data, null, 2)
-      : `${example.input.data}`,
+      : '',
   );
 
   i18nModel.value = getMonacoModelForUri(
@@ -468,15 +427,6 @@ watch(
 );
 
 watch(
-  () => appStore.jsonforms,
-  (value) => {
-    // reset state when store jsonforms changes
-    Object.assign(state, reloadState(state));
-  },
-  { deep: true },
-);
-
-watch(
   () => appStore.formOnly,
   (value) => {
     if (!value) {
@@ -514,7 +464,8 @@ const vuetifyOptions = computed(() => {
         <v-card-text>
           <v-tabs v-model="appStore.activeTab">
             <v-tab :key="0"
-              >Demo<validation-icon
+              >{{ appStore.layout == 'demo-and-data' ? 'Demo and Data' : 'Demo'
+              }}<validation-icon
                 v-if="errors"
                 :errors="errors"
               ></validation-icon
@@ -523,8 +474,10 @@ const vuetifyOptions = computed(() => {
             <v-tab :key="1">Schema</v-tab>
             <v-tab :key="2">UI Schema</v-tab>
             <v-tab :key="3">UI Schemas</v-tab>
-            <v-tab :key="4">Data</v-tab>
-            <v-tab :key="5">Internationalization</v-tab>
+            <v-tab :key="4">Internationalization</v-tab>
+            <v-tab v-if="appStore.layout !== 'demo-and-data'" :key="5"
+              >Data</v-tab
+            >
           </v-tabs>
         </v-card-text>
         <v-window v-model="appStore.activeTab">
@@ -537,49 +490,162 @@ const vuetifyOptions = computed(() => {
               </v-card-title>
               <v-divider class="mx-4"></v-divider>
               <div class="json-forms">
-                <vuetify-json-forms-wrapper
-                  v-if="appStore.useWebComponentView"
-                  :custom-style="`.v-application__wrap { min-height: 0px; }`"
-                  :data="state.data ? JSON.stringify(state.data) : undefined"
-                  :schema="
-                    state.schema ? JSON.stringify(state.schema) : undefined
-                  "
-                  :uischema="
-                    state.uischema ? JSON.stringify(state.uischema) : undefined
-                  "
-                  :uischemas="
-                    state.uischemas
-                      ? JSON.stringify(
-                          state.uischemas.map((item) => ({
-                            ...item,
-                            tester: item.tester.toString(),
-                          })),
-                        )
-                      : undefined
-                  "
-                  :config="
-                    state.config ? JSON.stringify(state.config) : undefined
-                  "
-                  :validationMode="state.validationMode"
-                  :readonly="state.readonly"
-                  :locale="state.i18n?.locale ?? 'en'"
+                <splitpanes
+                  :class="['default-theme', 'splitpanes-vuetify']"
                   :rtl="appStore.rtl"
-                  :dark="appStore.dark"
-                  :translations="
-                    state.i18n?.translations
-                      ? JSON.stringify(state.i18n?.translations)
-                      : '{}'
-                  "
-                  :vuetify-options="vuetifyOptions"
-                  @change="onWebComponentChange"
-                  @handleAction="onWebComponentHandleAction"
-                ></vuetify-json-forms-wrapper>
-                <ResolvedJsonForms
-                  v-else
-                  :state="state as JsonFormsProps"
-                  @change="onChange"
-                  @handleAction="onHandleAction"
-                />
+                  v-if="appStore.layout === 'demo-and-data'"
+                >
+                  <pane min-size="20">
+                    <v-card>
+                      <v-card-title>
+                        <v-toolbar flat>
+                          <v-toolbar-title>Demo</v-toolbar-title>
+                          <v-spacer></v-spacer>
+                        </v-toolbar>
+                      </v-card-title>
+                      <v-divider class="mx-4"></v-divider>
+                      <vuetify-json-forms-wrapper
+                        v-if="appStore.useWebComponentView"
+                        :custom-style="`.v-application__wrap { min-height: 0px; }`"
+                        :data="
+                          state.data ? JSON.stringify(state.data) : undefined
+                        "
+                        :schema="
+                          state.schema
+                            ? JSON.stringify(state.schema)
+                            : undefined
+                        "
+                        :uischema="
+                          state.uischema
+                            ? JSON.stringify(state.uischema)
+                            : undefined
+                        "
+                        :uischemas="
+                          state.uischemas
+                            ? JSON.stringify(
+                                state.uischemas.map((item) => ({
+                                  ...item,
+                                  tester: item.tester.toString(),
+                                })),
+                              )
+                            : undefined
+                        "
+                        :config="
+                          state.config
+                            ? JSON.stringify(state.config)
+                            : undefined
+                        "
+                        :validationMode="state.validationMode"
+                        :readonly="state.readonly"
+                        :locale="state.i18n?.locale ?? 'en'"
+                        :rtl="appStore.rtl"
+                        :dark="appStore.dark"
+                        :translations="
+                          state.i18n?.translations
+                            ? JSON.stringify(state.i18n?.translations)
+                            : '{}'
+                        "
+                        :vuetify-options="vuetifyOptions"
+                        @change="onWebComponentChange"
+                        @handleAction="onWebComponentHandleAction"
+                      ></vuetify-json-forms-wrapper>
+                      <ResolvedJsonForms
+                        v-else
+                        :state="state as JsonFormsProps"
+                        @change="onChange"
+                        @handleAction="onHandleAction"
+                      />
+                    </v-card>
+                  </pane>
+                  <pane>
+                    <v-card>
+                      <v-card-title>
+                        <v-toolbar flat>
+                          <v-toolbar-title>Data</v-toolbar-title>
+                          <v-spacer></v-spacer>
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ props }">
+                              <v-btn
+                                icon
+                                @click="reloadMonacoData"
+                                v-bind="props"
+                              >
+                                <v-icon>$reload</v-icon>
+                              </v-btn>
+                            </template>
+                            {{ `Reload Example Data` }}
+                          </v-tooltip>
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ props }">
+                              <v-btn
+                                icon
+                                @click="saveMonacoData"
+                                v-bind="props"
+                              >
+                                <v-icon>$save</v-icon>
+                              </v-btn>
+                            </template>
+                            {{ `Apply Change To Example Data` }}
+                          </v-tooltip>
+                        </v-toolbar>
+                      </v-card-title>
+                      <v-divider class="mx-4"></v-divider>
+                      <monaco-editor
+                        language="json"
+                        v-model="dataModel"
+                        style="height: calc(100vh - 100px)"
+                        :editorBeforeMount="registerValidations"
+                      ></monaco-editor>
+                    </v-card>
+                  </pane>
+                </splitpanes>
+                <div v-else>
+                  <vuetify-json-forms-wrapper
+                    v-if="appStore.useWebComponentView"
+                    :custom-style="`.v-application__wrap { min-height: 0px; }`"
+                    :data="state.data ? JSON.stringify(state.data) : undefined"
+                    :schema="
+                      state.schema ? JSON.stringify(state.schema) : undefined
+                    "
+                    :uischema="
+                      state.uischema
+                        ? JSON.stringify(state.uischema)
+                        : undefined
+                    "
+                    :uischemas="
+                      state.uischemas
+                        ? JSON.stringify(
+                            state.uischemas.map((item) => ({
+                              ...item,
+                              tester: item.tester.toString(),
+                            })),
+                          )
+                        : undefined
+                    "
+                    :config="
+                      state.config ? JSON.stringify(state.config) : undefined
+                    "
+                    :validationMode="state.validationMode"
+                    :readonly="state.readonly"
+                    :locale="state.i18n?.locale ?? 'en'"
+                    :rtl="appStore.rtl"
+                    :dark="appStore.dark"
+                    :translations="
+                      state.i18n?.translations
+                        ? JSON.stringify(state.i18n?.translations)
+                        : '{}'
+                    "
+                    :vuetify-options="vuetifyOptions"
+                    @change="onWebComponentChange"
+                    @handleAction="onWebComponentHandleAction"
+                  ></vuetify-json-forms-wrapper>
+                  <ResolvedJsonForms
+                    v-else
+                    :state="state as JsonFormsProps"
+                    @change="onChange"
+                    @handleAction="onHandleAction"
+                  />
+                </div>
               </div>
             </v-card>
           </v-window-item>
@@ -686,39 +752,6 @@ const vuetifyOptions = computed(() => {
             <v-card>
               <v-card-title>
                 <v-toolbar flat>
-                  <v-toolbar-title>Data</v-toolbar-title>
-                  <v-spacer></v-spacer>
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon @click="reloadMonacoData" v-bind="props">
-                        <v-icon>$reload</v-icon>
-                      </v-btn>
-                    </template>
-                    {{ `Reload Example Data` }}
-                  </v-tooltip>
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ props }">
-                      <v-btn icon @click="saveMonacoData" v-bind="props">
-                        <v-icon>$save</v-icon>
-                      </v-btn>
-                    </template>
-                    {{ `Apply Change To Example Data` }}
-                  </v-tooltip>
-                </v-toolbar>
-              </v-card-title>
-              <v-divider class="mx-4"></v-divider>
-              <monaco-editor
-                language="json"
-                v-model="dataModel"
-                style="height: calc(100vh - 100px)"
-                :editorBeforeMount="registerValidations"
-              ></monaco-editor>
-            </v-card>
-          </v-window-item>
-          <v-window-item :key="5">
-            <v-card>
-              <v-card-title>
-                <v-toolbar flat>
                   <v-toolbar-title>Internationalization</v-toolbar-title>
                   <v-spacer></v-spacer>
                   <v-tooltip bottom>
@@ -743,6 +776,39 @@ const vuetifyOptions = computed(() => {
               <monaco-editor
                 language="json"
                 v-model="i18nModel"
+                style="height: calc(100vh - 100px)"
+                :editorBeforeMount="registerValidations"
+              ></monaco-editor>
+            </v-card>
+          </v-window-item>
+          <v-window-item :key="5">
+            <v-card>
+              <v-card-title>
+                <v-toolbar flat>
+                  <v-toolbar-title>Data</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ props }">
+                      <v-btn icon @click="reloadMonacoData" v-bind="props">
+                        <v-icon>$reload</v-icon>
+                      </v-btn>
+                    </template>
+                    {{ `Reload Example Data` }}
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ props }">
+                      <v-btn icon @click="saveMonacoData" v-bind="props">
+                        <v-icon>$save</v-icon>
+                      </v-btn>
+                    </template>
+                    {{ `Apply Change To Example Data` }}
+                  </v-tooltip>
+                </v-toolbar>
+              </v-card-title>
+              <v-divider class="mx-4"></v-divider>
+              <monaco-editor
+                language="json"
+                v-model="dataModel"
                 style="height: calc(100vh - 100px)"
                 :editorBeforeMount="registerValidations"
               ></monaco-editor>
@@ -799,3 +865,28 @@ const vuetifyOptions = computed(() => {
     </div>
   </div>
 </template>
+<style lang="scss" scoped>
+:deep(.default-theme) {
+  &.splitpanes--vertical > .splitpanes__splitter,
+  .splitpanes--vertical > .splitpanes__splitter {
+    border-left: 1px solid rgb(var(--v-theme-on-surface-variant));
+  }
+
+  &.splitpanes--horizontal > .splitpanes__splitter,
+  .splitpanes--horizontal > .splitpanes__splitter {
+    border-top: 1px solid rgb(var(--v-theme-on-surface-variant));
+  }
+
+  .splitpanes__splitter {
+    background-color: rgb(var(--v-theme-surface));
+    &:before,
+    &:after {
+      background-color: rgb(var(--v-theme-on-surface-variant));
+    }
+    &:hover:before,
+    &:hover:after {
+      background-color: rgb(var(--v-theme-on-surface-variant));
+    }
+  }
+}
+</style>

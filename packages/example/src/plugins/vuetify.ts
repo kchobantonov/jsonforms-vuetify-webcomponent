@@ -269,8 +269,6 @@ export function buildVuetify() {
         delete vuetify.defaults.value?.VNumberInput?.variant;
         delete vuetify.defaults.value?.VDateInput?.variant;
       }
-
-      appStore.forceUpdateFlag++;
     },
   );
 

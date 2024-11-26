@@ -1,12 +1,16 @@
+import { getExamples } from '@/examples';
 import type { ValidationMode } from '@jsonforms/core';
 import { useLocalStorage } from '@vueuse/core';
-import { reactive, ref, watch } from 'vue';
+import { markRaw, reactive, ref, watch } from 'vue';
+
+export const appstoreLayouts = ['', 'demo-and-data'] as const;
+export type AppstoreLayouts = (typeof appstoreLayouts)[number];
 
 const appstore = reactive({
-  // forceUpdateFlag is a hack to force reload the whole UI when vuetify defaults (variants) are changed
-  forceUpdateFlag: 0,
+  examples: markRaw(getExamples()),
   exampleName: useHistoryHash(''),
   rtl: false,
+  layout: useLocalStorage('vuetify-example-layout', ''),
   formOnly: useHistoryHashQuery('form-only', false as boolean),
   activeTab: useHistoryHashQuery('active-tab', 0 as number),
   useWebComponentView: useHistoryHashQuery(
@@ -34,7 +38,6 @@ const appstore = reactive({
       hideAvatar: false,
       hideArraySummaryValidation: false,
       enableFilterErrorsBeforeTouch: false,
-      vuetify: {},
     },
     locale: useLocalStorage('vuetify-example-locale', 'en'),
   },

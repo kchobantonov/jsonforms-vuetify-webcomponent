@@ -4,7 +4,7 @@ _Complex Forms in the blink of an eye_
 
 JSON Forms eliminates the tedious task of writing fully-featured forms by hand by leveraging the capabilities of JSON, JSON Schema and Javascript.
 
-## Vue 2 Vuetify Renderers WebComponent
+## Vue 3 Vuetify Renderers WebComponent
 
 This is the JSON Forms Vue 2 Vuetify renderers WebComponent which provides a Vuetify based renderer set for [JSON Forms Vue 2](https://github.com/eclipsesource/jsonforms/blob/master/packages/vue2/vue2) implemented as WebComponent
 
@@ -106,7 +106,7 @@ Use the `vuetify-json-forms` webcomponent in your HTML page as follow.
       form.setAttribute('config', JSON.stringify(config));
       form.setAttribute('locale', 'en');
       form.setAttribute('translations', JSON.stringify(i18n));
-      form.setAttribute('default-preset', JSON.stringify(preset));
+      form.setAttribute('vuetify-options', JSON.stringify(preset));
 
       form.addEventListener('change', onChange);
     </script>

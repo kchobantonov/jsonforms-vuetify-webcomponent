@@ -7,14 +7,13 @@ import ExampleSettings from './components/ExampleSettings.vue';
 import ExampleView from './views/ExampleView.vue';
 import HomeView from './views/HomeView.vue';
 
-import { examples } from './examples';
 import { getCustomThemes } from './plugins/vuetify';
 import { useAppStore } from './store';
 
 const appStore = useAppStore();
 
 const example = computed(() =>
-  examples.find((ex) => ex.name === appStore.exampleName),
+  appStore.examples.find((ex) => ex.name === appStore.exampleName),
 );
 
 const theme = computed(() => {
@@ -32,7 +31,7 @@ const theme = computed(() => {
 <template>
   <v-locale-provider :rtl="appStore.rtl" :locale="appStore.jsonforms.locale">
     <v-theme-provider :theme="theme">
-      <v-app :key="appStore.forceUpdateFlag">
+      <v-app>
         <example-app-bar></example-app-bar>
         <example-drawer></example-drawer>
         <example-settings></example-settings>

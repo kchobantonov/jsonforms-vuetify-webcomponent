@@ -1,8 +1,9 @@
 import type { ExampleInputDescription } from '@/core/types';
+import { registerExamples } from '../register';
+import { onHandleAction } from './actions';
 import data from './data.json';
 import schema from './schema.json';
 import uischema from './uischema.json';
-import { onHandleAction } from './actions';
 
 export const input: ExampleInputDescription = {
   schema,
@@ -10,3 +11,11 @@ export const input: ExampleInputDescription = {
   data,
   onHandleAction,
 };
+
+registerExamples([
+  {
+    name: 'button',
+    label: 'Button',
+    input,
+  },
+]);
