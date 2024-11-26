@@ -28,13 +28,12 @@ import {
   markRaw,
   onMounted,
   provide,
-  reactive,
   ref,
+  shallowReactive,
   shallowRef,
   unref,
   watch,
   type InjectionKey,
-  type Reactive,
   type Ref,
   type ShallowRef,
 } from 'vue';
@@ -123,7 +122,7 @@ const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
   };
 };
 
-const state = reactive<JsonFormsProps>(initialState(props.example));
+const state = shallowReactive<JsonFormsProps>(initialState(props.example));
 
 const onChange = (event: JsonFormsChangeEvent): void => {
   if (props.example.name) {
