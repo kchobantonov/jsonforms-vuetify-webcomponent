@@ -348,7 +348,7 @@ const controlRenderer = defineComponent({
               `size should be greater than ${formatSize}`,
               {
                 limitText: `${formatSize}`,
-                limit: `${this.maxFileSize}`,
+                limit: `${this.minFileSize}`,
               },
             );
           }
