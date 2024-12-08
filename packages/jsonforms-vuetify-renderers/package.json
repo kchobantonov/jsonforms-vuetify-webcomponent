@@ -58,7 +58,7 @@
     "lodash": "^4.17.21",
     "monaco-editor": "^0.49.0",
     "vue": "^3.4.21",
-    "vuetify": "^3.6.6"
+    "vuetify": "^3.7.5"
   },
   "devDependencies": {
     "@jsonforms/core": "3.4.0",
@@ -109,6 +109,6 @@
     "vue": "^3.4.21",
     "vue-eslint-parser": "^9.4.2",
     "vue-tsc": "^2.0.11",
-    "vuetify": "^3.6.6"
+    "vuetify": "^3.7.5"
   }
 }

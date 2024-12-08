@@ -62,7 +62,7 @@
     "shady-css-parser": "^0.1.0",
     "vue": "^3.4.21",
     "vue-plugin-load-script": "^2.1.1",
-    "vuetify": "^3.6.6"
+    "vuetify": "^3.7.5"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
