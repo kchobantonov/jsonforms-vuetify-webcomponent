@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, inject, ref, watch, type InjectionKey, type Ref } from 'vue';
 import ExampleAppBar from './components/ExampleAppBar.vue';
 import ExampleDrawer from './components/ExampleDrawer.vue';
 import ExampleSettings from './components/ExampleSettings.vue';
@@ -7,6 +7,7 @@ import ExampleSettings from './components/ExampleSettings.vue';
 import ExampleView from './views/ExampleView.vue';
 import HomeView from './views/HomeView.vue';
 
+import type { DefaultsInstance } from 'vuetify';
 import { getCustomThemes } from './plugins/vuetify';
 import { useAppStore } from './store';
 
@@ -26,12 +27,29 @@ const theme = computed(() => {
 
   return appStore.dark ? 'dark' : 'light';
 });
+
+const appKey = ref(1);
+const DefaultsSymbol: InjectionKey<Ref<DefaultsInstance>> =
+  Symbol.for('vuetify:defaults');
+
+const vuetifyDefaults = inject(DefaultsSymbol);
+
+watch(
+  () => vuetifyDefaults,
+  () => {
+    // force app refresh on vuetifyDefaults changes
+    appKey.value = appKey.value + 1;
+  },
+  {
+    deep: true,
+  },
+);
 </script>
 
 <template>
   <v-locale-provider :rtl="appStore.rtl" :locale="appStore.jsonforms.locale">
     <v-theme-provider :theme="theme">
-      <v-app>
+      <v-app :key="appKey">
         <example-app-bar></example-app-bar>
         <example-drawer></example-drawer>
         <example-settings></example-settings>
