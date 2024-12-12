@@ -475,7 +475,7 @@ const vuetifyOptions = computed(() => {
 <template>
   <div>
     <v-container fluid class="demo" v-if="!appStore.formOnly">
-      <v-card>
+      <v-card style="overflow: visible">
         <v-card-title>{{ example.label }}</v-card-title>
         <v-card-text>
           <v-tabs v-model="appStore.activeTab">
@@ -496,9 +496,9 @@ const vuetifyOptions = computed(() => {
             >
           </v-tabs>
         </v-card-text>
-        <v-window v-model="appStore.activeTab">
+        <v-window v-model="appStore.activeTab" style="overflow: visible">
           <v-window-item :key="0">
-            <v-card>
+            <v-card style="overflow: visible">
               <v-card-title>
                 <v-toolbar flat>
                   <v-toolbar-title>JSONForm</v-toolbar-title>
@@ -511,8 +511,8 @@ const vuetifyOptions = computed(() => {
                   :rtl="appStore.rtl"
                   v-if="appStore.layout === 'demo-and-data'"
                 >
-                  <pane min-size="20">
-                    <v-card>
+                  <pane min-size="20" style="overflow: visible">
+                    <v-card style="overflow: visible">
                       <v-card-title>
                         <v-toolbar flat>
                           <v-toolbar-title>Demo</v-toolbar-title>
