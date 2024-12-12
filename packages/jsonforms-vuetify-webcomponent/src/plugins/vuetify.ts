@@ -85,7 +85,6 @@ function createVuetifyInstance(
   dayjs.locale(locale);
 
   const theme = {
-    isDisabled: true, // do not install styles since it is going to go into the head and not under the shadowdom
     defaultTheme: dark ? 'dark' : 'light',
     themes: getCustomThemes(blueprint).reduce(
       (acc: Record<string, ThemeDefinition>, current) => {

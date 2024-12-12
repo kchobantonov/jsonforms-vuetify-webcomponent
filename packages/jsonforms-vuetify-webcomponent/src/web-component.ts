@@ -11,6 +11,14 @@ import './monaco-setup';
 const VuetifyJsonFormsElement = defineCustomElement(VuetifyJsonForms, {
   shadowRoot: true, // Ensure shadow DOM is used
   configureApp: (app: App) => {
+    // provide dummy usehead to disable injection of theme css with id vuetify-theme-stylesheet
+    app.provide('usehead', {
+      push(getHead: () => {}) {
+        return {
+          patch(getHead: () => {}) {},
+        };
+      },
+    });
     app.use(buildVuetify());
     app.use(LoadScript);
   },
