@@ -48,8 +48,11 @@ const saveData = async (event) => {
 
 const changeLang = (event) => {
   let form = event.$el.getRootNode().host;
-
   form.setAttribute('locale', event.params.lang);
+};
+
+const toggleDarkMode = (event) => {
+  event.context.vuetify.dark = !event.context.vuetify.dark;
 };
 
 const onChange = (customEvent) => {
@@ -68,16 +71,18 @@ const onHandleAction = (customEvent) => {
   let [event] = customEvent.detail;
   if (event.action === 'showRequiredAsterisk') {
     event.callback = showRequiredAsterisk;
-  } else if (event.action == 'hideRequiredAsterisk') {
+  } else if (event.action === 'hideRequiredAsterisk') {
     event.callback = hideRequiredAsterisk;
-  } else if (event.action == 'showData') {
+  } else if (event.action === 'showData') {
     event.callback = showData;
-  } else if (event.action == 'hideData') {
+  } else if (event.action === 'hideData') {
     event.callback = hideData;
-  } else if (event.action == 'saveData') {
+  } else if (event.action === 'saveData') {
     event.callback = saveData;
-  } else if (event.action == 'changeLang') {
+  } else if (event.action === 'changeLang') {
     event.callback = changeLang;
+  } else if (event.action === 'toggleDarkMode') {
+    event.callback = toggleDarkMode;
   }
 };
 

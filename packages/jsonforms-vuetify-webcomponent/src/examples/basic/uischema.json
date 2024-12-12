@@ -4,39 +4,15 @@
   "elements": [
     {
       "type": "TemplateLayout",
-      "template": "<v-toolbar-items><v-row dense align='center'><v-col><slot name='0'></slot></v-col><v-col><slot name='1'></slot></v-col></v-row></v-toolbar-items>",
+      "template": "<v-toolbar-items class='d-flex align-center'><div v-for=\"element in elements\" :key=\"element.name\"><slot :name=\"element.name\"></slot></div></v-toolbar-items>",
       "elements": [
         {
-          "type": "Button",
-          "label": "EN",
-          "action": "changeLang",
-          "params": {
-            "lang": "en"
-          },
-          "options": {
-            "vuetify": {
-              "v-btn": {
-                "small": true,
-                "fab": true
-              }
-            }
-          }
+          "type": "TemplateLayout",
+          "template": "<v-select variant='plain' density='compact' hide-details='true' :model-value='context.locale' @update:modelValue='(value) => context.fireActionEvent(\"changeLang\", {\"lang\": value})' :items='[{\"label\": \"English\", \"value\": \"en\"}, {\"label\": \"Bulgarian\", \"value\": \"bg\"}]' item-title='label' item-value='value'></v-select>"
         },
         {
-          "type": "Button",
-          "label": "БГ",
-          "action": "changeLang",
-          "params": {
-            "lang": "bg"
-          },
-          "options": {
-            "vuetify": {
-              "v-btn": {
-                "small": true,
-                "fab": true
-              }
-            }
-          }
+          "type": "TemplateLayout",
+          "template": "<v-btn icon @click='() => context.fireActionEvent(\"toggleDarkMode\")'><v-icon>{{ context.vuetify.dark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon></v-btn>"
         }
       ]
     },
@@ -111,6 +87,27 @@
           "type": "HorizontalLayout",
           "elements": [
             {
+              "type": "Control",
+              "scope": "#/properties/json",
+              "options": {
+                "format": "code",
+                "language": "json",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "options": {
+                      "minimap": { "enabled": false }
+                    },
+                    "height": "200px"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
               "type": "Button",
               "label": "Show *",
               "action": "showRequiredAsterisk",
@@ -153,26 +150,6 @@
             {
               "type": "TemplateLayout",
               "template": "<v-dialog id='dialog' v-model='context.uidata.errorDialog.show' width='500'><v-card><v-card-title>{{ context.uidata.errorDialog.title }}</v-card-title><v-card-text>{{ context.uidata.errorDialog.text }}</v-card-text><v-divider></v-divider><v-card-actions><v-spacer></v-spacer><v-btn color='primary' text @click='context.uidata.errorDialog.show = false'> OK </v-btn></v-card-actions></v-card></v-dialog>"
-            }
-          ]
-        },
-        {
-          "type": "HorizontalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/json",
-              "options": {
-                "format": "code",
-                "language": "json",
-                "vuetify": {
-                  "monaco-editor": {
-                    "options": {
-                      "minimap": { "enabled": false }
-                    }
-                  }
-                }
-              }
             }
           ]
         }

@@ -86,14 +86,30 @@ const processStyleNode = async (
     const cssUrls = ExtractImportUrls.extract(cssText);
 
     // check for @import rules and analyzed if they refer to font-faces
-    for (const url of cssUrls) {
-      const response = await fetch(url);
-      const importedCssText = await response.text();
-      const importedCssAst = parser.parse(importedCssText);
+    for (const cssUrl of cssUrls) {
+      const url = cssUrl.startsWith('/')
+        ? window.location.origin + cssUrl
+        : cssUrl;
+      const response = import.meta.env.DEV
+        ? await fetch(url + '?raw')
+        : await fetch(url);
+      if (response.ok) {
+        let importedCssText = await response.text();
+        if (import.meta.env.DEV) {
+          // when vite is serving the css it returned as JS data
+          // in production this if statement will be removed
+          const strippedData = importedCssText
+            .replace(/export\s+default\s+/g, '')
+            .trim();
+          const extractedString = eval(strippedData);
+          importedCssText = extractedString;
+        }
+        const importedCssAst = parser.parse(importedCssText);
 
-      const embeddedFontFaceCss = fontFaceExtractor.stringify(importedCssAst);
-      if (embeddedFontFaceCss) {
-        fontFaceRules.push(adjustFontFaceUrls(embeddedFontFaceCss, url));
+        const embeddedFontFaceCss = fontFaceExtractor.stringify(importedCssAst);
+        if (embeddedFontFaceCss) {
+          fontFaceRules.push(adjustFontFaceUrls(embeddedFontFaceCss, url));
+        }
       }
     }
   }

@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import type { JsonFormsSubStates, JsonSchema } from '@jsonforms/core';
+import type { JsonSchema } from '@jsonforms/core';
 import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
+import { useJsonForms } from '@jsonforms/vue-vuetify';
 import type { Ajv } from 'ajv';
 import { normalizeId } from 'ajv/dist/compile/resolve';
 import * as JsonRefs from 'json-refs';
 import _get from 'lodash/get';
+import isFunction from 'lodash/isFunction';
 import {
   computed,
+  getCurrentInstance,
   inject,
   onMounted,
   provide,
   reactive,
+  ref,
   watch,
   type Ref,
   type SetupContext,
@@ -26,6 +30,7 @@ import {
   FormContextKey,
   HandleActionEmitterKey,
   createAjv,
+  type ActionEvent,
   type FormContext,
   type JsonFormsProps,
   type ResolvedSchema,
@@ -130,26 +135,44 @@ const errorMessage = computed(() => {
   return message;
 });
 
-const jsonforms = inject<JsonFormsSubStates | undefined>(
-  'jsonforms',
-  undefined,
-);
+const currentInstance = getCurrentInstance();
 
-const defaultContext: FormContext = {
+const defaultContext: Ref<FormContext> = ref({
   schemaUrl: props.state.schemaUrl,
 
-  jsonforms: jsonforms,
-  locale: jsonforms?.i18n?.locale,
-  translate: jsonforms?.i18n?.translate,
+  jsonforms: computed(() => useJsonForms()),
 
-  data: jsonforms?.core?.data,
-  schema: jsonforms?.core?.schema,
-  uischema: jsonforms?.core?.uischema,
-  errors: jsonforms?.core?.errors,
-  additionalErrors: jsonforms?.core?.additionalErrors,
+  locale: computed(() => useJsonForms().i18n?.locale),
+  translate: computed(() => useJsonForms().i18n?.translate),
+  data: computed(() => useJsonForms().core?.data),
+  schema: computed(() => useJsonForms().core?.schema),
+  uischema: computed(() => useJsonForms().core?.uischema),
+  errors: computed(() => useJsonForms().core?.errors),
+  additionalErrors: computed(() => useJsonForms().core?.additionalErrors),
 
+  fireActionEvent: async <TypeEl extends Element = any>(
+    action: string,
+    params: any,
+    el: TypeEl,
+  ) => {
+    const source: ActionEvent = {
+      action: action,
+      jsonforms: context.value.jsonforms!,
+      context: context.value,
+      // the action parameters passes from the UI schema
+      params: params ? { ...params } : {},
+      $el: el || currentInstance?.proxy?.$el,
+    };
+
+    (handleActionEmitter || emits)('handle-action', source);
+    if (isFunction(source.callback)) {
+      await source.callback(source);
+    } else {
+      console.log('action [' + action + '] is not handled');
+    }
+  },
   uidata: reactive({}),
-};
+});
 
 const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
   ...props.state,
@@ -185,27 +208,6 @@ watch(
   },
 );
 
-watch(
-  () => jsonforms,
-  (newJsonforms) => {
-    if (newJsonforms) {
-      defaultContext.value = {
-        schemaUrl: props.state.schemaUrl,
-        jsonforms: newJsonforms,
-        locale: newJsonforms.i18n?.locale,
-        translate: newJsonforms.i18n?.translate,
-        data: newJsonforms.core?.data,
-        schema: newJsonforms.core?.schema,
-        uischema: newJsonforms.core?.uischema,
-        errors: newJsonforms.core?.errors,
-        additionalErrors: newJsonforms.core?.additionalErrors,
-        uidata: defaultContext.value.uidata,
-      };
-    }
-  },
-  { immediate: true },
-);
-
 const overrideContext = inject<Ref<FormContext> | undefined>(
   FormContextKey,
   undefined,
@@ -214,10 +216,10 @@ const overrideContext = inject<Ref<FormContext> | undefined>(
 const context = computed(() =>
   overrideContext
     ? {
-        ...defaultContext,
+        ...defaultContext.value,
         ...overrideContext.value,
       }
-    : defaultContext,
+    : defaultContext.value,
 );
 
 provide(FormContextKey, context);
@@ -237,7 +239,8 @@ if (!handleActionEmitter) {
       v-if="resolvedSchema.resolved && resolvedSchema.error === undefined"
       v-bind="properties"
       @change="onChange"
-    ></json-forms>
+    >
+    </json-forms>
     <v-container v-else style="height: 400px">
       <v-row
         v-if="!resolvedSchema.resolved"

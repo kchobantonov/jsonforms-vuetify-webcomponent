@@ -18,6 +18,7 @@ import type {
   ComputedRef,
   Directive,
   InjectionKey,
+  MaybeRefOrGetter,
   MethodOptions,
   Reactive,
   Ref,
@@ -57,17 +58,22 @@ export interface FormContext {
 
   schemaUrl?: string;
 
-  jsonforms?: JsonFormsSubStates;
+  jsonforms?: MaybeRefOrGetter<JsonFormsSubStates>;
 
   // below are just the shortcuts for acessing the jsonforms.core
-  locale?: string;
-  translate?: Translator;
-  data?: any;
-  schema?: JsonSchema;
-  uischema?: UISchemaElement;
-  errors?: ErrorObject[];
-  additionalErrors?: ErrorObject[];
+  locale?: MaybeRefOrGetter<string | undefined>;
+  translate?: MaybeRefOrGetter<Translator | undefined>;
+  data?: MaybeRefOrGetter<any>;
+  schema?: MaybeRefOrGetter<JsonSchema | undefined>;
+  uischema?: MaybeRefOrGetter<UISchemaElement | undefined>;
+  errors?: MaybeRefOrGetter<ErrorObject[] | undefined>;
+  additionalErrors?: MaybeRefOrGetter<ErrorObject[] | undefined>;
 
+  fireActionEvent?: <TypeEl extends Element = any>(
+    action: string,
+    params: any,
+    el: TypeEl,
+  ) => Promise<void>;
   uidata?: Reactive<Record<string, any>>;
 }
 

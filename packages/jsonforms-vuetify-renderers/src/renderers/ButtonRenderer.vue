@@ -16,14 +16,9 @@
 <script lang="ts">
 import { rendererProps, type RendererProps } from '@jsonforms/vue';
 import { useJsonForms, useTranslator } from '@jsonforms/vue-vuetify';
-import isFunction from 'lodash/isFunction';
-import { defineComponent, inject, ref, type SetupContext } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { VBtn, VIcon } from 'vuetify/components';
-import {
-  AsyncFunction,
-  HandleActionEmitterKey,
-  type ActionEvent,
-} from '../core';
+import { AsyncFunction, type ActionEvent } from '../core';
 import {
   useFormContext,
   useJsonFormsButton,
@@ -47,11 +42,6 @@ const controlRenderer = defineComponent({
     const jsonforms = useJsonForms();
     const formContext = useFormContext();
 
-    const handleActionEmitter = inject<SetupContext['emit'] | undefined>(
-      HandleActionEmitterKey,
-      undefined,
-    );
-
     const loading = ref(false);
 
     return {
@@ -60,37 +50,28 @@ const controlRenderer = defineComponent({
       jsonforms,
       formContext,
       loading,
-      handleActionEmitter,
     };
   },
   methods: {
     async click() {
       this.loading = true;
 
-      const source: ActionEvent = {
-        action: this.button.action,
-        jsonforms: this.jsonforms,
-        context: this.formContext,
-        // the action parameters passes from the UI schema
-        params: this.button.params ? { ...this.button.params } : {},
-        $el: this.$el,
-      };
       try {
         if (this.button.action) {
-          if (this.handleActionEmitter) {
-            this.handleActionEmitter('handle-action', source);
-          } else {
-            this.$root
-              ? this.$root.$emit('handle-action', source)
-              : this.$emit('handle-action', source);
-          }
-
-          if (isFunction(source.callback)) {
-            await source.callback(source);
-          } else {
-            console.log('action [' + this.button.action + '] is not handled');
-          }
+          this.formContext.fireActionEvent?.(
+            this.button.action,
+            this.button.params ? { ...this.button.params } : {},
+            this.$el,
+          );
         } else if (this.button.script) {
+          const source: ActionEvent = {
+            action: this.button.action,
+            jsonforms: this.jsonforms,
+            context: this.formContext,
+            // the action parameters passes from the UI schema
+            params: this.button.params ? { ...this.button.params } : {},
+            $el: this.$el,
+          };
           await new AsyncFunction(this.button.script).call(source);
         }
       } finally {

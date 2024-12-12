@@ -539,6 +539,7 @@ const vuetifyFormWc = defineComponent({
 
     let context: Ref<FormContext> = ref({
       uidata: uidataToUse,
+      vuetify: appStore,
     });
 
     const theme = computed(() => {
