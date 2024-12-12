@@ -54,8 +54,14 @@ const changeLang = (event) => {
 
 const onChange = (customEvent) => {
   let [event] = customEvent.detail;
-  console.log('Form state data:' + JSON.stringify(event.data));
-  console.log('Form state errors:' + JSON.stringify(event.errors));
+  console.log(
+    'Form state data:',
+    event.data !== undefined ? JSON.stringify(event.data) : '',
+  );
+  console.log(
+    'Form state errors:',
+    event.errors !== undefined ? JSON.stringify(event.errors) : '',
+  );
 };
 
 const onHandleAction = (customEvent) => {
@@ -74,3 +80,5 @@ const onHandleAction = (customEvent) => {
     event.callback = changeLang;
   }
 };
+
+export default { onChange, onHandleAction };

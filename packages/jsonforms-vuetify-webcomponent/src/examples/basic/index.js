@@ -7,7 +7,7 @@ import schema from './schema.json';
 import uidata from './uidata.json';
 import uischema from './uischema.json';
 import uischemas from './uischemas.json';
-import style from './style.css';
+import style from './style.js';
 
 export const input = {
   actions: actions,

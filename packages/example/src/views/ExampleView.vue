@@ -426,6 +426,23 @@ watch(
 );
 
 watch(
+  () => appStore.jsonforms,
+  (jsonforms) => {
+    Object.assign(state, {
+      config: jsonforms.config,
+      readonly: jsonforms.readonly,
+      validationMode: jsonforms.validationMode,
+      i18n: {
+        locale: jsonforms.locale,
+        translate: createTranslator(jsonforms.locale, state.i18n?.translations),
+        translations: state.i18n?.translations,
+      },
+    });
+  },
+  { deep: true },
+);
+
+watch(
   () => appStore.formOnly,
   (value) => {
     if (!value) {

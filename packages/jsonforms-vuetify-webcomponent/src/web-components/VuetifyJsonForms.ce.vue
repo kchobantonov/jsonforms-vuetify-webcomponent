@@ -85,8 +85,9 @@ const vuetifyFormWc = defineComponent({
       },
     },
     readonly: {
+      required: false,
       type: Boolean,
-      default: false,
+      default: undefined,
     },
     uischemas: {
       type: String,
@@ -117,8 +118,9 @@ const vuetifyFormWc = defineComponent({
       },
     },
     locale: {
+      required: false,
       type: String,
-      default: 'en',
+      default: undefined,
     },
     customStyle: {
       type: String,
@@ -155,12 +157,14 @@ const vuetifyFormWc = defineComponent({
       },
     },
     dark: {
+      required: false,
       type: Boolean,
-      default: false,
+      default: undefined,
     },
     rtl: {
+      required: false,
       type: Boolean,
-      default: false,
+      default: undefined,
     },
     uidata: {
       type: String,
@@ -208,58 +212,79 @@ const vuetifyFormWc = defineComponent({
   },
   setup(props) {
     const appStore = useAppStore();
-    appStore.rtl = props.rtl;
-    appStore.dark = props.dark;
-    appStore.locale = props.locale;
-    if (props.vuetifyOptions) {
+    appStore.rtl = props.rtl !== undefined ? props.rtl : false;
+    appStore.dark = props.dark !== undefined ? props.dark : false;
+    appStore.locale = props.locale !== undefined ? props.locale : 'en';
+
+    const updateAppStore = (vuetifyOptions: string | undefined | object) => {
+      if (vuetifyOptions === undefined) {
+        return;
+      }
       try {
-        const options = JSON.parse(props.vuetifyOptions);
+        const options =
+          typeof vuetifyOptions === 'string'
+            ? JSON.parse(vuetifyOptions)
+            : vuetifyOptions;
+
         if (isPlainObject(options)) {
           appStore.defaults = options.defaults;
           appStore.blueprint = options.blueprint;
+
+          if (options.icons?.defaultSet) {
+            appStore.iconset = options.icons.defaultSet;
+          }
+
+          if (
+            props.dark === undefined &&
+            typeof options.theme?.dark === 'boolean'
+          ) {
+            appStore.dark = options.theme.dark;
+          }
         }
-      } catch (e) {}
-    }
+      } catch (e) {
+        console.log('vuetify-options error:', e);
+      }
+    };
+
+    updateAppStore(props.vuetifyOptions);
 
     watch(
       () => props.rtl,
-      (value) => {
-        appStore.rtl = value;
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          appStore.rtl = value !== undefined ? value : false;
+        }
       },
     );
     watch(
       () => props.dark,
-      (value) => {
-        appStore.dark = value;
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          appStore.dark = value !== undefined ? value : false;
+        }
       },
     );
     watch(
       () => props.locale,
-      (value) => {
-        appStore.locale = value;
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          appStore.locale = value !== undefined ? value : 'en';
+        }
       },
     );
     watch(
       () => props.vuetifyOptions,
-      (value) => {
-        if (value) {
-          try {
-            const options = JSON.parse(value);
-            if (isPlainObject(options)) {
-              appStore.defaults = options.defaults;
-              appStore.blueprint = options.blueprint;
-              if (options.icons?.defaultSet) {
-                appStore.iconset = options.icons.defaultSet;
-              }
-              if (options.theme) {
-                appStore.dark = options.theme.dark === true;
-              }
-            }
-          } catch (e) {}
-        } else {
-          appStore.defaults = {};
-          appStore.blueprint = 'md1';
-          appStore.iconset = 'mdi';
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          if (value) {
+            updateAppStore(value);
+          } else {
+            updateAppStore({
+              defaults: {},
+              blueprint: 'md1',
+              iconset: 'mdi',
+            });
+          }
         }
       },
     );

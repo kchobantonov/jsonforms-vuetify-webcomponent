@@ -6,7 +6,7 @@
       </custom-style>
 
       <custom-style type="text/css">
-        {{ customStyle }}
+        {{ customStyleToUse }}
       </custom-style>
 
       <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
@@ -42,6 +42,7 @@
 import { useAppStore } from '@/store';
 import {
   createTranslator,
+  extraVuetifyRenderers,
   type FormContext,
   FormContextKey,
   type JsonFormsProps,
@@ -54,14 +55,10 @@ import {
   defaultMiddleware,
   type JsonFormsUISchemaRegistryEntry,
   type Translator,
-  type UISchemaElement,
   type ValidationMode,
 } from '@jsonforms/core';
 import { type JsonFormsChangeEvent } from '@jsonforms/vue';
-import { type ErrorObject } from 'ajv';
-import get from 'lodash/get';
 import isArray from 'lodash/isArray';
-import isPlainObject from 'lodash/isPlainObject';
 import {
   computed,
   defineComponent,
@@ -74,6 +71,7 @@ import {
   type Ref,
   ref,
   toRef,
+  watch,
 } from 'vue';
 import { type ThemeInstance } from 'vuetify';
 import {
@@ -83,6 +81,8 @@ import {
   VThemeProvider,
 } from 'vuetify/components';
 import { extractAndInjectFonts } from '../util/inject-fonts';
+
+import { extendedVuetifyRenderers } from '@jsonforms/vue-vuetify';
 
 const ThemeSymbol: InjectionKey<ThemeInstance> = Symbol.for('vuetify:theme');
 
@@ -105,13 +105,30 @@ const vuetifyFormWc = defineComponent({
   emits: ['change'],
   props: {
     data: {
-      required: true,
+      required: false,
       type: String,
+      default: undefined,
+      validator: function (value) {
+        try {
+          if (value === undefined) {
+            return true;
+          }
+
+          if (typeof value !== 'string') {
+            return false;
+          }
+
+          JSON.parse(value);
+
+          return true;
+        } catch (e) {
+          return false;
+        }
+      },
     },
     schema: {
       required: false,
       type: String,
-      default: undefined,
       validator: function (value) {
         try {
           const schema = typeof value === 'string' ? JSON.parse(value) : value;
@@ -125,7 +142,6 @@ const vuetifyFormWc = defineComponent({
     uischema: {
       required: false,
       type: String,
-      default: undefined,
       validator: function (value) {
         try {
           const uischema =
@@ -140,7 +156,6 @@ const vuetifyFormWc = defineComponent({
     schemaUrl: {
       required: false,
       type: String,
-      default: undefined,
     },
     config: {
       required: false,
@@ -245,144 +260,285 @@ const vuetifyFormWc = defineComponent({
   async setup(props) {
     const appStore = useAppStore();
 
-    let error: any = undefined;
+    let error = ref<string | undefined>(undefined);
 
-    let dataToUse: any = undefined;
-    let schemaToUse: Record<string, any> | undefined = undefined;
-    let schemaUrlToUse: string | undefined = undefined;
-    let uischemaToUse: UISchemaElement | undefined = undefined;
-    let configToUse: Record<string, any> | undefined = undefined;
-    let readonlyToUse = false;
-    let uischemasToUse: JsonFormsUISchemaRegistryEntry[] = [];
-    let validationModeToUse: ValidationMode = 'ValidateAndShow';
-    let additionalErrorsToUse: ErrorObject[] = [];
-    let translationsToUse: Record<string, any> = {};
+    const getJsonDataType = (value: any): string | null => {
+      if (typeof value === 'string') {
+        return 'string';
+      } else if (typeof value === 'number') {
+        return Number.isInteger(value) ? 'integer' : 'number';
+      } else if (typeof value === 'boolean') {
+        return 'boolean';
+      } else if (Array.isArray(value)) {
+        return 'array';
+      } else if (value === null) {
+        return 'null';
+      } else if (typeof value === 'object') {
+        return 'object';
+      }
 
-    let uidataToUse = reactive<Record<string, any>>({});
+      return null;
+    };
 
+    const toJsonData = (
+      prop: string,
+      jsonType:
+        | 'string'
+        | 'integer'
+        | 'number'
+        | 'boolean'
+        | 'array'
+        | 'null'
+        | 'object'
+        | 'any',
+      value: string | undefined,
+    ) => {
+      try {
+        const result = typeof value == 'string' ? JSON.parse(value) : undefined;
+        if (jsonType !== 'any' && result !== undefined) {
+          const resultType = getJsonDataType(result);
+          if (resultType !== jsonType) {
+            throw new Error(
+              `Invalid data type. Expected ${jsonType} but found ${resultType}`,
+            );
+          }
+        }
+        return result;
+      } catch (e) {
+        error.value = `${prop} error: ${e}`;
+        console.log(e);
+
+        return undefined;
+      }
+    };
+
+    let dataToUse = ref(toJsonData('data', 'any', props.data));
+    let schemaToUse = ref(toJsonData('schema', 'object', props.schema));
+    let schemaUrlToUse = ref(props.schemaUrl);
+    let uischemaToUse = ref(toJsonData('uischema', 'object', props.uischema));
+    let configToUse = ref(toJsonData('config', 'object', props.config));
+    let readonlyToUse = ref(props.readonly);
+    let uischemasToUse = ref<JsonFormsUISchemaRegistryEntry[]>([]);
     try {
-      try {
-        dataToUse =
-          typeof props.data == 'string' ? JSON.parse(props.data) : undefined;
-      } catch (e) {
-        error = `Data Error: ${e}`;
-        console.log(e);
-      }
-      try {
-        schemaToUse =
-          typeof props.schema == 'string'
-            ? JSON.parse(props.schema)
-            : undefined;
-      } catch (e) {
-        error = `Schema Error: ${e}`;
-        console.log(e);
-      }
-      schemaUrlToUse =
-        typeof props.schemaUrl == 'string' ? props.schemaUrl : undefined;
-      try {
-        uischemaToUse =
-          typeof props.uischema == 'string'
-            ? JSON.parse(props.uischema)
-            : undefined;
-      } catch (e) {
-        error = `UISchema Error: ${e}`;
-        console.log(e);
-      }
-
-      try {
-        configToUse =
-          typeof props.config == 'string'
-            ? JSON.parse(props.config)
-            : undefined;
-      } catch (e) {
-        error = `Config Error: ${e}`;
-        console.log(e);
-      }
-
-      readonlyToUse = props.readonly;
-
-      validationModeToUse =
-        props.validationMode === 'ValidateAndShow' ||
-        props.validationMode === 'ValidateAndHide' ||
-        props.validationMode === 'NoValidation'
-          ? props.validationMode
-          : 'ValidateAndShow';
-
-      try {
-        translationsToUse =
-          typeof props.translations == 'string'
-            ? JSON.parse(props.translations)
-            : undefined;
-      } catch (e) {
-        error = `Translations Error: ${e}`;
-        console.log(e);
-      }
-
-      try {
-        uischemasToUse = parseAndTransformUISchemaRegistryEntries(
-          props.uischemas,
-        );
-      } catch (e) {
-        error = `UISchemas Error: ${e}`;
-        console.log(e);
-      }
-
-      try {
-        additionalErrorsToUse =
-          typeof props.additionalErrors == 'string'
-            ? JSON.parse(props.additionalErrors)
-            : undefined;
-      } catch (e) {
-        error = `Additional Errors Error: ${e}`;
-        console.log(e);
-      }
-
-      try {
-        uidataToUse = reactive(
-          typeof props.uidata === 'string' ? JSON.parse(props.uidata) : {},
-        );
-      } catch (e) {
-        error = `UIData Error: ${e}`;
-        console.log(e);
-      }
+      uischemasToUse.value = parseAndTransformUISchemaRegistryEntries(
+        props.uischemas,
+      );
     } catch (e) {
-      error = `Error: ${e}`;
+      error.value = `uischemas error: ${e}`;
       console.log(e);
     }
-    let context: Ref<FormContext> = ref({
-      uidata: uidataToUse,
+    let validationModeToUse = ref(
+      props.validationMode === 'ValidateAndShow' ||
+        props.validationMode === 'ValidateAndHide' ||
+        props.validationMode === 'NoValidation'
+        ? props.validationMode
+        : 'ValidateAndShow',
+    );
+    let additionalErrorsToUse = ref(
+      toJsonData('additionalErrors', 'array', props.additionalErrors),
+    );
+    let translationsToUse = ref(
+      toJsonData('translations', 'object', props.translations),
+    );
+    let customStyleToUse = ref(props.customStyle);
+    let uidataToUse = reactive<Record<string, any>>(
+      toJsonData('uidata', 'object', props.uidata),
+    );
+
+    let i18nToUse = ref({
+      locale: appStore.locale,
+      translate: createTranslator(appStore.locale, translationsToUse.value),
     });
 
     // provide the schema $id so that we can refer to it in UI schema rule conditions
-    if (schemaToUse && !schemaToUse.$id) {
-      schemaToUse.$id = '/';
+    if (schemaToUse.value && !schemaToUse.value.$id) {
+      schemaToUse.value.$id = '/';
     }
-
-    const { extendedVuetifyRenderers } = await import('@jsonforms/vue-vuetify');
-
-    const { extraVuetifyRenderers } = await import(
-      '@chobantonov/jsonforms-vuetify-renderers'
-    );
 
     const renderers = [...extendedVuetifyRenderers, ...extraVuetifyRenderers];
 
     const state = reactive<JsonFormsProps>({
-      data: dataToUse,
-      schema: schemaToUse,
-      schemaUrl: schemaUrlToUse,
-      uischema: uischemaToUse,
+      data: dataToUse.value,
+      schema: schemaToUse.value,
+      schemaUrl: schemaUrlToUse.value,
+      uischema: uischemaToUse.value,
       renderers: markRaw(renderers),
       cells: undefined, // not defined
-      config: configToUse,
-      readonly: readonlyToUse,
-      uischemas: uischemasToUse,
-      validationMode: validationModeToUse,
-      i18n: {
-        locale: appStore.locale,
-        translate: createTranslator(appStore.locale, translationsToUse),
-      },
-      additionalErrors: additionalErrorsToUse,
+      config: configToUse.value,
+      readonly: readonlyToUse.value,
+      uischemas: uischemasToUse.value,
+      validationMode: validationModeToUse.value,
+      i18n: i18nToUse.value,
+      additionalErrors: additionalErrorsToUse.value,
       middleware: defaultMiddleware,
+    });
+
+    watch(
+      () => props.data,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          dataToUse.value = toJsonData('data', 'any', value);
+
+          state.data = dataToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.schema,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          schemaToUse.value = toJsonData('schema', 'object', value);
+          // provide the schema $id so that we can refer to it in UI schema rule conditions
+          if (schemaToUse.value && !schemaToUse.value.$id) {
+            schemaToUse.value.$id = '/';
+          }
+          state.schema = schemaToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.schemaUrl,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          schemaUrlToUse.value = value;
+
+          state.schemaUrl = schemaUrlToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.uischema,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          uischemaToUse.value = toJsonData('uischema', 'object', value);
+
+          state.uischema = uischemaToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.config,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          configToUse.value = toJsonData('config', 'object', value);
+
+          state.config = configToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.readonly,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          readonlyToUse.value = value;
+
+          state.readonly = readonlyToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.uischemas,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          try {
+            uischemasToUse.value = parseAndTransformUISchemaRegistryEntries(
+              props.uischemas,
+            );
+          } catch (e) {
+            error.value = `uischemas error: ${e}`;
+            console.log(e);
+          }
+
+          state.uischemas = uischemasToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.validationMode,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          validationModeToUse.value =
+            value === 'ValidateAndShow' ||
+            value === 'ValidateAndHide' ||
+            value === 'NoValidation'
+              ? value
+              : 'ValidateAndShow';
+
+          state.validationMode = validationModeToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.additionalErrors,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          additionalErrorsToUse.value = toJsonData(
+            'additionalErrors',
+            'object',
+            value,
+          );
+
+          state.additionalErrors = additionalErrorsToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.translations,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          translationsToUse.value = toJsonData('translations', 'object', value);
+
+          i18nToUse.value = {
+            locale: appStore.locale,
+            translate: createTranslator(
+              appStore.locale,
+              translationsToUse.value,
+            ) as Translator,
+          };
+
+          state.i18n = i18nToUse.value;
+        }
+      },
+    );
+    watch(
+      () => props.customStyle,
+      (customStyle, oldCustomStyle) => {
+        if (customStyle !== oldCustomStyle) {
+          customStyleToUse.value = customStyle;
+        }
+      },
+    );
+    watch(
+      () => props.uidata,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          uidataToUse = reactive<Record<string, any>>(
+            toJsonData('uidata', 'object', value),
+          );
+
+          context.value.uidata = uidataToUse;
+        }
+      },
+    );
+    watch(
+      () => appStore.locale,
+      (value, oldValue) => {
+        if (value !== oldValue) {
+          i18nToUse.value = {
+            locale: value,
+            translate: createTranslator(
+              value,
+              translationsToUse.value,
+            ) as Translator,
+          };
+
+          state.i18n = i18nToUse.value;
+        }
+      },
+    );
+
+    let context: Ref<FormContext> = ref({
+      uidata: uidataToUse,
     });
 
     const theme = computed(() => {
@@ -397,6 +553,7 @@ const vuetifyFormWc = defineComponent({
       context,
       appStore,
       theme,
+      customStyleToUse,
     };
   },
   provide() {
@@ -407,138 +564,6 @@ const vuetifyFormWc = defineComponent({
       },
       [FormContextKey]: toRef(this, 'context'),
     };
-  },
-  watch: {
-    data: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          const data =
-            typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.state.data = data;
-          this.$forceUpdate();
-        }
-      },
-    },
-    schema: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          const schema =
-            typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.state.schema = schema;
-          this.$forceUpdate();
-        }
-      },
-    },
-    schemaUrl: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          const schemaUrl = typeof value === 'string' ? value : undefined;
-          this.state.schemaUrl = schemaUrl;
-          this.$forceUpdate();
-        }
-      },
-    },
-    uischema: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          const uischema =
-            typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.state.uischema = uischema;
-          this.$forceUpdate();
-        }
-      },
-    },
-    config: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          const config =
-            typeof value === 'string' ? JSON.parse(value) : undefined;
-          this.state.config = config;
-          this.$forceUpdate();
-        }
-      },
-    },
-    readonly: {
-      handler(value?: boolean, oldValue?: boolean) {
-        if (value !== oldValue) {
-          this.state.readonly = value;
-          this.$forceUpdate();
-        }
-      },
-    },
-    uischemas: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.state.uischemas =
-            parseAndTransformUISchemaRegistryEntries(value);
-          this.$forceUpdate();
-        }
-      },
-    },
-    validationMode: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.state.validationMode =
-            value === 'ValidateAndShow' ||
-            value === 'ValidateAndHide' ||
-            value === 'NoValidation'
-              ? value
-              : 'ValidateAndShow';
-          this.$forceUpdate();
-        }
-      },
-    },
-    translations: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.translationsToUse =
-            typeof value === 'string' ? JSON.parse(value) : {};
-
-          this.state.i18n = {
-            locale: this.appStore.locale,
-            translate: createTranslator(
-              this.appStore.locale,
-              this.translationsToUse,
-            ) as Translator,
-          };
-          this.$forceUpdate();
-        }
-      },
-    },
-    'appStore.locale': {
-      handler(value: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.state.i18n = {
-            locale: value,
-            translate: createTranslator(
-              value,
-              this.translationsToUse,
-            ) as Translator,
-          };
-          this.$forceUpdate();
-        }
-      },
-    },
-    additionalErrors: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.state.additionalErrors =
-            typeof value === 'string' ? JSON.parse(value) : [];
-          this.$forceUpdate();
-        }
-      },
-    },
-    uidata: {
-      handler(value?: string, oldValue?: string) {
-        if (value !== oldValue) {
-          this.uidataToUse = reactive(
-            typeof value === 'string' ? JSON.parse(value) : {},
-          );
-          this.context.uidata = this.uidataToUse;
-          this.$forceUpdate();
-        }
-      },
-    },
   },
   async mounted() {
     extractAndInjectFonts(this.$el.getRootNode());
@@ -558,14 +583,7 @@ const vuetifyFormWc = defineComponent({
   methods: {
     onChange(event: JsonFormsChangeEvent): void {
       this.$emit('change', event);
-    },
-    vuetifyProps(
-      options: Record<string, any>,
-      path: string,
-    ): Record<string, any> {
-      const props = get(options?.vuetify, path);
-
-      return props && isPlainObject(props) ? props : {};
+      this.state.data = event.data;
     },
   },
 });
