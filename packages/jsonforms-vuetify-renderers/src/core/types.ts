@@ -57,10 +57,10 @@ export interface FormContext {
   [key: string]: any;
 
   schemaUrl?: string;
+  uidata?: Reactive<Record<string, any>>;
 
   jsonforms?: MaybeRefOrGetter<JsonFormsSubStates>;
 
-  // below are just the shortcuts for acessing the jsonforms.core
   locale?: MaybeRefOrGetter<string | undefined>;
   translate?: MaybeRefOrGetter<Translator | undefined>;
   data?: MaybeRefOrGetter<any>;
@@ -74,7 +74,6 @@ export interface FormContext {
     params: any,
     el: TypeEl,
   ) => Promise<void>;
-  uidata?: Reactive<Record<string, any>>;
 }
 
 export type ActionEvent = {

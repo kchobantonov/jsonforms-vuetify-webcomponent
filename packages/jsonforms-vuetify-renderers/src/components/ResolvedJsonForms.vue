@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import type { JsonSchema } from '@jsonforms/core';
+import {
+  defaultMiddleware,
+  type JsonFormsCore,
+  type JsonFormsSubStates,
+  type JsonSchema,
+  type Middleware,
+} from '@jsonforms/core';
 import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
-import { useJsonForms } from '@jsonforms/vue-vuetify';
 import type { Ajv } from 'ajv';
 import { normalizeId } from 'ajv/dist/compile/resolve';
 import * as JsonRefs from 'json-refs';
@@ -136,19 +141,45 @@ const errorMessage = computed(() => {
 });
 
 const currentInstance = getCurrentInstance();
+const jsonformsCore = ref<JsonFormsCore | undefined>(undefined);
+// reconstruct the jsonforms since we can't use the provided jsonforms from the sub component JsonForms
+const jsonforms = computed<JsonFormsSubStates>(
+  () =>
+    ({
+      core: jsonformsCore.value,
+      config: properties.value.config,
+      renderers: properties.value.renderers,
+      cells: properties.value.cells,
+      i18n: properties.value.i18n,
+      uischemas: properties.value.uischemas,
+      readonly: properties.value.readonly,
+    }) as JsonFormsSubStates,
+);
 
 const defaultContext: Ref<FormContext> = ref({
   schemaUrl: props.state.schemaUrl,
+  uidata: reactive({}),
 
-  jsonforms: computed(() => useJsonForms()),
-
-  locale: computed(() => useJsonForms().i18n?.locale),
-  translate: computed(() => useJsonForms().i18n?.translate),
-  data: computed(() => useJsonForms().core?.data),
-  schema: computed(() => useJsonForms().core?.schema),
-  uischema: computed(() => useJsonForms().core?.uischema),
-  errors: computed(() => useJsonForms().core?.errors),
-  additionalErrors: computed(() => useJsonForms().core?.additionalErrors),
+  jsonforms: jsonforms,
+  locale: computed(() => properties.value.i18n?.locale),
+  translate: computed(() => properties.value.i18n?.translate),
+  data: computed({
+    get: () => jsonformsCore.value?.data,
+    set: (newValue) => {
+      // allow actions to set new data
+      properties.value.data = newValue;
+    },
+  }),
+  schema: computed(() => jsonformsCore.value?.schema),
+  uischema: computed(() => jsonformsCore.value?.uischema),
+  errors: computed(() => jsonformsCore.value?.errors),
+  additionalErrors: computed({
+    get: () => jsonformsCore.value?.additionalErrors,
+    set: (newValue) => {
+      // allow actions to set new additionalErrors
+      properties.value.additionalErrors = newValue;
+    },
+  }),
 
   fireActionEvent: async <TypeEl extends Element = any>(
     action: string,
@@ -171,13 +202,23 @@ const defaultContext: Ref<FormContext> = ref({
       console.log('action [' + action + '] is not handled');
     }
   },
-  uidata: reactive({}),
 });
 
+const createMiddlewareWrapper = (wrappedFunction: Middleware): Middleware => {
+  return (state, action, defaultReducer) => {
+    // Delegate the call to the wrapped function
+    const core = wrappedFunction(state, action, defaultReducer);
+    jsonformsCore.value = core;
+    return core;
+  };
+};
 const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
   ...props.state,
   schema: resolvedSchema.schema ?? props.state.schema,
   ajv: props.state.ajv ?? createAjv(props.state.i18n),
+  middleware: createMiddlewareWrapper(
+    props.state.middleware || defaultMiddleware,
+  ),
 }));
 
 watch(

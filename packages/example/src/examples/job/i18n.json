@@ -161,14 +161,8 @@
       }
     },
     "static-text": {
-      "btn": {
-        "en": {
-          "label": "EN"
-        },
-        "bg": {
-          "label": "BG"
-        }
-      },
+      "English": "English",
+      "Bulgarian": "Български",
       "group": {
         "address-information": "Address Information"
       },
@@ -348,14 +342,8 @@
     },
     "Job Application": "Кандидатстване за работа",
     "static-text": {
-      "btn": {
-        "en": {
-          "label": "EN"
-        },
-        "bg": {
-          "label": "БГ"
-        }
-      },
+      "English": "English",
+      "Bulgarian": "Български",
       "group": {
         "address-information": "Информация за адреса"
       },

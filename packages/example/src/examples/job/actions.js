@@ -13,8 +13,15 @@ const changeLang = (event /*: ActionEvent*/) => {
   }
 };
 
-export const onHandleAction = (event /*: ActionEvent*/) => {
+const toggleDarkMode = (event) => {
+  event.context.vuetify.dark = !event.context.vuetify.dark;
+};
+
+export const onHandleAction = (customEvent) => {
+  let [event /*: ActionEvent*/] = customEvent.detail;
   if (event.action === 'changeLang') {
     event.callback = changeLang;
+  } else if (event.action === 'toggleDarkMode') {
+    event.callback = toggleDarkMode;
   }
 };

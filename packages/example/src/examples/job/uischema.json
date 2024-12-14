@@ -4,42 +4,16 @@
   "elements": [
     {
       "type": "TemplateLayout",
-      "template": "<v-toolbar><v-toolbar-title>{{translate('Job Application', 'Job Application')}}</v-toolbar-title><slot v-for=\"element in elements\" :key=\"element.name\" :name=\"element.name\"></slot></v-toolbar>",
+      "template": "<v-toolbar><v-toolbar-title>{{translate('Job Application', 'Job Application')}}</v-toolbar-title><v-toolbar-items class='d-flex align-center'><div v-for=\"element in elements\" :key=\"element.name\"><slot :name=\"element.name\"></slot></div></v-toolbar-items></v-toolbar>",
       "name": "toolbar",
       "elements": [
         {
-          "type": "Button",
-          "label": "EN",
-          "i18n": "static-text.btn.en",
-          "action": "changeLang",
-          "params": {
-            "lang": "en"
-          },
-          "options": {
-            "vuetify": {
-              "v-btn": {
-                "small": true,
-                "fab": true
-              }
-            }
-          }
+          "type": "TemplateLayout",
+          "template": "<v-select variant='plain' density='compact' hide-details='true' :model-value='context.locale' @update:modelValue='(value) => context.fireActionEvent(\"changeLang\", {\"lang\": value})' :items='[{\"label\": context.translate(\"static-text.English\", \"English\"), \"value\": \"en\"}, {\"label\": context.translate(\"static-text.Bulgarian\", \"Bulgarian\"), \"value\": \"bg\"}]' item-title='label' item-value='value'></v-select>"
         },
         {
-          "type": "Button",
-          "label": "BG",
-          "i18n": "static-text.btn.bg",
-          "action": "changeLang",
-          "params": {
-            "lang": "bg"
-          },
-          "options": {
-            "vuetify": {
-              "v-btn": {
-                "small": true,
-                "fab": true
-              }
-            }
-          }
+          "type": "TemplateLayout",
+          "template": "<v-btn icon @click='() => context.fireActionEvent(\"toggleDarkMode\")'><v-icon>{{ context.vuetify.dark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon></v-btn>"
         }
       ]
     },

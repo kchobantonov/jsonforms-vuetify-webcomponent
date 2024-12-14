@@ -276,18 +276,10 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
 </head>
 
 <body>
-  <!--
-  <div id="root">
-    <div class="loading">
-      <div class="loader"></div>
-      <h3>The preview is now loading. When loading for the first time, this process takes a while.</h3>
-    </div>
-  </div>
-  -->
   <vuetify-json-forms id="vuetify-json-forms">
   </vuetify-json-forms>
 
-  <script type="text/javascript">
+  <script type="module">
     var style = ${
       files.style && files.style.data
         ? JSON.stringify(files.style.data).replace(/\//g, "\\/")
@@ -333,12 +325,6 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
         ? JSON.stringify(files.preset.data).replace(/\//g, "\\/")
         : "''"
     };
-    //var onChange = null;
-    //var onHandleAction = null;
-    ${
-      files.actions && files.actions.data ? files.actions.data : "// no actions"
-    };
-
     
     let form = document.getElementById('vuetify-json-forms');
     if (style) {
@@ -368,11 +354,25 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
     if (preset) {
       form.setAttribute('vuetify-options', preset);
     }
-    if (onChange) {
-      form.addEventListener('change', onChange);
+      
+    ${
+      files.actions && files.actions.data ? files.actions.data : "// no actions"
+    };
+
+    try {
+      if (typeof onChange === 'function') {
+        form.addEventListener('change', onChange);
+      }
+    } catch (e) {
+      // no onChange function
     }
-    if (onHandleAction) {
-      form.addEventListener('handle-action', onHandleAction);
+
+    try {
+      if (typeof onHandleAction === 'function') {
+        form.addEventListener('handle-action', onHandleAction);
+      }
+    } catch (e) {
+      // no onChange function
     }
 
   </script>
