@@ -23,7 +23,7 @@ export const onHandleAction = (
 ) => {
   // if the event is sent via webcomponent then it will be of type CustomEvent otherwise it will be ActionEvent
   const event =
-    customEvent instanceof CustomEvent ? customEvent.detail.event : customEvent;
+    customEvent instanceof CustomEvent ? customEvent.detail[0] : customEvent;
 
   if (event.action === 'changeLang') {
     event.callback = changeLang;
