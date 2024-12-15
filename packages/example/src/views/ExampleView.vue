@@ -8,6 +8,7 @@ import {
   TemplateComponentsKey,
   type ActionEvent,
   type JsonFormsProps,
+  type VuetifyConfig,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import type { JsonFormsChangeEvent } from '@jsonforms/vue';
 import {
@@ -470,6 +471,12 @@ const vuetifyOptions = computed(() => {
     },
   } as Partial<VuetifyOptions>);
 });
+
+const vuetifyConfig = computed<VuetifyConfig>(() => ({
+  theme: appStore.theme,
+  rtl: appStore.rtl,
+  defaults: {},
+}));
 </script>
 
 <template>
@@ -565,12 +572,13 @@ const vuetifyOptions = computed(() => {
                         @change="onWebComponentChange"
                         @handleAction="onWebComponentHandleAction"
                       ></vuetify-json-forms-wrapper>
-                      <ResolvedJsonForms
+                      <resolved-json-forms
                         v-else
                         :state="state as JsonFormsProps"
+                        :vuetify-config="vuetifyConfig"
                         @change="onChange"
                         @handleAction="onHandleAction"
-                      />
+                      ></resolved-json-forms>
                     </v-card>
                   </pane>
                   <pane>
@@ -655,12 +663,13 @@ const vuetifyOptions = computed(() => {
                     @change="onWebComponentChange"
                     @handleAction="onWebComponentHandleAction"
                   ></vuetify-json-forms-wrapper>
-                  <ResolvedJsonForms
+                  <resolved-json-forms
                     v-else
                     :state="state as JsonFormsProps"
+                    :vuetify-config="vuetifyConfig"
                     @change="onChange"
                     @handleAction="onHandleAction"
-                  />
+                  ></resolved-json-forms>
                 </div>
               </div>
             </v-card>
@@ -872,12 +881,13 @@ const vuetifyOptions = computed(() => {
         @handleAction="onWebComponentHandleAction"
       ></vuetify-json-forms-wrapper>
 
-      <ResolvedJsonForms
+      <resolved-json-forms
         v-else
         :state="state as JsonFormsProps"
+        :vuetify-config="vuetifyConfig"
         @change="onChange"
         @handleAction="onHandleAction"
-      />
+      ></resolved-json-forms>
     </div>
   </div>
 </template>

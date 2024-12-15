@@ -12,25 +12,24 @@
       <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
         <v-theme-provider :theme="theme">
           <v-defaults-provider :defaults="appStore.defaults">
-            <v-app>
-              <div v-if="error !== undefined">
-                <v-container style="height: 400px">
-                  <v-row
-                    class="fill-height"
-                    align-content="center"
-                    justify="center"
-                  >
-                    <v-col class="text-subtitle-1 text-center error" cols="12">
-                      {{ error }}
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </div>
-              <resolved-json-forms
-                :state="state"
-                @change="onChange"
-              ></resolved-json-forms>
-            </v-app>
+            <div v-if="error !== undefined">
+              <v-container style="height: 400px">
+                <v-row
+                  class="fill-height"
+                  align-content="center"
+                  justify="center"
+                >
+                  <v-col class="text-subtitle-1 text-center error" cols="12">
+                    {{ error }}
+                  </v-col>
+                </v-row>
+              </v-container>
+            </div>
+            <resolved-json-forms
+              :state="state"
+              :vuetify-config="vuetifyConfig"
+              @change="onChange"
+            ></resolved-json-forms>
           </v-defaults-provider>
         </v-theme-provider>
       </v-locale-provider>
@@ -50,6 +49,7 @@ import {
   ResolvedJsonForms,
   TemplateComponentsKey,
   VMonacoEditor,
+  type VuetifyConfig,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import {
   defaultMiddleware,
@@ -75,7 +75,6 @@ import {
 } from 'vue';
 import { type ThemeInstance } from 'vuetify';
 import {
-  VApp,
   VDefaultsProvider,
   VLocaleProvider,
   VThemeProvider,
@@ -96,7 +95,6 @@ const CustomStyle = defineComponent({
 const vuetifyFormWc = defineComponent({
   components: {
     ResolvedJsonForms,
-    VApp,
     VThemeProvider,
     VLocaleProvider,
     VDefaultsProvider,
@@ -206,7 +204,6 @@ const vuetifyFormWc = defineComponent({
     customStyle: {
       required: false,
       type: String,
-      default: '.v-application__wrap { min-height: 0px; }',
     },
     translations: {
       required: false,
@@ -537,13 +534,18 @@ const vuetifyFormWc = defineComponent({
       },
     );
 
-    let context: Ref<FormContext> = ref({
-      uidata: uidataToUse,
-      vuetify: appStore,
-    });
-
     const theme = computed(() => {
       return appStore.dark ? 'dark' : 'light';
+    });
+
+    const vuetifyConfig = computed<VuetifyConfig>(() => ({
+      theme: theme.value,
+      rtl: appStore.rtl,
+      defaults: appStore.defaults,
+    }));
+
+    let context: Ref<FormContext> = ref({
+      uidata: uidataToUse,
     });
 
     return {
@@ -555,6 +557,7 @@ const vuetifyFormWc = defineComponent({
       appStore,
       theme,
       customStyleToUse,
+      vuetifyConfig,
     };
   },
   provide() {

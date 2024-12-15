@@ -101,8 +101,8 @@ const submit = async (event: ActionEvent) => {
   // Simulate a delay (e.g., waiting for a response or processing time)
   await new Promise((resolve) => setTimeout(resolve, 2000));
   console.log(
-    event.jsonforms.core?.data
-      ? `${JSON.stringify(event.jsonforms.core.data)}`
+    event.context.data
+      ? `${JSON.stringify(event.context.data)}`
       : 'Your form is blank. No JSON data.',
   );
   // Update the dialog to indicate that the action is complete

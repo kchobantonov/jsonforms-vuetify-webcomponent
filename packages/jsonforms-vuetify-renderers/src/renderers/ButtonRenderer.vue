@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { rendererProps, type RendererProps } from '@jsonforms/vue';
-import { useJsonForms, useTranslator } from '@jsonforms/vue-vuetify';
+import { useTranslator } from '@jsonforms/vue-vuetify';
 import { defineComponent, ref } from 'vue';
 import { VBtn, VIcon } from 'vuetify/components';
 import { AsyncFunction, type ActionEvent } from '../core';
@@ -38,8 +38,6 @@ const controlRenderer = defineComponent({
   setup(props: RendererProps<ButtonElement>) {
     const t = useTranslator();
     const button = useVuetifyButton(useJsonFormsButton(props));
-
-    const jsonforms = useJsonForms();
     const formContext = useFormContext();
 
     const loading = ref(false);
@@ -47,7 +45,6 @@ const controlRenderer = defineComponent({
     return {
       ...button,
       t,
-      jsonforms,
       formContext,
       loading,
     };
@@ -58,7 +55,7 @@ const controlRenderer = defineComponent({
 
       try {
         if (this.button.action) {
-          this.formContext.fireActionEvent?.(
+          await this.formContext.fireActionEvent?.(
             this.button.action,
             this.button.params ? { ...this.button.params } : {},
             this.$el,
@@ -66,7 +63,6 @@ const controlRenderer = defineComponent({
         } else if (this.button.script) {
           const source: ActionEvent = {
             action: this.button.action,
-            jsonforms: this.jsonforms,
             context: this.formContext,
             // the action parameters passes from the UI schema
             params: this.button.params ? { ...this.button.params } : {},

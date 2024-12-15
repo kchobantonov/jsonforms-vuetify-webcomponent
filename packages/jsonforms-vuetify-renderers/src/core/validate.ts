@@ -1,10 +1,10 @@
+import type { JsonFormsI18nState } from '@jsonforms/core';
 import { createAjv as createDefaultAjv } from '@jsonforms/vue-vuetify';
 import type { Options } from 'ajv';
-import { ajvTranslations } from './ajv-i18n';
-import { ajvKeywords } from './keywords';
 import ajvErrors from 'ajv-errors';
 import { markRaw, type ComputedRef, type MaybeRef } from 'vue';
-import type { JsonFormsI18nState } from '@jsonforms/core';
+import { ajvTranslations } from './ajv-i18n';
+import { ajvKeywords } from './keywords';
 
 export const createAjv = (
   i18n:

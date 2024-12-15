@@ -2,12 +2,10 @@
 import {
   defaultMiddleware,
   type JsonFormsCore,
-  type JsonFormsSubStates,
   type JsonSchema,
   type Middleware,
 } from '@jsonforms/core';
 import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
-import type { Ajv } from 'ajv';
 import { normalizeId } from 'ajv/dist/compile/resolve';
 import * as JsonRefs from 'json-refs';
 import _get from 'lodash/get';
@@ -16,20 +14,27 @@ import {
   computed,
   getCurrentInstance,
   inject,
+  markRaw,
   onMounted,
   provide,
   reactive,
   ref,
+  shallowRef,
+  toRefs,
   watch,
   type Ref,
   type SetupContext,
 } from 'vue';
+import { useTheme } from 'vuetify';
 import {
   VAlert,
   VCol,
   VContainer,
+  VDefaultsProvider,
+  VLocaleProvider,
   VProgressLinear,
   VRow,
+  VThemeProvider,
 } from 'vuetify/components';
 import {
   FormContextKey,
@@ -39,10 +44,13 @@ import {
   type FormContext,
   type JsonFormsProps,
   type ResolvedSchema,
+  type VuetifyConfig,
 } from '../core';
+import type Ajv from 'ajv';
 
 const props = defineProps<{
   state: JsonFormsProps;
+  vuetifyConfig: VuetifyConfig;
 }>();
 
 const resolvedSchema = reactive<ResolvedSchema>({
@@ -54,9 +62,16 @@ const resolvedSchema = reactive<ResolvedSchema>({
 const emits = defineEmits(['change', 'handle-action']);
 
 const onChange = (event: JsonFormsChangeEvent): void => {
+  data.value = event.data;
   emits('change', event);
 };
 
+watch(
+  () => props.state.data,
+  (value) => {
+    data.value = value;
+  },
+);
 watch(
   () => props.state.schema,
   async (schema) => {
@@ -68,6 +83,46 @@ watch(
   async (schemaUrl) => {
     await resolveSchema(props.state.schema, schemaUrl);
   },
+);
+watch(
+  () => props.state.readonly,
+  (value) => {
+    readonly.value = value;
+  },
+);
+watch(
+  () => props.state.additionalErrors,
+  (value) => {
+    additionalErrors.value = value;
+  },
+);
+watch(
+  () => props.state.ajv,
+  (value) => {
+    ajv.value = value ?? createAjv(props.state.i18n);
+  },
+);
+watch(
+  () => props.state.i18n,
+  (value) => {
+    ajv.value = props.state.ajv ?? createAjv(value);
+  },
+);
+watch(
+  () => props.state.middleware,
+  (value) => {
+    middleware.value = createMiddlewareWrapper(value ?? defaultMiddleware);
+  },
+);
+
+watch(
+  () => props.vuetifyConfig,
+  (vuetifyConfig) => {
+    Object.assign(vuetifyConfigToUse, vuetifyConfig);
+    vuetifyConfigToUse.dark =
+      vuetifyTheme.themes.value[vuetifyConfigToUse.theme]?.dark ?? false;
+  },
+  { deep: true },
 );
 
 const resolveSchema = async (schema?: JsonSchema, schemaUrl?: string) => {
@@ -132,6 +187,15 @@ const resolvingSchemaMessage = computed(() => {
   return message;
 });
 
+const createMiddlewareWrapper = (wrappedFunction: Middleware): Middleware => {
+  return (state, action, defaultReducer) => {
+    // Delegate the call to the wrapped function
+    const core = wrappedFunction(state, action, defaultReducer);
+    jsonformsCore.value = core;
+    return core;
+  };
+};
+
 const errorMessage = computed(() => {
   const message = 'Error resolving schema';
   if (props.state.i18n?.translate) {
@@ -142,44 +206,35 @@ const errorMessage = computed(() => {
 
 const currentInstance = getCurrentInstance();
 const jsonformsCore = ref<JsonFormsCore | undefined>(undefined);
-// reconstruct the jsonforms since we can't use the provided jsonforms from the sub component JsonForms
-const jsonforms = computed<JsonFormsSubStates>(
-  () =>
-    ({
-      core: jsonformsCore.value,
-      config: properties.value.config,
-      renderers: properties.value.renderers,
-      cells: properties.value.cells,
-      i18n: properties.value.i18n,
-      uischemas: properties.value.uischemas,
-      readonly: properties.value.readonly,
-    }) as JsonFormsSubStates,
+
+const vuetifyTheme = useTheme();
+const vuetifyConfigToUse = reactive({
+  ...props.vuetifyConfig,
+  dark: vuetifyTheme.themes.value[props.vuetifyConfig?.theme]?.dark ?? false,
+});
+
+const readonly = ref(props.state.readonly);
+const data = ref(props.state.data);
+const additionalErrors = ref(props.state.additionalErrors);
+const ajv = shallowRef(props.state.ajv ?? createAjv(props.state.i18n));
+const middleware = shallowRef(
+  createMiddlewareWrapper(props.state.middleware ?? defaultMiddleware),
 );
 
 const defaultContext: Ref<FormContext> = ref({
   schemaUrl: props.state.schemaUrl,
   uidata: reactive({}),
 
-  jsonforms: jsonforms,
+  vuetify: vuetifyConfigToUse,
+  config: computed(() => properties.value.config),
+  readonly: readonly,
   locale: computed(() => properties.value.i18n?.locale),
   translate: computed(() => properties.value.i18n?.translate),
-  data: computed({
-    get: () => jsonformsCore.value?.data,
-    set: (newValue) => {
-      // allow actions to set new data
-      properties.value.data = newValue;
-    },
-  }),
+  data: data,
   schema: computed(() => jsonformsCore.value?.schema),
   uischema: computed(() => jsonformsCore.value?.uischema),
   errors: computed(() => jsonformsCore.value?.errors),
-  additionalErrors: computed({
-    get: () => jsonformsCore.value?.additionalErrors,
-    set: (newValue) => {
-      // allow actions to set new additionalErrors
-      properties.value.additionalErrors = newValue;
-    },
-  }),
+  additionalErrors: additionalErrors,
 
   fireActionEvent: async <TypeEl extends Element = any>(
     action: string,
@@ -188,14 +243,16 @@ const defaultContext: Ref<FormContext> = ref({
   ) => {
     const source: ActionEvent = {
       action: action,
-      jsonforms: context.value.jsonforms!,
       context: context.value,
       // the action parameters passes from the UI schema
       params: params ? { ...params } : {},
-      $el: el || currentInstance?.proxy?.$el,
+      $el: el ?? currentInstance?.proxy?.$el,
     };
 
-    (handleActionEmitter || emits)('handle-action', source);
+    // fire event
+    (handleActionEmitter ?? emits)('handle-action', source);
+
+    // check if we have a callback to call
     if (isFunction(source.callback)) {
       await source.callback(source);
     } else {
@@ -204,47 +261,71 @@ const defaultContext: Ref<FormContext> = ref({
   },
 });
 
-const createMiddlewareWrapper = (wrappedFunction: Middleware): Middleware => {
-  return (state, action, defaultReducer) => {
-    // Delegate the call to the wrapped function
-    const core = wrappedFunction(state, action, defaultReducer);
-    jsonformsCore.value = core;
-    return core;
-  };
-};
-const properties = computed<JsonFormsProps & { ajv: Ajv }>(() => ({
+const properties = computed(() => ({
   ...props.state,
+  readonly: readonly.value,
+  data: data.value,
+  additionalErrors: additionalErrors.value,
+
   schema: resolvedSchema.schema ?? props.state.schema,
-  ajv: props.state.ajv ?? createAjv(props.state.i18n),
-  middleware: createMiddlewareWrapper(
-    props.state.middleware || defaultMiddleware,
-  ),
+  renderers: props.state.renderers
+    ? markRaw(props.state.renderers)
+    : props.state.renderers,
+  cells: props.state.cells ? markRaw(props.state.cells) : props.state.cells,
+  ajv: ajv.value,
+  middleware: middleware.value,
 }));
+
+const registerCurrentSchema = (schema: JsonSchema | undefined, ajv: Ajv) => {
+  // register the current schema using $id equal to '/' so that it can be used by condition schema rules
+  const currentSchemaId = '/';
+  // remove the previously current schema
+  ajv.removeSchema(currentSchemaId);
+
+  if (schema) {
+    // clear previous schemas in AVJ - schema with key or id "${id}" already exists
+    const { schemaId } = ajv.opts;
+    let id = (schema as any)[schemaId];
+    if (id) {
+      id = normalizeId(id);
+      if (id && !id.startsWith('#')) {
+        if (ajv.getSchema(id)) {
+          // schema exists and we are going to add it again so clear it before it throws schema already exists
+          ajv.removeSchema(id);
+        }
+      }
+    }
+
+    // register the current schema using $id equal to '/' so that it can be used by condition schema rules
+    const registeredSchema = { ...schema, [schemaId]: currentSchemaId };
+    ajv.addSchema(registeredSchema);
+  }
+};
 
 watch(
   () => properties.value.schema,
   (schema) => {
-    if (schema) {
-      // clear previous schemas in AVJ - schema with key or id "${id}" already exists
-      const { schemaId } = properties.value.ajv.opts;
-      let id = (schema as any)[schemaId];
-      if (id) {
-        id = normalizeId(id);
-        if (id && !id.startsWith('#')) {
-          if (properties.value.ajv.getSchema(id)) {
-            // schema exists and we are going to add it again so clear it before it throws schema already exists
-            properties.value.ajv.removeSchema(id);
-          }
-        }
+    registerCurrentSchema(schema, properties.value.ajv);
+  },
+);
+watch(
+  () => properties.value.ajv,
+  (ajv) => {
+    registerCurrentSchema(properties.value.schema, ajv);
+  },
+);
+
+watch(
+  () => vuetifyConfigToUse.dark,
+  (dark, oldDark) => {
+    if (dark !== oldDark) {
+      let newTheme = dark
+        ? vuetifyConfigToUse.theme.replace('light', 'dark')
+        : vuetifyConfigToUse.theme.replace('dark', 'light');
+      if (!vuetifyTheme.themes.value[newTheme]) {
+        newTheme = dark ? 'dark' : 'light';
       }
-
-      // register the current schema using $id equal to '/' so that it can be used by condition schema rules
-      const currentSchemaId = '/';
-      // remove the previously current schema
-      properties.value.ajv.removeSchema(currentSchemaId);
-
-      const registeredSchema = { ...schema, [schemaId]: currentSchemaId };
-      properties.value.ajv.addSchema(registeredSchema);
+      vuetifyConfigToUse.theme = newTheme;
     }
   },
 );
@@ -254,14 +335,12 @@ const overrideContext = inject<Ref<FormContext> | undefined>(
   undefined,
 );
 
-const context = computed(() =>
-  overrideContext
-    ? {
-        ...defaultContext.value,
-        ...overrideContext.value,
-      }
-    : defaultContext.value,
-);
+const context = overrideContext
+  ? ref({
+      ...toRefs(defaultContext.value),
+      ...toRefs(overrideContext.value),
+    })
+  : defaultContext;
 
 provide(FormContextKey, context);
 
@@ -275,43 +354,50 @@ if (!handleActionEmitter) {
 </script>
 
 <template>
-  <div>
-    <json-forms
-      v-if="resolvedSchema.resolved && resolvedSchema.error === undefined"
-      v-bind="properties"
-      @change="onChange"
-    >
-    </json-forms>
-    <v-container v-else style="height: 400px">
-      <v-row
-        v-if="!resolvedSchema.resolved"
-        class="fill-height"
-        align-content="center"
-        justify="center"
-      >
-        <v-col class="text-subtitle-1 text-center" cols="12">
-          {{ resolvingSchemaMessage }}
-        </v-col>
-        <v-col cols="6">
-          <v-progress-linear
-            indeterminate
-            rounded
-            height="6"
-          ></v-progress-linear>
-        </v-col>
-      </v-row>
-      <v-row
-        v-else-if="resolvedSchema.error !== undefined"
-        class="fill-height"
-        align-content="center"
-        justify="center"
-      >
-        <v-col class="text-subtitle-1 text-center" cols="12">
-          <v-alert color="red" dark>
-            {{ errorMessage }}: {{ resolvedSchema.error }}
-          </v-alert>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+  <v-locale-provider
+    :rtl="vuetifyConfigToUse.rtl"
+    :locale="properties.i18n?.locale"
+  >
+    <v-theme-provider :theme="vuetifyConfigToUse.theme">
+      <v-defaults-provider :defaults="vuetifyConfigToUse.defaults">
+        <json-forms
+          v-if="resolvedSchema.resolved && resolvedSchema.error === undefined"
+          v-bind="properties"
+          @change="onChange"
+        >
+        </json-forms>
+        <v-container v-else style="height: 400px">
+          <v-row
+            v-if="!resolvedSchema.resolved"
+            class="fill-height"
+            align-content="center"
+            justify="center"
+          >
+            <v-col class="text-subtitle-1 text-center" cols="12">
+              {{ resolvingSchemaMessage }}
+            </v-col>
+            <v-col cols="6">
+              <v-progress-linear
+                indeterminate
+                rounded
+                height="6"
+              ></v-progress-linear>
+            </v-col>
+          </v-row>
+          <v-row
+            v-else-if="resolvedSchema.error !== undefined"
+            class="fill-height"
+            align-content="center"
+            justify="center"
+          >
+            <v-col class="text-subtitle-1 text-center" cols="12">
+              <v-alert color="red" dark>
+                {{ errorMessage }}: {{ resolvedSchema.error }}
+              </v-alert>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-defaults-provider>
+    </v-theme-provider>
+  </v-locale-provider>
 </template>

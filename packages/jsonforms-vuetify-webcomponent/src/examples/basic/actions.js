@@ -1,9 +1,9 @@
 const showRequiredAsterisk = (event) => {
-  event.jsonforms.config.hideRequiredAsterisk = false;
+  event.context.config.hideRequiredAsterisk = false;
 };
 
 const hideRequiredAsterisk = (event) => {
-  event.jsonforms.config.hideRequiredAsterisk = true;
+  event.context.config.hideRequiredAsterisk = true;
 };
 
 // note that at the moment showData is not use by the template - instead the template shows how to use the script instead
@@ -25,23 +25,24 @@ const saveData = async (event) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  const data = event.jsonforms.core.data;
-  if (event.jsonforms.core.errors && event.jsonforms.core.errors.length > 0) {
+  const data = event.context.data;
+  if (event.context.errors && event.context.errors.length > 0) {
     const uidata = event.context.uidata;
-    uidata.errorDialog.title = event.jsonforms.i18n.translate('Error', 'Error');
-    uidata.errorDialog.text = event.jsonforms.i18n.translate(
+    uidata.errorDialog.title = event.context.translate('Error', 'Error');
+    uidata.errorDialog.text = event.context.translate(
       'You have errors. Fix those before saving data.',
       'You have errors. Fix those before saving data.',
     );
     uidata.errorDialog.show = true;
   } else {
     try {
-      event.jsonforms.readonly = true;
+      event.context.readonly = true;
       await sleep(4000);
 
       alert('Data Saved:' + JSON.stringify(data));
+      event.context.data = {};
     } finally {
-      event.jsonforms.readonly = false;
+      event.context.readonly = false;
     }
   }
 };

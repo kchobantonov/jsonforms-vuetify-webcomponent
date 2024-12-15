@@ -1,4 +1,5 @@
 {
-  "firstName": "First Name",
+  "firstName": "John",
+  "lastName": "Doe",
   "json": "{\n    \"test\": \"json\"\n}\n"
 }

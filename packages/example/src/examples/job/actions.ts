@@ -13,8 +13,18 @@ const changeLang = (event: ActionEvent) => {
   }
 };
 
-export const onHandleAction = (event: ActionEvent) => {
+const toggleDarkMode = (event: ActionEvent) => {
+  event.context.vuetify!.dark = !event.context.vuetify!.dark;
+};
+
+export const onHandleAction = (customEvent: ActionEvent | CustomEvent) => {
+  // if the event is sent via webcomponent then it will be of type CustomEvent otherwise it will be ActionEvent
+  const event =
+    customEvent instanceof CustomEvent ? customEvent.detail.event : customEvent;
+
   if (event.action === 'changeLang') {
     event.callback = changeLang;
+  } else if (event.action === 'toggleDarkMode') {
+    event.callback = toggleDarkMode;
   }
 };

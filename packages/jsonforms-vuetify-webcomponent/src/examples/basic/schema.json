@@ -46,7 +46,7 @@
     },
     "lastName": {
       "type": "string",
-      "minLength": 5,
+      "minLength": 3,
       "maxLength": 15
     },
     "home_address": { "$ref": "#/definitions/address" },

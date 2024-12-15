@@ -2,7 +2,6 @@ import type {
   JsonFormsCellRendererRegistryEntry,
   JsonFormsI18nState,
   JsonFormsRendererRegistryEntry,
-  JsonFormsSubStates,
   JsonFormsUISchemaRegistryEntry,
   JsonSchema,
   Middleware,
@@ -53,13 +52,28 @@ export type ResolvedSchema = {
   error?: string;
 };
 
+type DefaultsInstance =
+  | undefined
+  | {
+      [key: string]: undefined | Record<string, unknown>;
+      global?: Record<string, unknown>;
+    };
+type DefaultsOptions = Partial<DefaultsInstance>;
+
+export type VuetifyConfig = {
+  theme: string;
+  rtl: boolean;
+  defaults: DefaultsOptions;
+};
+
 export interface FormContext {
   [key: string]: any;
 
   schemaUrl?: string;
   uidata?: Reactive<Record<string, any>>;
-
-  jsonforms?: MaybeRefOrGetter<JsonFormsSubStates>;
+  vuetify?: VuetifyConfig & { dark: boolean };
+  config?: MaybeRefOrGetter<any>;
+  readonly?: MaybeRefOrGetter<boolean>;
 
   locale?: MaybeRefOrGetter<string | undefined>;
   translate?: MaybeRefOrGetter<Translator | undefined>;
@@ -79,7 +93,6 @@ export interface FormContext {
 export type ActionEvent = {
   action: string;
   callback?: (event: ActionEvent) => void;
-  jsonforms: JsonFormsSubStates;
   context: FormContext;
   // the action parameters passes from the UI schema
   params: Record<string, any>;
