@@ -105,7 +105,7 @@ watch(
 watch(
   () => props.state.i18n,
   (value) => {
-    ajv.value = props.state.ajv ?? createAjv(value);
+    ajvI18N.value = value;
   },
 );
 watch(
@@ -216,7 +216,8 @@ const vuetifyConfigToUse = reactive({
 const readonly = ref(props.state.readonly);
 const data = ref(props.state.data);
 const additionalErrors = ref(props.state.additionalErrors);
-const ajv = shallowRef(props.state.ajv ?? createAjv(props.state.i18n));
+const ajvI18N = ref(props.state.i18n);
+const ajv = shallowRef(props.state.ajv ?? createAjv(ajvI18N));
 const middleware = shallowRef(
   createMiddlewareWrapper(props.state.middleware ?? defaultMiddleware),
 );
