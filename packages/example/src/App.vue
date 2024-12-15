@@ -8,7 +8,7 @@ import ExampleView from './views/ExampleView.vue';
 import HomeView from './views/HomeView.vue';
 
 import type { DefaultsInstance } from 'vuetify';
-import { getCustomThemes } from './plugins/vuetify';
+import { useAppTheme } from './plugins/vuetify';
 import { useAppStore } from './store';
 
 const appStore = useAppStore();
@@ -17,16 +17,7 @@ const example = computed(() =>
   appStore.examples.find((ex) => ex.name === appStore.exampleName),
 );
 
-const theme = computed(() => {
-  const theme = getCustomThemes(appStore.blueprint).filter(
-    (t) => t.name === appStore.theme,
-  );
-  if (theme && theme[0] && theme[0].dark === appStore.dark) {
-    return theme[0].name;
-  }
-
-  return appStore.dark ? 'dark' : 'light';
-});
+const theme = useAppTheme();
 
 const appKey = ref(1);
 const DefaultsSymbol: InjectionKey<Ref<DefaultsInstance>> =

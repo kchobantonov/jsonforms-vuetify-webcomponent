@@ -10,7 +10,7 @@ import 'vuetify/styles';
 
 import { faIconAliases, mdiIconAliases } from '@jsonforms/vue-vuetify';
 import dayjs from 'dayjs';
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { fa, aliases as faAliases } from 'vuetify/iconsets/fa';
 import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
 import { aliases as appFaAliases } from '../icons/fa';
@@ -276,5 +276,22 @@ export function buildVuetify() {
 
   return vuetify;
 }
+
+export const useAppTheme = () => {
+  const appStore = useAppStore();
+
+  const theme = computed(() => {
+    const theme = getCustomThemes(appStore.blueprint).filter(
+      (t) => t.name === appStore.theme,
+    );
+    if (theme && theme[0] && theme[0].dark === appStore.dark) {
+      return theme[0].name;
+    }
+
+    return appStore.dark ? 'dark' : 'light';
+  });
+
+  return theme;
+};
 
 export default buildVuetify;

@@ -50,6 +50,7 @@ import {
 import type { MonacoApi } from '../core/monaco';
 import { useAppStore } from '../store';
 
+import { useAppTheme } from '@/plugins/vuetify';
 import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
 
 const vuetifyRenderers = [
@@ -472,8 +473,10 @@ const vuetifyOptions = computed(() => {
   } as Partial<VuetifyOptions>);
 });
 
+const theme = useAppTheme();
+
 const vuetifyConfig = computed<VuetifyConfig>(() => ({
-  theme: appStore.theme,
+  theme: theme.value,
   rtl: appStore.rtl,
   defaults: {},
 }));
