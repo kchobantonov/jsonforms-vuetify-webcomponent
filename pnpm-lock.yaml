@@ -65,6 +65,9 @@ importers:
       pinia:
         specifier: ^2.1.7
         version: 2.2.2(typescript@5.4.5)(vue@3.5.9)
+      splitpanes:
+        specifier: ^3.1.5
+        version: 3.1.5
       vue:
         specifier: ^3.4.21
         version: 3.5.9(typescript@5.4.5)
@@ -141,9 +144,6 @@ importers:
       sass:
         specifier: ^1.75.0
         version: 1.79.3
-      splitpanes:
-        specifier: ^3.1.5
-        version: 3.1.5
       typescript:
         specifier: ~5.4.0
         version: 5.4.5
@@ -11230,7 +11230,7 @@ packages:
 
   /splitpanes@3.1.5:
     resolution: {integrity: sha512-r3Mq2ITFQ5a2VXLOy4/Sb2Ptp7OfEO8YIbhVJqJXoFc9hc5nTXXkCvtVDjIGbvC0vdE7tse+xTM9BMjsszP6bw==}
-    dev: true
+    dev: false
 
   /sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
