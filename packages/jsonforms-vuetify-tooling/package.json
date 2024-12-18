@@ -107,7 +107,7 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "pnpm run compile-tests && pnpm run build && pnpm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
+    "test": "pnpm run pretest && node ./out/test/runTest.js",
     "vsix": "vsce package --no-dependencies"
   },
   "devDependencies": {
