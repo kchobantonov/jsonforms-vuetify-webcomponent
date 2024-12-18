@@ -6,3 +6,4 @@ packages/*/dist
 packages/*/out
 packages/*/stats.html
 packages/jsonforms-vuetify-tooling/.vscode-test
+packages/jsonforms-vuetify-tooling/jsonforms-vuetify-tooling-*.vsix
