@@ -21,5 +21,8 @@
       "source.fixAll.eslint": "explicit"
     }
   },
-  "jest.runMode": "on-demand"
+  "jest.runMode": "on-demand",
+  "files.associations": {
+    "plyconfig.json": "jsonc"
+  }
 }
