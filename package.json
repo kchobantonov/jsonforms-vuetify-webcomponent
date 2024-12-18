@@ -25,6 +25,7 @@
     "tooling:package": "lerna run --scope=jsonforms-vuetify-tooling package"
   },
   "devDependencies": {
-    "lerna": "^6.6.2"
+    "lerna": "^6.6.2",
+    "typescript": "~5.4.0"
   }
 }
