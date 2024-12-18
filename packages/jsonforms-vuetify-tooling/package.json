@@ -98,7 +98,7 @@
     }
   },
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf dist out jsonforms-vuetify-tooling-*.vsix",
     "vscode:prepublish": "pnpm run package",
     "build": "webpack",
     "watch": "webpack --watch",
