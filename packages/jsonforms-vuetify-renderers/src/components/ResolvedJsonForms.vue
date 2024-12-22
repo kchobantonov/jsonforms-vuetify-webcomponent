@@ -99,7 +99,7 @@ watch(
 watch(
   () => props.state.ajv,
   (value) => {
-    ajv.value = value ?? createAjv(props.state.i18n);
+    ajv.value = value ?? createAjv(ajvI18N);
   },
 );
 watch(

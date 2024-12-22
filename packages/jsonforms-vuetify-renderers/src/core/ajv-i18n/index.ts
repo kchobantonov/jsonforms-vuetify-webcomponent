@@ -1,8 +1,8 @@
+import type { JsonFormsI18nState, Translator } from '@jsonforms/core';
 import type { Ajv, ErrorObject, Plugin } from 'ajv';
 import localize from 'ajv-i18n/localize';
-import { unref, type ComputedRef, type MaybeRef } from 'vue';
+import { computed, watch, type ComputedRef, type Ref } from 'vue';
 import { localize_bg } from './bg';
-import type { JsonFormsI18nState, Translator } from '@jsonforms/core';
 
 function injectAdditionalLocales() {
   // add missing BG locale - https://github.com/ajv-validator/ajv-i18n/pull/312 until this is merged and released
@@ -26,7 +26,7 @@ function injectAdditionalLocales() {
 
 export interface I18NOptions {
   i18n:
-    | MaybeRef<JsonFormsI18nState | undefined>
+    | Ref<JsonFormsI18nState | undefined>
     | ComputedRef<JsonFormsI18nState | undefined>;
 }
 
@@ -49,7 +49,8 @@ export const ajvTranslations: Plugin<I18NOptions> = (
           );
 
           if (!validationResult && validateFunction.errors) {
-            const i18n = options?.i18n ? unref(options.i18n) : undefined;
+            const i18n = options!.i18n.value;
+
             const language: keyof typeof localize | undefined = i18n
               ? (i18n.locale as keyof typeof localize)
               : undefined;
@@ -69,7 +70,7 @@ export const ajvTranslations: Plugin<I18NOptions> = (
 
             validateFunction.errors = unwrapErrorMessageErrors(
               validateFunction.errors,
-              i18n?.translate,
+              options!.i18n,
             );
           }
           Object.assign(newValidateFunction, validateFunction);
@@ -88,7 +89,9 @@ export const ajvTranslations: Plugin<I18NOptions> = (
 
 export const unwrapErrorMessageErrors = (
   errors: ErrorObject[],
-  translate: Translator | undefined,
+  i18n:
+    | Ref<JsonFormsI18nState | undefined>
+    | ComputedRef<JsonFormsI18nState | undefined>,
 ): ErrorObject[] => {
   return (
     errors
@@ -100,13 +103,18 @@ export const unwrapErrorMessageErrors = (
           Array.isArray(error.params?.errors)
         ) {
           // error created by the ajv-errors, replace the error with the actual errors and change the error message
-          return error.params.errors.map((paramError) => ({
+          const result = error.params.errors.map((paramError) => ({
             ...paramError,
-            message:
-              translate && error.message
-                ? translate(error.message, error.message)
+            message: computed(() =>
+              i18n?.value?.translate && error.message
+                ? i18n.value.translate(
+                    `error.errorMessage.${error.message}`,
+                    error.message,
+                  )
                 : error.message,
+            ),
           }));
+          return result;
         }
         // otherwise just return the current error that is not related to ajv-errors
         return error;

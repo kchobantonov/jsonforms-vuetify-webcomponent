@@ -2,13 +2,13 @@ import type { JsonFormsI18nState } from '@jsonforms/core';
 import { createAjv as createDefaultAjv } from '@jsonforms/vue-vuetify';
 import type { Options } from 'ajv';
 import ajvErrors from 'ajv-errors';
-import { markRaw, type ComputedRef, type MaybeRef } from 'vue';
+import { markRaw, type ComputedRef, type Ref } from 'vue';
 import { ajvTranslations } from './ajv-i18n';
 import { ajvKeywords } from './keywords';
 
 export const createAjv = (
   i18n:
-    | MaybeRef<JsonFormsI18nState | undefined>
+    | Ref<JsonFormsI18nState | undefined>
     | ComputedRef<JsonFormsI18nState | undefined>,
 ) => {
   const options: Options = {

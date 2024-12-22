@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["age"],
+  "errorMessage": {
+    "required": {
+      "age": "age.required"
+    }
+  },
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 20,
+      "errorMessage": {
+        "minLength": "firstName.minLength",
+        "maxLength": "firstName.maxLength"
+      }
+    },
+    "lastName": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 15,
+      "errorMessage": {
+        "minLength": "lastName.minLength",
+        "maxLength": "lastName.maxLength"
+      }
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 18,
+      "maximum": 100,
+      "errorMessage": {
+        "minimum": "age.minimum",
+        "maximum": "age.maximum"
+      }
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["Male", "Female", "Undisclosed"]
+    },
+    "height": {
+      "type": "number"
+    },
+    "dateOfBirth": {
+      "type": "string",
+      "format": "date"
+    },
+    "rating": {
+      "type": "integer"
+    },
+    "committer": {
+      "type": "boolean"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "streetnumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

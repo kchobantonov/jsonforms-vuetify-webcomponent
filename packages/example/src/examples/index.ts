@@ -19,6 +19,7 @@ import { input as dateExample } from './date';
 import { input as dateTimeExample } from './datetime';
 import { input as enumExample } from './enum';
 import { input as enumInArray } from './enum-in-array';
+import { input as errorMessage } from './error-message';
 import { input as file } from './file';
 import { input as groupLayout } from './group-layout';
 import { input as horizontalLayout } from './horizontal-layout';
@@ -78,6 +79,7 @@ export {
   dateTimeExample,
   enumExample,
   enumInArray,
+  errorMessage,
   file,
   groupLayout,
   horizontalLayout,
