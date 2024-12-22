@@ -1,7 +1,7 @@
-import type { JsonFormsI18nState, Translator } from '@jsonforms/core';
+import type { JsonFormsI18nState } from '@jsonforms/core';
 import type { Ajv, ErrorObject, Plugin } from 'ajv';
 import localize from 'ajv-i18n/localize';
-import { computed, watch, type ComputedRef, type Ref } from 'vue';
+import { computed, type ComputedRef, type Ref } from 'vue';
 import { localize_bg } from './bg';
 
 function injectAdditionalLocales() {
@@ -26,6 +26,7 @@ function injectAdditionalLocales() {
 
 export interface I18NOptions {
   i18n:
+    | undefined
     | Ref<JsonFormsI18nState | undefined>
     | ComputedRef<JsonFormsI18nState | undefined>;
 }
@@ -49,7 +50,7 @@ export const ajvTranslations: Plugin<I18NOptions> = (
           );
 
           if (!validationResult && validateFunction.errors) {
-            const i18n = options!.i18n.value;
+            const i18n = options!.i18n?.value;
 
             const language: keyof typeof localize | undefined = i18n
               ? (i18n.locale as keyof typeof localize)
@@ -90,6 +91,7 @@ export const ajvTranslations: Plugin<I18NOptions> = (
 export const unwrapErrorMessageErrors = (
   errors: ErrorObject[],
   i18n:
+    | undefined
     | Ref<JsonFormsI18nState | undefined>
     | ComputedRef<JsonFormsI18nState | undefined>,
 ): ErrorObject[] => {

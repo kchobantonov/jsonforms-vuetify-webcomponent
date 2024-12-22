@@ -8,6 +8,7 @@ import { ajvKeywords } from './keywords';
 
 export const createAjv = (
   i18n:
+    | undefined
     | Ref<JsonFormsI18nState | undefined>
     | ComputedRef<JsonFormsI18nState | undefined>,
 ) => {
