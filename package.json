@@ -24,6 +24,11 @@
     "tooling:vsix": "lerna run --scope=jsonforms-vuetify-tooling vsix",
     "tooling:package": "lerna run --scope=jsonforms-vuetify-tooling package"
   },
+  "pnpm": {
+    "overrides": {
+      "ajv-formats": "^3.0.1"
+    }
+  },
   "devDependencies": {
     "lerna": "^6.6.2",
     "typescript": "~5.4.0"

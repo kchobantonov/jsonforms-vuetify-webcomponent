@@ -61,9 +61,9 @@
     "vuetify": "^3.7.5"
   },
   "devDependencies": {
-    "@jsonforms/core": "3.4.0",
-    "@jsonforms/vue": "3.4.0",
-    "@jsonforms/vue-vuetify": "3.4.0",
+    "@jsonforms/core": "3.5.0-beta.1",
+    "@jsonforms/vue": "3.5.0-beta.1",
+    "@jsonforms/vue-vuetify": "3.5.0-beta.1",
     "@mdi/font": "^7.4.47",
     "@monaco-editor/loader": "^1.4.0",
     "@rushstack/eslint-patch": "^1.8.0",
