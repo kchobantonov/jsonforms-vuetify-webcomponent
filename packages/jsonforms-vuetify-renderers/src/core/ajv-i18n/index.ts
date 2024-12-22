@@ -25,8 +25,7 @@ function injectAdditionalLocales() {
 }
 
 export interface I18NOptions {
-  i18n:
-    | undefined
+  i18n?:
     | Ref<JsonFormsI18nState | undefined>
     | ComputedRef<JsonFormsI18nState | undefined>;
 }
@@ -90,8 +89,7 @@ export const ajvTranslations: Plugin<I18NOptions> = (
 
 export const unwrapErrorMessageErrors = (
   errors: ErrorObject[],
-  i18n:
-    | undefined
+  i18n?:
     | Ref<JsonFormsI18nState | undefined>
     | ComputedRef<JsonFormsI18nState | undefined>,
 ): ErrorObject[] => {
