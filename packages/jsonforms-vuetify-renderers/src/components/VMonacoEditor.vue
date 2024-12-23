@@ -181,6 +181,16 @@ watch(
   },
 );
 
+watch(
+  () => props.modelValue,
+  (value) => {
+    model.value = value;
+    if (editor.value && editor.value.getValue() !== model.value) {
+      editor.value.setValue(model.value || '');
+    }
+  },
+);
+
 // Watch disabled and readonly props and update the editor's options if needed
 watch(
   [() => props.disabled, () => props.readonly],

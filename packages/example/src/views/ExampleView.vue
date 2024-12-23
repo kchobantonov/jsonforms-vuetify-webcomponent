@@ -917,5 +917,9 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
       background-color: rgb(var(--v-theme-on-surface-variant));
     }
   }
+
+  .splitpanes__pane {
+    background-color: rgb(var(--v-theme-surface));
+  }
 }
 </style>
