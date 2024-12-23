@@ -71,6 +71,8 @@ import { VField, VInput } from 'vuetify/components';
 
 import { callEvent, type VFieldProps, type VInputProps } from './common';
 
+import('../util/monaco-setup');
+
 interface MonacoEditorProps extends VInputProps, VFieldProps {
   autofocus?: boolean;
   prefix?: string;

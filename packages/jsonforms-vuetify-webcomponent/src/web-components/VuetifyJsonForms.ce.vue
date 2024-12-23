@@ -14,18 +14,25 @@
       :additionalErrors="additionalErrors"
       :uidata="uidata"
       @change="onChange"
-    ></vuetify-json-forms
-  ></Suspense>
+    ></vuetify-json-forms>
+  </Suspense>
 </template>
 
 <script lang="ts">
 import { useAppStore } from '@/store';
-import { HandleActionEmitterKey } from '@chobantonov/jsonforms-vuetify-renderers';
 import { type ValidationMode } from '@jsonforms/core';
 import { type JsonFormsChangeEvent } from '@jsonforms/vue';
-import { defineComponent, watch, type PropType } from 'vue';
-import VuetifyJsonForms from '../components/VuetifyJsonForms.vue';
 import isPlainObject from 'lodash/isPlainObject';
+import {
+  defineAsyncComponent,
+  defineComponent,
+  watch,
+  type PropType,
+} from 'vue';
+
+const VuetifyJsonForms = defineAsyncComponent(
+  () => import('../components/VuetifyJsonForms.vue'),
+);
 
 const vuetifyFormWc = defineComponent({
   components: {
@@ -199,12 +206,6 @@ const vuetifyFormWc = defineComponent({
       },
     },
   },
-  provide() {
-    return {
-      // provide the this.$emit to be used as handleActionEmitter since this emitter is connected to the native web component
-      [HandleActionEmitterKey]: this.$emit,
-    };
-  },
   methods: {
     onChange(event: JsonFormsChangeEvent): void {
       this.$emit('change', event);
@@ -289,7 +290,9 @@ const vuetifyFormWc = defineComponent({
       },
     );
 
-    return appStore;
+    return {
+      appStore,
+    };
   },
 });
 

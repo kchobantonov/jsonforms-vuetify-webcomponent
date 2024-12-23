@@ -10,14 +10,7 @@
 </template>
 
 <script lang="ts">
-import {
-  and,
-  optionIs,
-  rankWith,
-  uiTypeIs,
-  type JsonFormsRendererRegistryEntry,
-  type LabelElement,
-} from '@jsonforms/core';
+import { type LabelElement } from '@jsonforms/core';
 import {
   rendererProps,
   useJsonFormsLabel,

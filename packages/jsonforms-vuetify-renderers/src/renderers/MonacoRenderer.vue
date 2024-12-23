@@ -41,7 +41,11 @@ import {
   useVuetifyControl,
 } from '@jsonforms/vue-vuetify';
 import { defineComponent } from 'vue';
-import VMonacoEditor from '../components/VMonacoEditor.vue';
+import { defineAsyncComponent } from 'vue';
+
+const VMonacoEditor = defineAsyncComponent(
+  () => import('../components/VMonacoEditor.vue'),
+);
 
 const controlRenderer = defineComponent({
   name: 'monaco-control-renderer',

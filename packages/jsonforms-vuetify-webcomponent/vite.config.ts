@@ -8,7 +8,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 // needed for json-refs
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'node:path';
-import { createHash } from 'crypto';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,6 +18,7 @@ export default defineConfig({
     exclude: ['vuetify'],
   },
   plugins: [
+    visualizer(),
     vue({
       template: { transformAssetUrls },
     }),
@@ -40,47 +41,50 @@ export default defineConfig({
       input: resolve(__dirname, 'src/web-component.ts'), // Specify the entry point here
       output: {
         entryFileNames: 'vuetify-json-forms.js', // Set the output file name
+        assetFileNames: 'assets/[name]-[hash][extname]',
         manualChunks(id) {
-          if (id.includes('node_modules/vuetify')) {
-            return 'vuetify';
+          // Check if the module is inside node_modules
+          if (id.includes('node_modules') && !id.includes('monaco-editor')) {
+            // Extract the package name (considering scoped packages as well)
+            let packageName = id.split('node_modules/').pop()!.split('/')[0];
+
+            // Handle scoped packages like @vue/cli
+            if (packageName.startsWith('@')) {
+              packageName = packageName.replace('@', '').replace(/[\\/]/, '_');
+            }
+
+            // Remove version information from package name
+            packageName = packageName.replace(/@[^/]+$/, '');
+
+            // Return the custom chunk name based on the package name
+            return `npm.${packageName}`;
           }
 
-          if (id.includes('node_modules/vue')) {
-            return 'vue';
-          }
-
-          // Create a chunk for JSON Forms or other specific libraries
-          if (id.includes('node_modules/@jsonforms')) {
-            return 'jsonforms';
-          }
-
-          if (id.includes('node_modules/monaco')) {
-            return 'monaco';
-          }
-
-          // Check if the module is from node_modules
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
+          // Return null for other modules, keeping them in the main chunk
+          return null;
         },
         chunkFileNames: (chunkInfo) => {
-          // Use the npm module name or file name for the chunk
-          let moduleName = chunkInfo.facadeModuleId
-            ? chunkInfo.facadeModuleId.split('/').slice(-2).join('_')
-            : chunkInfo.name;
-          if (moduleName.endsWith('.js')) {
-            moduleName = moduleName.substring(
-              0,
-              moduleName.length - '.js'.length,
-            );
-          }
-          // Create an MD5 hash of the chunk content for cache-busting
-          const hash = createHash('md5')
-            .update((chunkInfo as any).code || '')
-            .digest('hex')
-            .slice(0, 20); // Slice the hash to make it shorter (optional)
+          let name = chunkInfo.name;
 
-          return `chunks/${moduleName}-${hash}.js`;
+          if (!chunkInfo.isDynamicEntry) {
+            // Extract package name from the module path
+            let packageName = chunkInfo.name.split('/').pop();
+
+            // Handle scoped packages like @vue/cli
+            if (packageName && packageName.startsWith('@')) {
+              packageName = packageName
+                .replace('@', '') // Remove '@'
+                .replace(/[\\/]/, '_'); // Replace '/' with '_'
+            }
+
+            // Remove version information (anything after the '@')
+            packageName = packageName?.replace(/@[^/]+$/, '');
+
+            // Return the final chunk name
+            name = packageName ?? name;
+          }
+
+          return `chunks/${name}-[hash].js`; // Default naming if name is undefined
         },
       },
     },

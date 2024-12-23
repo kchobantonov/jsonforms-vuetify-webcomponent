@@ -41,6 +41,7 @@ import {
 } from '@jsonforms/vue-vuetify';
 import { type ErrorObject } from 'ajv';
 import {
+  defineAsyncComponent,
   defineComponent,
   inject,
   ref,
@@ -62,8 +63,12 @@ import {
 } from '../core/types';
 import { useFormContext } from '../util';
 
-import * as defaultComponents from 'vuetify/components';
+import { VDefaultsProvider } from 'vuetify/components/VDefaultsProvider';
 import * as defaultDirectives from 'vuetify/directives';
+
+const VMonacoEditor = defineAsyncComponent(
+  () => import('../components/VMonacoEditor.vue'),
+);
 
 export interface TemplateLayout extends Layout {
   type: 'TemplateLayout';
@@ -78,18 +83,20 @@ const controlRenderer = defineComponent({
   inheritAttrs: false,
   components: {
     TemplateCompiler,
-    VDefaultsProvider: defaultComponents.VDefaultsProvider,
+    VDefaultsProvider: VDefaultsProvider,
   },
   props: {
     ...rendererProps<TemplateLayout>(),
   },
-  setup(props: RendererProps<TemplateLayout>) {
+  async setup(props: RendererProps<TemplateLayout>) {
     const t = useTranslator();
     const layout = useVuetifyLayout(useJsonFormsLayout(props));
 
     const jsonforms = useJsonForms();
     const context = useFormContext();
     const templateError = ref<string | null>(null);
+
+    const defaultComponents = await import('vuetify/components');
 
     return {
       ...layout,
@@ -192,8 +199,8 @@ const controlRenderer = defineComponent({
       );
 
       return override
-        ? { ...this.defaultComponents, ...override }
-        : this.defaultComponents;
+        ? { ...this.defaultComponents, VMonacoEditor, ...override }
+        : { ...this.defaultComponents, VMonacoEditor };
     },
   },
   methods: {

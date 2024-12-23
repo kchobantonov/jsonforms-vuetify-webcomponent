@@ -44,11 +44,10 @@ import {
   extraVuetifyRenderers,
   type FormContext,
   FormContextKey,
+  HandleActionEmitterKey,
   type JsonFormsProps,
   parseAndTransformUISchemaRegistryEntries,
   ResolvedJsonForms,
-  TemplateComponentsKey,
-  VMonacoEditor,
   type VuetifyConfig,
 } from '@chobantonov/jsonforms-vuetify-renderers';
 import {
@@ -562,10 +561,8 @@ const vuetifyFormWc = defineComponent({
   },
   provide() {
     return {
-      // demo how we can extend the template layout components that we can use.
-      [TemplateComponentsKey]: {
-        VMonacoEditor,
-      },
+      // provide the this.$emit to be used as handleActionEmitter since this emitter is connected to the native web component
+      [HandleActionEmitterKey]: this.$root!.$emit,
       [FormContextKey]: toRef(this, 'context'),
     };
   },

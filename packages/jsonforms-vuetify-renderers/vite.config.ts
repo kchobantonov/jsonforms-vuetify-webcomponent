@@ -26,7 +26,7 @@ export default defineConfig({
       // tell the build process to treat this project as library
       entry: resolve(__dirname, 'src/index.ts'),
       name: packageJson.name,
-      formats: ['es', 'cjs', 'umd'],
+      formats: ['es', 'cjs'],
       fileName: (format: string) => {
         if (format === 'es') {
           format = 'esm';
