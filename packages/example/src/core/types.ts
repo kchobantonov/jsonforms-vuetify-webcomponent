@@ -17,7 +17,7 @@ export type ExampleInputDescription = {
   schema?: JsonSchema;
   uischema?: UISchemaElement;
   uischemas?: JsonFormsUISchemaRegistryEntry[];
-  data: string | number | boolean | any[] | Record<string, any>;
+  data: null | string | number | boolean | any[] | Record<string, any>;
   i18n?: Record<string, any>;
   renderers?: JsonFormsRendererRegistryEntry[];
   onHandleAction?: (event: ActionEvent) => void;

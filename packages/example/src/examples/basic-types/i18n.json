@@ -1,0 +1,54 @@
+{
+  "en": {
+    "aNull": {
+      "label": "null"
+    },
+    "aBoolean": {
+      "label": "boolean"
+    },
+    "aNumber": {
+      "label": "number"
+    },
+    "anInteger": {
+      "label": "integer"
+    },
+    "aString": {
+      "label": "string"
+    },
+    "anArray": {
+      "label": "array"
+    },
+    "anObject": {
+      "label": "object",
+      "nestedKey": {
+        "label": "Nested Key"
+      }
+    }
+  },
+  "bg": {
+    "aNull": {
+      "label": "нулева стойност"
+    },
+    "aBoolean": {
+      "label": "булева стойност"
+    },
+    "aNumber": {
+      "label": "число"
+    },
+    "anInteger": {
+      "label": "цяло число"
+    },
+    "aString": {
+      "label": "низ"
+    },
+    "anArray": {
+      "label": "масив"
+    },
+    "anObject": {
+      "label": "обект",
+      "nestedKey": {
+        "label": "Вложено Поле"
+      }
+    }
+  }
+}

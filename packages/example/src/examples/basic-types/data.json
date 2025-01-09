@@ -1,0 +1,11 @@
+{
+  "aNull": null,
+  "aBoolean": true,
+  "aNumber": 42.5,
+  "anInteger": 42,
+  "aString": "Hello, world!",
+  "anArray": ["item1", "item2"],
+  "anObject": {
+    "nestedKey": 123
+  }
+}

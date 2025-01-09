@@ -1,0 +1,12 @@
+{
+  "en": {
+    "integer": {
+      "label": "Integer Type"
+    }
+  },
+  "bg": {
+    "integer": {
+      "label": "Целочислен тип"
+    }
+  }
+}
