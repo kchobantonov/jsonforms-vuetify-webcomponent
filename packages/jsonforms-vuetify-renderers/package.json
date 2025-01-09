@@ -56,6 +56,7 @@
     "dayjs": "^1.10.6",
     "json-refs": "3.0.15",
     "lodash": "^4.17.21",
+    "maska": "^2.1.11",
     "monaco-editor": "^0.49.0",
     "vue": "^3.4.21",
     "vuetify": "^3.7.5"
@@ -92,6 +93,7 @@
     "jsdom": "^24.0.0",
     "json-refs": "3.0.15",
     "lodash": "^4.17.21",
+    "maska": "^2.1.11",
     "monaco-editor": "^0.49.0",
     "npm-run-all2": "^6.1.2",
     "prettier": "^3.2.5",

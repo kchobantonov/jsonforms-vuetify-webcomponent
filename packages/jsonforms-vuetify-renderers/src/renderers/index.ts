@@ -7,6 +7,7 @@ import { default as DataProviderRenderer } from './DataProviderRenderer.vue';
 import { default as DataProviderSelectRenderer } from './DataProviderSelectRenderer.vue';
 import { default as ButtonRenderer } from './ButtonRenderer.vue';
 import { default as MonacoRenderer } from './MonacoRenderer.vue';
+import { default as DurationRenderer } from './DurationRenderer.vue';
 
 import { entry as templateLabelRendererEntry } from './TemplateLabelRenderer.entry';
 import { entry as templateLayoutRendererEntry } from './TemplateLayoutRenderer.entry';
@@ -17,10 +18,12 @@ import { entry as dataProviderRendererEntry } from './DataProviderRenderer.entry
 import { entry as dataProviderSelectRendererEntry } from './DataProviderSelectRenderer.entry';
 import { entry as buttonRendererEntry } from './ButtonRenderer.entry';
 import { entry as monacoRendererEntry } from './MonacoRenderer.entry';
+import { entry as durationRendererEntry } from './DurationRenderer.entry';
 
 export const extraVuetifyRenderers = [
   buttonRendererEntry,
   monacoRendererEntry,
+  durationRendererEntry,
   templateLabelRendererEntry,
   templateLayoutRendererEntry,
   templateRendererEntry,
@@ -40,4 +43,5 @@ export {
   DataProviderSelectRenderer,
   ButtonRenderer,
   MonacoRenderer,
+  DurationRenderer,
 };

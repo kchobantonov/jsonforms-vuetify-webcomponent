@@ -15,8 +15,9 @@ import { input as categorizationStepperNav } from './categorization-stepper-nav'
 import { input as control } from './control';
 import { input as controlOptions } from './control-options';
 import { input as customRenderer } from './custom-renderer';
-import { input as dateExample } from './date';
-import { input as dateTimeExample } from './datetime';
+import { input as date } from './date';
+import { input as dateTime } from './datetime';
+import { input as duration } from './duration';
 import { input as enumExample } from './enum';
 import { input as enumInArray } from './enum-in-array';
 import { input as errorMessage } from './error-message';
@@ -31,7 +32,6 @@ import { input as listWithDetailsAndReorder } from './list-with-details-and-reor
 import { input as listWithDetailsRestrict } from './list-with-details-restrict';
 import { input as login } from './login';
 import { input as main } from './main';
-import { input as mixed } from './mixed';
 import { input as monacoEditor } from './monaco-editor';
 import { input as multiEnum } from './multi-enum';
 import { input as nestedArray } from './nested-array';
@@ -75,8 +75,9 @@ export {
   control,
   controlOptions,
   customRenderer,
-  dateExample,
-  dateTimeExample,
+  date,
+  dateTime,
+  duration,
   enumExample,
   enumInArray,
   errorMessage,
@@ -91,7 +92,6 @@ export {
   listWithDetailsRestrict,
   login,
   main,
-  mixed,
   monacoEditor,
   multiEnum,
   nestedArray,
