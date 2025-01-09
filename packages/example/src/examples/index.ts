@@ -6,7 +6,6 @@ import { input as anyOfSimple } from './anyOf-simple';
 import { input as anyOfWithProps } from './anyOf-with-props';
 import { input as array } from './array';
 import { input as arrayRestrict } from './array-restrict';
-import { input as arrayType } from './array-type';
 import { input as arrayWithReorder } from './array-with-reorder';
 import { input as basic } from './basic';
 import { input as basicTypes } from './basic-types';
@@ -36,7 +35,6 @@ import { input as listWithDetailsAndReorder } from './list-with-details-and-reor
 import { input as listWithDetailsRestrict } from './list-with-details-restrict';
 import { input as login } from './login';
 import { input as main } from './main';
-import { input as mixed } from './mixed';
 import { input as monacoEditor } from './monaco-editor';
 import { input as multiEnum } from './multi-enum';
 import { input as nestedArray } from './nested-array';
@@ -49,7 +47,6 @@ import { input as nullType } from './null-type';
 import { input as numberType } from './number-type';
 import { input as object } from './object';
 import { input as objectNested } from './object-nested';
-import { input as objectType } from './object-type';
 import { input as oneOf } from './oneOf';
 import { input as oneOfRecursive } from './oneOf-recursive';
 import { input as oneOfTab } from './oneOf-tab';
@@ -75,7 +72,6 @@ export {
   anyOfWithProps,
   array,
   arrayRestrict,
-  arrayType,
   arrayWithReorder,
   basic,
   basicTypes,
@@ -105,7 +101,6 @@ export {
   listWithDetailsRestrict,
   login,
   main,
-  mixed,
   monacoEditor,
   multiEnum,
   nestedArray,
@@ -118,7 +113,6 @@ export {
   numberType,
   object,
   objectNested,
-  objectType,
   oneOf,
   oneOfRecursive,
   oneOfTab,
