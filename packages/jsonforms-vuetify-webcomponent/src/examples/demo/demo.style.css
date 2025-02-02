@@ -3,7 +3,6 @@
   src: url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
 }
 
-.v-application__wrap {
-  min-height: 0px;
+:host {
   font-family: Hallelujah, cursive;
 }

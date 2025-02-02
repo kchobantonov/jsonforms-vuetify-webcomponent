@@ -1,6 +1,6 @@
 {
   "type": "TemplateLayout",
-  "template": "<v-card flat><slot name=\"toolbar\"></slot><v-container style=\"pa-0\" fluid><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot v-if=\"element.name != 'toolbar'\" :name=\"element.name\"></slot></v-col></v-row></v-container></v-card>",
+  "template": "<v-card class=\"main-form\" flat><slot name=\"toolbar\"></slot><v-container style=\"pa-0\" fluid><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot v-if=\"element.name != 'toolbar'\" :name=\"element.name\"></slot></v-col></v-row></v-container></v-card>",
   "elements": [
     {
       "type": "TemplateLayout",
