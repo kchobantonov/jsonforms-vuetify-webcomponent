@@ -14,6 +14,9 @@ importers:
       lerna:
         specifier: ^6.6.2
         version: 6.6.2
+      rimraf:
+        specifier: ^5.0.10
+        version: 5.0.10
       typescript:
         specifier: ~5.4.0
         version: 5.4.5
@@ -141,9 +144,6 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.4.2
-      rimraf:
-        specifier: ^4.4.1
-        version: 4.4.1
       sass:
         specifier: ^1.75.0
         version: 1.83.0
@@ -279,9 +279,6 @@ importers:
       resize-observer-polyfill:
         specifier: ^1.5.1
         version: 1.5.1
-      rimraf:
-        specifier: ^4.4.1
-        version: 4.4.1
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.4.49)
@@ -370,9 +367,6 @@ importers:
       mocha:
         specifier: ^10.2.0
         version: 10.8.2
-      rimraf:
-        specifier: ^4.4.1
-        version: 4.4.1
       ts-loader:
         specifier: ^8.4.0
         version: 8.4.0(typescript@5.4.5)(webpack@4.47.0)
@@ -500,9 +494,6 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.4.2
-      rimraf:
-        specifier: ^4.4.1
-        version: 4.4.1
       rollup-plugin-visualizer:
         specifier: ^5.12.0
         version: 5.12.0
@@ -10946,6 +10937,13 @@ packages:
     hasBin: true
     dependencies:
       glob: 9.3.5
+    dev: true
+
+  /rimraf@5.0.10:
+    resolution: {integrity: sha512-l0OE8wL34P4nJH/H2ffoaniAokM2qSmrtXHmlpvYr5AVVX8msAyW0l8NVJFDxlSK4u3Uh/f41cQheDVdnYijwQ==}
+    hasBin: true
+    dependencies:
+      glob: 10.4.5
     dev: true
 
   /ripemd160@2.0.2:
