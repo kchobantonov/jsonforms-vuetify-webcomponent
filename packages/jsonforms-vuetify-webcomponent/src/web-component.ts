@@ -23,4 +23,6 @@ const VuetifyJsonFormsElement = defineCustomElement(VuetifyJsonForms, {
   styles,
 });
 
-customElements.define('vuetify-json-forms', VuetifyJsonFormsElement);
+if (!customElements.get('vuetify-json-forms')) {
+  customElements.define('vuetify-json-forms', VuetifyJsonFormsElement);
+}
