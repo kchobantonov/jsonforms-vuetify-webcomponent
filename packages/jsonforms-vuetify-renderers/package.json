@@ -1,6 +1,6 @@
 {
   "name": "@chobantonov/jsonforms-vuetify-renderers",
-  "version": "3.5.0-beta.1",
+  "version": "3.5.1",
   "description": "Additional Vue Vuetify renderers for JSON Forms",
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
@@ -44,9 +44,9 @@
     "type-check": "vue-tsc --build --force"
   },
   "peerDependencies": {
-    "@jsonforms/core": "3.5.0-beta.1",
-    "@jsonforms/vue": "3.5.0-beta.1",
-    "@jsonforms/vue-vuetify": "3.5.0-beta.1",
+    "@jsonforms/core": "3.5.1",
+    "@jsonforms/vue": "3.5.1",
+    "@jsonforms/vue-vuetify": "3.5.1",
     "@monaco-editor/loader": "^1.4.0",
     "@vue/compiler-dom": "^3.4.21",
     "ajv": "^8.6.1",
@@ -62,9 +62,9 @@
     "vuetify": "^3.7.5"
   },
   "devDependencies": {
-    "@jsonforms/core": "3.5.0-beta.1",
-    "@jsonforms/vue": "3.5.0-beta.1",
-    "@jsonforms/vue-vuetify": "3.5.0-beta.1",
+    "@jsonforms/core": "3.5.1",
+    "@jsonforms/vue": "3.5.1",
+    "@jsonforms/vue-vuetify": "3.5.1",
     "@mdi/font": "^7.4.47",
     "@monaco-editor/loader": "^1.4.0",
     "@rushstack/eslint-patch": "^1.8.0",
