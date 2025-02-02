@@ -32,6 +32,6 @@ jobs:
         run: pnpm run build
 
       - name: Publish to npm
-        run: npx lerna publish --no-private from-git --yes --no-verify-access
+        run: npx lerna publish --no-private from-git --yes
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
