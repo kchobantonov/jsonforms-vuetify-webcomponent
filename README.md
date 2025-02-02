@@ -4,7 +4,7 @@ This is a monorepo containing the JSON Forms extended Vuetify renderers, webcomp
 
 See [jsonforms-vuetify-webcomponent.netlify.app](https://jsonforms-vuetify-webcomponent.netlify.app) for the deployed example application.
 
-The example application is based on [JSON Forms Vuetify Renderers](https://github.com/eclipsesource/jsonforms-vuetify-renderers) example project but adds more examples to demonstrate the additioanal renderers that are included in the webcomponent, like [TemplateLayout Renderer](https://jsonforms-vuetify-webcomponent.netlify.app/#/example/template-layout)
+The example application is based on [JSON Forms Vuetify Renderers](https://github.com/eclipsesource/jsonforms/tree/master/packages/vue-vuetify) example project but adds more examples to demonstrate the additioanal renderers that are included in the webcomponent, like [TemplateLayout Renderer](https://jsonforms-vuetify-webcomponent.netlify.app/#/example/template-layout)
 
 ## JSON Forms
 

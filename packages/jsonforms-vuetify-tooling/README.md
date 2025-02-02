@@ -4,7 +4,7 @@
 [![Installs](https://badgen.net/vs-marketplace/i/kchobantonov.jsonforms-vuetify-tooling)](https://marketplace.visualstudio.com/items?itemName=kchobantonov.jsonforms-vuetify-tooling)
 [![Downloads](https://badgen.net/vs-marketplace/d/kchobantonov.jsonforms-vuetify-tooling)](https://marketplace.visualstudio.com/items?itemName=kchobantonov.jsonforms-vuetify-tooling)
 
-Make it easier for developers to use [JSON Forms Vuetify Renderer Set](https://github.com/eclipsesource/jsonforms-vuetify-renderers)
+Make it easier for developers to use [JSON Forms Vuetify Renderer Set](https://github.com/eclipsesource/jsonforms/tree/master/packages/vue-vuetify)
 
 ## Usage
 
