@@ -4,7 +4,7 @@
   "author": "Krasimir Chobantonov",
   "publisher": "kchobantonov",
   "description": "VSCode extension for JSONForms tooling using Vue3 Vuetify renderer set",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "preview": true,
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
