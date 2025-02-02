@@ -110,7 +110,7 @@ Use the `vuetify-json-forms` webcomponent in your HTML page as follow.
 
       form.addEventListener('change', onChange);
     </script>
-    <script type="text/javascript" src="vuetify-json-forms.min.js"></script>
+    <script type="module" src="vuetify-json-forms.min.js"></script>
   </body>
 </html>
 ```

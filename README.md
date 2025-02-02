@@ -57,12 +57,12 @@ Open <http://localhost:8080/demo.html>
 
 ### Loading from CDN
 
-For example if we use version `3.1.0-alpha.3` of the webcomponent then using the below HTML snippet we can renders the demo form.
+For example if we use version `3.5.0-beta.1` of the webcomponent then using the below HTML snippet we can renders the demo form.
 
 ```html
 <vuetify-json-forms id="vuetify-json-forms"></vuetify-json-forms>
 
-<script>
+<script type="text/javascript">
   let demo = {
     properties: {
       firstName: {
@@ -87,8 +87,8 @@ For example if we use version `3.1.0-alpha.3` of the webcomponent then using the
 </script>
 
 <script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.1.0-alpha.3/dist/vuetify-json-forms.min.js"
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.5.0-beta.1/dist/vuetify-json-forms.min.js"
 ></script>
 ```
 
