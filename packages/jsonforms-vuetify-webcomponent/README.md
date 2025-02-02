@@ -6,7 +6,7 @@ JSON Forms eliminates the tedious task of writing fully-featured forms by hand b
 
 ## Vue 3 Vuetify Renderers WebComponent
 
-This is the JSON Forms Vue 2 Vuetify renderers WebComponent which provides a Vuetify based renderer set for [JSON Forms Vue 2](https://github.com/eclipsesource/jsonforms/blob/master/packages/vue2/vue2) implemented as WebComponent
+This is the JSON Forms Vue 3 Vuetify renderers WebComponent which provides a Vuetify based renderer set for [JSON Forms Vue Vuetify renderer set](https://github.com/eclipsesource/jsonforms/tree/master/packages/vue-vuetify) implemented as WebComponent
 
 ### Quick start
 
