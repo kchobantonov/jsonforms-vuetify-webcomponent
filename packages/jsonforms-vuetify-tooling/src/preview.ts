@@ -1,6 +1,6 @@
 import { watch } from "chokidar";
 import { existsSync } from "fs";
-import { join } from "path";
+import { join, normalize } from "path";
 import {
   MessageType,
   readFileWithPromise,
@@ -95,7 +95,7 @@ const showWebview = async (
     { enableScripts: true }
   );
 
-  const pathPrefix = schemaPath.endsWith("/schema.json") // no prefix if the file is called schema.json
+  const pathPrefix = schemaPath.endsWith(normalize("/schema.json")) // no prefix if the file is called schema.json
     ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
     : schemaPath.endsWith(".schema.json")
       ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
