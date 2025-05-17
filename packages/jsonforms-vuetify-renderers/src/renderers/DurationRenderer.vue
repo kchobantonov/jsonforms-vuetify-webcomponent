@@ -214,13 +214,13 @@ import {
   VConfirmEdit,
   VIcon,
   VMenu,
+  VNumberInput,
   VRow,
   VTextField,
 } from 'vuetify/components';
-import { VNumberInput } from 'vuetify/labs/VNumberInput';
 
-import { useIcons } from '../icons';
 import { useDisplay } from 'vuetify';
+import { useIcons } from '../icons';
 
 type DurationKeys =
   | 'years'

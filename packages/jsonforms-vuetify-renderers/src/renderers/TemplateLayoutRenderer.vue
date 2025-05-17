@@ -38,7 +38,9 @@ import {
   useJsonForms,
   useTranslator,
   useVuetifyLayout,
+  ValidationIcon,
 } from '@jsonforms/vue-vuetify';
+
 import { type ErrorObject } from 'ajv';
 import {
   defineAsyncComponent,
@@ -199,8 +201,13 @@ const controlRenderer = defineComponent({
       );
 
       return override
-        ? { ...this.defaultComponents, VMonacoEditor, ...override }
-        : { ...this.defaultComponents, VMonacoEditor };
+        ? {
+            ...this.defaultComponents,
+            VMonacoEditor,
+            ValidationIcon,
+            ...override,
+          }
+        : { ...this.defaultComponents, VMonacoEditor, ValidationIcon };
     },
   },
   methods: {

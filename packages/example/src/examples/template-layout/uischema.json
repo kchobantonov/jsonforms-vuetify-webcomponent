@@ -103,7 +103,7 @@
     },
     {
       "type": "TemplateLayout",
-      "template": "<v-card-text><v-card-title>JSON Data<v-tooltip bottom color=\"error\" v-if=\"errors && errors.length > 0\"><template v-slot:activator=\"{ props }\"><v-icon v-bind=\"props\" color=\"red\">mdi-alert-circle</v-icon></template><span>Validation Errors</span></v-tooltip><v-tooltip bottom color=\"success\" v-else><template v-slot:activator=\"{ props }\"><v-icon v-bind=\"props\" color=\"green\">mdi-check-circle</v-icon></template><span>No Validation Errors</span></v-tooltip></v-card-title><slot name=\"0\"></slot></v-card-text>",
+      "template": "<v-card-text><v-card-title><div style='display: flex; gap: 1rem;'><span>JSON Data</span><validation-icon v-if='errors' :errors='errors'></validation-icon></div></v-card-title><slot name=\"0\"></slot></v-card-text>",
       "elements": [
         {
           "type": "TemplateLayout",

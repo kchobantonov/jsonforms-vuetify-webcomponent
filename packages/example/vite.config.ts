@@ -77,6 +77,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       // support runtime compilation of Vue components
       vue: 'vue/dist/vue.esm-bundler.js',
+      'vuetify/labs/VNumberInput': 'vuetify/components/VNumberInput',
     },
   },
 });
