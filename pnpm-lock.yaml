@@ -30,14 +30,14 @@ importers:
         specifier: workspace:*
         version: link:../jsonforms-vuetify-webcomponent
       '@jsonforms/core':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: 3.6.0
+        version: 3.6.0
       '@jsonforms/vue':
-        specifier: 3.5.1
-        version: 3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: 3.6.0
+        version: 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
-        specifier: 3.5.1
-        version: 3.5.1(@jsonforms/core@3.5.1)(@jsonforms/vue@3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        specifier: 3.6.0
+        version: 3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
       '@vue/compiler-dom':
         specifier: ^3.4.21
         version: 3.5.13
@@ -172,14 +172,14 @@ importers:
   packages/jsonforms-vuetify-renderers:
     devDependencies:
       '@jsonforms/core':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: 3.6.0
+        version: 3.6.0
       '@jsonforms/vue':
-        specifier: 3.5.1
-        version: 3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: 3.6.0
+        version: 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
-        specifier: 3.5.1
-        version: 3.5.1(@jsonforms/core@3.5.1)(@jsonforms/vue@3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        specifier: 3.6.0
+        version: 3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -389,14 +389,14 @@ importers:
         specifier: ^6.5.2
         version: 6.7.2
       '@jsonforms/core':
-        specifier: 3.5.1
-        version: 3.5.1
+        specifier: 3.6.0
+        version: 3.6.0
       '@jsonforms/vue':
-        specifier: 3.5.1
-        version: 3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: 3.6.0
+        version: 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
-        specifier: 3.5.1
-        version: 3.5.1(@jsonforms/core@3.5.1)(@jsonforms/vue@3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        specifier: 3.6.0
+        version: 3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -962,14 +962,14 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@jsonforms/core@3.5.1':
-    resolution: {integrity: sha512-Jrq/UcfvKsAprLJ+9TMFa8pKsfdyv3dAw85XstSNRcjDT19LreBlhVqIvTvtgZidg8Iet3yqy5xlNnB+XyrvrQ==}
+  '@jsonforms/core@3.6.0':
+    resolution: {integrity: sha512-Qz7qJPf/yP4ybqknZ500zggIDZRJfcufu+3efp/xNWf05mpXvxN9TdfmA++BdXi5Nr4UAgjos2kFmQpZpQaCDw==}
 
-  '@jsonforms/vue-vuetify@3.5.1':
-    resolution: {integrity: sha512-jOzLkyDYHMPM72Yvos3M6qYrYnPtA/MXRozWNoaAAL4XY0UkNUgH8EWpcoonraJeRNi7ZtTH7Dw+Ob8j0yr+7Q==}
+  '@jsonforms/vue-vuetify@3.6.0':
+    resolution: {integrity: sha512-3+4FxZNPmtu4Vy9pr7IEUVkaPmr7Geaq2Vlw1Z7g4IUr7Ohl0ZHoEKYUMkdvL9pcP/b7iDFvqTSsvkRZXSnjdg==}
     peerDependencies:
-      '@jsonforms/core': 3.5.1
-      '@jsonforms/vue': 3.5.1
+      '@jsonforms/core': 3.6.0
+      '@jsonforms/vue': 3.6.0
       ajv: ^8.6.1
       dayjs: ^1.10.6
       lodash: ^4.17.21
@@ -977,10 +977,10 @@ packages:
       vue: ^3.4.21
       vuetify: ^3.6.6
 
-  '@jsonforms/vue@3.5.1':
-    resolution: {integrity: sha512-mxxZ/RrvxpIyqxRXH1K4f+Zha/JJCeycx/oKC7h2w6ZsQFqLSFJuntQ1nIwNOCIR21lYQZXIt/VkmvAemnis5g==}
+  '@jsonforms/vue@3.6.0':
+    resolution: {integrity: sha512-KW74d2RBeGau15LseCXiSTiUZ+9nQEyxDgaHggD2iQssrGCBSMWHj2+tGw+hWRZrk4IK99j4j4PRT2mLdexJqw==}
     peerDependencies:
-      '@jsonforms/core': 3.5.1
+      '@jsonforms/core': 3.6.0
       vue: ^3.2.26
 
   '@lerna/child-process@6.6.2':
@@ -7776,17 +7776,17 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@jsonforms/core@3.5.1':
+  '@jsonforms/core@3.6.0':
     dependencies:
       '@types/json-schema': 7.0.15
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
       lodash: 4.17.21
 
-  '@jsonforms/vue-vuetify@3.5.1(@jsonforms/core@3.5.1)(@jsonforms/vue@3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)':
+  '@jsonforms/vue-vuetify@3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)':
     dependencies:
-      '@jsonforms/core': 3.5.1
-      '@jsonforms/vue': 3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5))
+      '@jsonforms/core': 3.6.0
+      '@jsonforms/vue': 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
       ajv: 8.17.1
       dayjs: 1.11.13
       lodash: 4.17.21
@@ -7794,9 +7794,9 @@ snapshots:
       vue: 3.5.13(typescript@5.4.5)
       vuetify: 3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
 
-  '@jsonforms/vue@3.5.1(@jsonforms/core@3.5.1)(vue@3.5.13(typescript@5.4.5))':
+  '@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))':
     dependencies:
-      '@jsonforms/core': 3.5.1
+      '@jsonforms/core': 3.6.0
       lodash: 4.17.21
       vue: 3.5.13(typescript@5.4.5)
 

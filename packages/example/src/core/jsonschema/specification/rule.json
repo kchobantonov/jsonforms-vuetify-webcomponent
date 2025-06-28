@@ -15,7 +15,8 @@
         { "$ref": "#/definitions/leafCondition" },
         { "$ref": "#/definitions/schemaBasedCondition" },
         { "$ref": "#/definitions/orCondition" },
-        { "$ref": "#/definitions/andCondition" }
+        { "$ref": "#/definitions/andCondition" },
+        { "$ref": "#/definitions/validateFunctionCondition" }
       ]
     }
   },
@@ -89,6 +90,21 @@
             "type": { "const": "AND" }
           },
           "required": ["type"]
+        }
+      ]
+    },
+    "validateFunctionCondition": {
+      "allOf": [
+        { "$ref": "#/definitions/scopable" },
+        { "$ref": "#/definitions/condition" },
+        {
+          "properties": {
+            "validate": {
+              "type": "string",
+              "pattern": "^\\(.*\\)\\s*=>\\s*.+"
+            }
+          },
+          "required": ["validate"]
         }
       ]
     }

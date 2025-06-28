@@ -11,10 +11,10 @@ import {
   hasShowRule,
   isInherentlyEnabled,
   isVisible,
+  type BaseUISchemaElement,
   type Internationalizable,
   type JsonFormsState,
   type OwnPropsOfRenderer,
-  type UISchemaElement,
 } from '@jsonforms/core';
 import { useControl, type RendererProps } from '@jsonforms/vue';
 import { useStyles } from '@jsonforms/vue-vuetify';
@@ -25,7 +25,9 @@ import merge from 'lodash/merge';
 import { computed, inject, type Ref } from 'vue';
 import { FormContextKey, type FormContext } from '../core';
 
-export interface ButtonElement extends UISchemaElement, Internationalizable {
+export interface ButtonElement
+  extends BaseUISchemaElement,
+    Internationalizable {
   type: 'Button';
   /**
    * The label of button.

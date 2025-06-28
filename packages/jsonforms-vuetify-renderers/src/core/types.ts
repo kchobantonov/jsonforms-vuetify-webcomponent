@@ -99,9 +99,9 @@ export type ActionEvent = {
   $el: Element;
 };
 
-export interface NamedUISchemaElement extends UISchemaElement {
+export type NamedUISchemaElement = UISchemaElement & {
   name: string;
-}
+};
 
 export interface DataProvider {
   loading: boolean;

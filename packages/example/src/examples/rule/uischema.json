@@ -46,9 +46,7 @@
             "effect": "HIDE",
             "condition": {
               "scope": "#/properties/vegetables",
-              "schema": {
-                "const": false
-              }
+              "validate": "(context) => !context.data"
             }
           }
         }

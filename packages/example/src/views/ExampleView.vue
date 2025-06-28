@@ -542,19 +542,10 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
                             : undefined
                         "
                         :uischema="
-                          state.uischema
-                            ? JSON.stringify(state.uischema)
-                            : undefined
+                          uischemaModel ? uischemaModel.getValue() : undefined
                         "
                         :uischemas="
-                          state.uischemas
-                            ? JSON.stringify(
-                                state.uischemas.map((item) => ({
-                                  ...item,
-                                  tester: item.tester.toString(),
-                                })),
-                              )
-                            : undefined
+                          uischemasModel ? uischemasModel.getValue() : undefined
                         "
                         :config="
                           state.config
@@ -635,18 +626,13 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
                       state.schema ? JSON.stringify(state.schema) : undefined
                     "
                     :uischema="
-                      state.uischema
-                        ? JSON.stringify(state.uischema)
+                      uischemaModel && uischemaModel.getValue()
+                        ? uischemaModel.getValue()
                         : undefined
                     "
                     :uischemas="
-                      state.uischemas
-                        ? JSON.stringify(
-                            state.uischemas.map((item) => ({
-                              ...item,
-                              tester: item.tester.toString(),
-                            })),
-                          )
+                      uischemasModel && uischemasModel.getValue()
+                        ? uischemasModel.getValue()
                         : undefined
                     "
                     :config="
@@ -857,15 +843,14 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
         :custom-style="`.v-application__wrap { min-height: 0px; }`"
         :data="state.data ? JSON.stringify(state.data) : undefined"
         :schema="state.schema ? JSON.stringify(state.schema) : undefined"
-        :uischema="state.uischema ? JSON.stringify(state.uischema) : undefined"
+        :uischema="
+          uischemaModel && uischemaModel.getValue()
+            ? uischemaModel.getValue()
+            : undefined
+        "
         :uischemas="
-          state.uischemas
-            ? JSON.stringify(
-                state.uischemas.map((item) => ({
-                  ...item,
-                  tester: item.tester.toString(),
-                })),
-              )
+          uischemasModel && uischemasModel.getValue()
+            ? uischemasModel.getValue()
             : undefined
         "
         :config="state.config ? JSON.stringify(state.config) : undefined"

@@ -46,6 +46,7 @@ import {
   type ResolvedSchema,
   type VuetifyConfig,
 } from '../core';
+import { resolveUISchemaValidations } from '../util';
 import type Ajv from 'ajv';
 
 const props = defineProps<{
@@ -58,6 +59,11 @@ const resolvedSchema = reactive<ResolvedSchema>({
   resolved: false,
   error: undefined,
 });
+
+const configToUse = ref(props.state.config);
+const resolvedUiSchema = ref(
+  resolveUISchemaValidations(props.state.uischema, configToUse),
+);
 
 const emits = defineEmits(['change', 'handle-action']);
 
@@ -113,6 +119,22 @@ watch(
   (value) => {
     middleware.value = createMiddlewareWrapper(value ?? defaultMiddleware);
   },
+);
+
+watch(
+  () => props.state.config,
+  (config) => {
+    configToUse.value = config;
+  },
+  { deep: true },
+);
+
+watch(
+  () => props.state.uischema,
+  (uischema) => {
+    resolvedUiSchema.value = resolveUISchemaValidations(uischema, configToUse);
+  },
+  { deep: true },
 );
 
 watch(
@@ -268,6 +290,8 @@ const properties = computed(() => ({
   data: data.value,
   additionalErrors: additionalErrors.value,
 
+  uischema: resolvedUiSchema.value,
+  config: configToUse.value,
   schema: resolvedSchema.schema ?? props.state.schema,
   renderers: props.state.renderers
     ? markRaw(props.state.renderers)

@@ -2,11 +2,79 @@ import {
   type JsonFormsUISchemaRegistryEntry,
   type UISchemaElement,
   type UISchemaTester,
+  type ValidateFunctionContext,
   NOT_APPLICABLE,
 } from '@jsonforms/core';
+import type { Ref } from 'vue';
+
+export const resolveUISchemaValidations = (
+  uischema: UISchemaElement | undefined,
+  config: Ref<Record<string, any> | undefined>,
+): UISchemaElement | undefined => {
+  if (!uischema) {
+    return undefined;
+  }
+
+  const transformNode = (node: UISchemaElement): UISchemaElement => {
+    const transformed = { ...node } as UISchemaElement;
+
+    if (
+      'rule' in transformed &&
+      transformed.rule?.condition &&
+      typeof transformed.rule.condition === 'object' &&
+      'validate' in transformed.rule.condition &&
+      typeof transformed.rule.condition.validate === 'string'
+    ) {
+      const fnBody = transformed.rule.condition.validate;
+
+      const validate = (context: ValidateFunctionContext): boolean => {
+        try {
+          const enhancedContext = {
+            ...context,
+            config: config?.value,
+          };
+
+          const validateFn = new Function(
+            'context',
+            `const validateFn = ${fnBody}; return validateFn(context);`,
+          );
+
+          const result = validateFn(enhancedContext);
+
+          if (typeof result !== 'boolean') {
+            console.error(
+              `UISchema validate: expected boolean, got ${typeof result}`,
+            );
+            return false;
+          }
+
+          return result;
+        } catch (e) {
+          console.error(`UISchema validate error:`, e);
+          return false;
+        }
+      };
+
+      transformed.rule.condition.validate = validate;
+    }
+
+    if ('elements' in transformed && Array.isArray(transformed.elements)) {
+      transformed.elements = transformed.elements.map(transformNode);
+    }
+
+    return transformed;
+  };
+
+  return transformNode(uischema);
+};
 
 export const parseAndTransformUISchemaRegistryEntries = (
-  uischemaRegistryEntries?: string,
+  uischemaRegistryEntries?:
+    | string
+    | {
+        tester: string;
+        uischema: UISchemaElement;
+      }[],
 ): JsonFormsUISchemaRegistryEntry[] => {
   const uischemasMap: {
     tester: string;
@@ -14,7 +82,7 @@ export const parseAndTransformUISchemaRegistryEntries = (
   }[] =
     typeof uischemaRegistryEntries === 'string'
       ? JSON.parse(uischemaRegistryEntries)
-      : [];
+      : (uischemaRegistryEntries ?? []);
 
   return uischemasMap
     .map((elem, index) => {
