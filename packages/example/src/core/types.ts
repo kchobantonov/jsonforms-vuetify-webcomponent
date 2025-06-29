@@ -18,7 +18,7 @@ export type ExampleInputDescription = {
   schema?: JsonSchema;
   uischema?: UISchemaElement;
   uischemas?: JsonFormsUISchemaRegistryEntry[];
-  data: null | string | number | boolean | any[] | Record<string, any>;
+  data?: any;
   i18n?: Record<string, any>;
   renderers?: JsonFormsRendererRegistryEntry[];
   actions?: { label: string; apply: (props: StateProps) => any }[];

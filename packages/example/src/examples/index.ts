@@ -35,6 +35,7 @@ import { input as listWithDetailsAndReorder } from './list-with-details-and-reor
 import { input as listWithDetailsRestrict } from './list-with-details-restrict';
 import { input as login } from './login';
 import { input as main } from './main';
+import { input as mixed } from './mixed';
 import { input as monacoEditor } from './monaco-editor';
 import { input as multiEnum } from './multi-enum';
 import { input as nestedArray } from './nested-array';
@@ -101,6 +102,7 @@ export {
   listWithDetailsRestrict,
   login,
   main,
+  mixed,
   monacoEditor,
   multiEnum,
   nestedArray,
