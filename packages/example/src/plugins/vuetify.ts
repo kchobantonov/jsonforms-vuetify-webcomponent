@@ -16,6 +16,8 @@ import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
 import { aliases as appFaAliases } from '../icons/fa';
 import { aliases as appMdiAliases } from '../icons/mdi';
 import { useAppStore } from '../store';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 
 export function getCustomThemes(blueprint: string) {
   const getThemeColors = (blueprint: string) => {
@@ -173,6 +175,8 @@ function createVuetifyInstance(
   dayjs.locale(locale);
 
   return createVuetify({
+    components,
+    directives,
     blueprint: toBlueprint(blueprint),
     locale: {
       locale: locale,

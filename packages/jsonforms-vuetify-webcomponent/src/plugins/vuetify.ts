@@ -12,6 +12,9 @@ import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
 import { mdiIconAliases, faIconAliases } from '@jsonforms/vue-vuetify';
 import { useAppStore } from '@/store';
 
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+
 export function getCustomThemes(blueprint: string) {
   const getThemeColors = (blueprint: string) => {
     switch (blueprint) {
@@ -96,6 +99,8 @@ function createVuetifyInstance(
   };
 
   return createVuetify({
+    components,
+    directives,
     blueprint: toBlueprint(blueprint),
     locale: {
       locale: locale,
