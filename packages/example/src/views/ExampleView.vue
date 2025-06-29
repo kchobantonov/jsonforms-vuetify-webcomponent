@@ -53,6 +53,11 @@ import { useAppStore } from '../store';
 import { useAppTheme } from '@/plugins/vuetify';
 import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
 
+import type {
+  JsonFormsUISchemaRegistryEntry,
+  UISchemaElement,
+} from '@jsonforms/core';
+
 const vuetifyRenderers = [
   ...extendedVuetifyRenderers,
   ...extraVuetifyRenderers,
@@ -505,7 +510,7 @@ const uischemaString = computed<string | undefined>(() => {
         'validate' in transformed.rule.condition &&
         typeof transformed.rule.condition.validate === 'function'
       ) {
-        transformed.rule.condition.validate =
+        (transformed.rule.condition.validate as unknown) =
           transformed.rule.condition.validate.toString();
       }
 
@@ -523,7 +528,12 @@ const uischemaString = computed<string | undefined>(() => {
 });
 
 const uischemasString = computed<string | undefined>(() => {
-  let uischemas = state.uischemas;
+  let uischemas:
+    | (
+        | JsonFormsUISchemaRegistryEntry
+        | { tester: string; uischema: UISchemaElement }
+      )[]
+    | undefined = state.uischemas;
   if (uischemas) {
     uischemas = uischemas.map((item) => ({
       ...item,
