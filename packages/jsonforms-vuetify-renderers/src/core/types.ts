@@ -33,11 +33,11 @@ export interface JsonFormsProps {
   schema?: JsonSchema;
   schemaUrl?: string;
   uischema?: UISchemaElement;
-  renderers: MaybeReadonly<JsonFormsRendererRegistryEntry[]>;
-  cells?: MaybeReadonly<JsonFormsCellRendererRegistryEntry[]>;
+  renderers: JsonFormsRendererRegistryEntry[];
+  cells?: JsonFormsCellRendererRegistryEntry[];
   config?: any;
   readonly?: boolean;
-  uischemas?: MaybeReadonly<JsonFormsUISchemaRegistryEntry[]>;
+  uischemas?: JsonFormsUISchemaRegistryEntry[];
   validationMode?: ValidationMode;
   ajv?: Ajv;
   i18n?: JsonFormsI18nState & { translations?: Record<string, any> };

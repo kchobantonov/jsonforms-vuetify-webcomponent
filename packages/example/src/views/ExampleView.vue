@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ExampleDescription } from '@/core/types';
+import type { ExampleDescription, ExampleInputDescription } from '@/core/types';
 import {
   createTranslator,
   FormContextKey,
@@ -454,6 +454,17 @@ watch(
   },
 );
 
+type Action = NonNullable<ExampleInputDescription['actions']>[number];
+
+const handleAction = (action: Action) => {
+  if (action) {
+    const newState = action.apply(state);
+    if (newState) {
+      Object.assign(state, newState);
+    }
+  }
+};
+
 const DefaultsSymbol: InjectionKey<Ref<DefaultsInstance>> =
   Symbol.for('vuetify:defaults');
 
@@ -480,6 +491,48 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
   rtl: appStore.rtl,
   defaults: {},
 }));
+
+const uischemaString = computed<string | undefined>(() => {
+  let uischema = state.uischema;
+  if (uischema) {
+    const transformNode = (node: UISchemaElement): UISchemaElement => {
+      const transformed = { ...node } as UISchemaElement;
+
+      if (
+        'rule' in transformed &&
+        transformed.rule?.condition &&
+        typeof transformed.rule.condition === 'object' &&
+        'validate' in transformed.rule.condition &&
+        typeof transformed.rule.condition.validate === 'function'
+      ) {
+        transformed.rule.condition.validate =
+          transformed.rule.condition.validate.toString();
+      }
+
+      if ('elements' in transformed && Array.isArray(transformed.elements)) {
+        transformed.elements = transformed.elements.map(transformNode);
+      }
+
+      return transformed;
+    };
+
+    uischema = transformNode(uischema);
+  }
+
+  return uischema ? JSON.stringify(uischema) : undefined;
+});
+
+const uischemasString = computed<string | undefined>(() => {
+  let uischemas = state.uischemas;
+  if (uischemas) {
+    uischemas = uischemas.map((item) => ({
+      ...item,
+      tester: item.tester.toString(),
+    }));
+  }
+
+  return uischemas ? JSON.stringify(uischemas) : undefined;
+});
 </script>
 
 <template>
@@ -512,6 +565,15 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
               <v-card-title>
                 <v-toolbar flat>
                   <v-toolbar-title>JSONForm</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-toolbar-items v-if="example.input.actions">
+                    <v-btn
+                      v-for="(action, index) in example.input.actions"
+                      :key="index"
+                      @click="() => handleAction(action)"
+                      >{{ action.label }}</v-btn
+                    >
+                  </v-toolbar-items>
                 </v-toolbar>
               </v-card-title>
               <v-divider class="mx-4"></v-divider>
@@ -541,12 +603,8 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
                             ? JSON.stringify(state.schema)
                             : undefined
                         "
-                        :uischema="
-                          uischemaModel ? uischemaModel.getValue() : undefined
-                        "
-                        :uischemas="
-                          uischemasModel ? uischemasModel.getValue() : undefined
-                        "
+                        :uischema="uischemaString"
+                        :uischemas="uischemasString"
                         :config="
                           state.config
                             ? JSON.stringify(state.config)
@@ -625,16 +683,8 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
                     :schema="
                       state.schema ? JSON.stringify(state.schema) : undefined
                     "
-                    :uischema="
-                      uischemaModel && uischemaModel.getValue()
-                        ? uischemaModel.getValue()
-                        : undefined
-                    "
-                    :uischemas="
-                      uischemasModel && uischemasModel.getValue()
-                        ? uischemasModel.getValue()
-                        : undefined
-                    "
+                    :uischema="uischemaString"
+                    :uischemas="uischemasString"
                     :config="
                       state.config ? JSON.stringify(state.config) : undefined
                     "
@@ -843,16 +893,8 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
         :custom-style="`.v-application__wrap { min-height: 0px; }`"
         :data="state.data ? JSON.stringify(state.data) : undefined"
         :schema="state.schema ? JSON.stringify(state.schema) : undefined"
-        :uischema="
-          uischemaModel && uischemaModel.getValue()
-            ? uischemaModel.getValue()
-            : undefined
-        "
-        :uischemas="
-          uischemasModel && uischemasModel.getValue()
-            ? uischemasModel.getValue()
-            : undefined
-        "
+        :uischema="uischemaString"
+        :uischemas="uischemasString"
         :config="state.config ? JSON.stringify(state.config) : undefined"
         :validationMode="state.validationMode"
         :readonly="state.readonly"

@@ -32,6 +32,9 @@ importers:
       '@jsonforms/core':
         specifier: 3.6.0
         version: 3.6.0
+      '@jsonforms/examples':
+        specifier: 3.6.0
+        version: 3.6.0(@jsonforms/core@3.6.0)(ajv@8.17.1)
       '@jsonforms/vue':
         specifier: 3.6.0
         version: 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
@@ -964,6 +967,11 @@ packages:
 
   '@jsonforms/core@3.6.0':
     resolution: {integrity: sha512-Qz7qJPf/yP4ybqknZ500zggIDZRJfcufu+3efp/xNWf05mpXvxN9TdfmA++BdXi5Nr4UAgjos2kFmQpZpQaCDw==}
+
+  '@jsonforms/examples@3.6.0':
+    resolution: {integrity: sha512-CgXeUZ3OmnnoMUrRffT9krlkXKgious342+gaTf/aWiclLev65qqzs7C9r5I6ItzQow2PB9uQywwvL41821H9Q==}
+    peerDependencies:
+      '@jsonforms/core': 3.6.0
 
   '@jsonforms/vue-vuetify@3.6.0':
     resolution: {integrity: sha512-3+4FxZNPmtu4Vy9pr7IEUVkaPmr7Geaq2Vlw1Z7g4IUr7Ohl0ZHoEKYUMkdvL9pcP/b7iDFvqTSsvkRZXSnjdg==}
@@ -7782,6 +7790,14 @@ snapshots:
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
       lodash: 4.17.21
+
+  '@jsonforms/examples@3.6.0(@jsonforms/core@3.6.0)(ajv@8.17.1)':
+    dependencies:
+      '@jsonforms/core': 3.6.0
+      ajv-i18n: 4.2.0(ajv@8.17.1)
+      lodash: 4.17.21
+    transitivePeerDependencies:
+      - ajv
 
   '@jsonforms/vue-vuetify@3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)':
     dependencies:

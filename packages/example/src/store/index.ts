@@ -1,13 +1,30 @@
 import { getExamples } from '@/examples';
+import { getExamples as getJsonFormsExamples } from '@jsonforms/examples';
 import type { ValidationMode } from '@jsonforms/core';
 import { useLocalStorage } from '@vueuse/core';
 import { markRaw, reactive, ref, watch } from 'vue';
+import type { ExampleDescription } from '@/core/types';
 
 export const appstoreLayouts = ['', 'demo-and-data'] as const;
 export type AppstoreLayouts = (typeof appstoreLayouts)[number];
 
+const examples = getExamples();
+const jsonFormExamples: ExampleDescription[] = getJsonFormsExamples()
+  .map((example) => ({
+    name: 'jsonforms-' + example.name,
+    label: 'JsonForms - ' + example.label,
+    input: {
+      schema: example.schema,
+      uischema: example.uischema,
+      uischemas: example.uischemas,
+      actions: example.actions,
+      data: example.data,
+    },
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));
+
 const appstore = reactive({
-  examples: markRaw(getExamples()),
+  examples: markRaw([...examples, ...jsonFormExamples]),
   exampleName: useHistoryHash(''),
   rtl: false,
   layout: useLocalStorage('vuetify-example-layout', ''),

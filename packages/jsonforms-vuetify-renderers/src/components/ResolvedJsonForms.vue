@@ -313,7 +313,11 @@ const registerCurrentSchema = (schema: JsonSchema | undefined, ajv: Ajv) => {
     let id = (schema as any)[schemaId];
     if (id) {
       id = normalizeId(id);
-      if (id && !id.startsWith('#')) {
+      if (
+        id &&
+        !id.startsWith('#') &&
+        'http://json-schema.org/draft-07/schema' !== id
+      ) {
         if (ajv.getSchema(id)) {
           // schema exists and we are going to add it again so clear it before it throws schema already exists
           ajv.removeSchema(id);

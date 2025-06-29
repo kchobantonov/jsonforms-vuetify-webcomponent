@@ -1,9 +1,10 @@
 import type { ActionEvent } from '@chobantonov/jsonforms-vuetify-renderers';
 import type {
-  UISchemaElement,
-  JsonSchema,
+  JsonFormsCellRendererRegistryEntry,
   JsonFormsRendererRegistryEntry,
   JsonFormsUISchemaRegistryEntry,
+  JsonSchema,
+  UISchemaElement,
 } from '@jsonforms/core';
 
 export type ExampleDescription = {
@@ -20,5 +21,17 @@ export type ExampleInputDescription = {
   data: null | string | number | boolean | any[] | Record<string, any>;
   i18n?: Record<string, any>;
   renderers?: JsonFormsRendererRegistryEntry[];
+  actions?: { label: string; apply: (props: StateProps) => any }[];
   onHandleAction?: (event: ActionEvent) => void;
 };
+
+export interface StateProps {
+  data: any;
+  schema?: JsonSchema;
+  uischema?: UISchemaElement;
+  renderers: JsonFormsRendererRegistryEntry[];
+  cells?: JsonFormsCellRendererRegistryEntry[];
+  config?: any;
+  uischemas?: JsonFormsUISchemaRegistryEntry[];
+  readonly?: boolean;
+}
