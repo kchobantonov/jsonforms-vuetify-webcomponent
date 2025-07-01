@@ -23,6 +23,7 @@ export type ExampleInputDescription = {
   renderers?: JsonFormsRendererRegistryEntry[];
   actions?: { label: string; apply: (props: StateProps) => any }[];
   onHandleAction?: (event: ActionEvent) => void;
+  config?: Record<string, any>;
 };
 
 export interface StateProps {

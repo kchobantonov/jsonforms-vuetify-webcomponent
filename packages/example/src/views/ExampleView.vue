@@ -93,6 +93,7 @@ const uischemasModel = shallowRef<monaco.editor.ITextModel | undefined>(
 );
 const dataModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 const i18nModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
+const configModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 
 provide(TemplateComponentsKey, { MonacoEditor });
 provide(
@@ -112,7 +113,7 @@ const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
     uischema: example.input.uischema,
     renderers: renderers,
     cells: undefined, // not defined
-    config: appStore.jsonforms.config,
+    config: { ...appStore.jsonforms.config, ...(example.input.config ?? {}) },
     readonly: appStore.jsonforms.readonly,
     uischemas: example.input.uischemas,
     validationMode: appStore.jsonforms.validationMode,
@@ -322,6 +323,31 @@ const saveMonacoI18N = () => {
   );
 };
 
+const reloadMonacoConfig = () => {
+  const example = find(
+    appStore.examples,
+    (example) => example.name === appStore.exampleName,
+  );
+
+  if (example) {
+    configModel.value = getMonacoModelForUri(
+      monaco.Uri.parse(toConfigUri(example.name)),
+      example.input.config ? JSON.stringify(example.input.config, null, 2) : '',
+    );
+    toast('Original example config loaded. Apply it to take effect.');
+  }
+};
+
+const saveMonacoConfig = () => {
+  saveMonacoModel(
+    configModel,
+    (modelValue) => {
+      state.config = modelValue ? JSON.parse(modelValue) : {};
+    },
+    'New config applied',
+  );
+};
+
 const saveMonacoModel = (
   model: ShallowRef<monaco.editor.ITextModel | undefined>,
   apply: (value: string) => void,
@@ -397,6 +423,11 @@ const updateMonacoModels = (example: ExampleDescription) => {
     monaco.Uri.parse(toI18NUri(example.name)),
     example.input.i18n ? JSON.stringify(example.input.i18n, null, 2) : '',
   );
+
+  configModel.value = getMonacoModelForUri(
+    monaco.Uri.parse(toConfigUri(example.name)),
+    example.input.config ? JSON.stringify(example.input.config, null, 2) : '',
+  );
 };
 
 const toSchemaUri = (id: string): string => {
@@ -413,6 +444,9 @@ const toDataUri = (id: string): string => {
 };
 const toI18NUri = (id: string): string => {
   return `${id}.i18n.json`;
+};
+const toConfigUri = (id: string): string => {
+  return `${id}.config.json`;
 };
 const toast = (message: string): void => {
   snackbar.value = true;
@@ -564,7 +598,8 @@ const uischemasString = computed<string | undefined>(() => {
             <v-tab :key="2">UI Schema</v-tab>
             <v-tab :key="3">UI Schemas</v-tab>
             <v-tab :key="4">Internationalization</v-tab>
-            <v-tab v-if="appStore.layout !== 'demo-and-data'" :key="5"
+            <v-tab :key="5">Config</v-tab>
+            <v-tab v-if="appStore.layout !== 'demo-and-data'" :key="6"
               >Data</v-tab
             >
           </v-tabs>
@@ -842,7 +877,7 @@ const uischemasString = computed<string | undefined>(() => {
                         <v-icon>$save</v-icon>
                       </v-btn>
                     </template>
-                    {{ `Apply Change To Example Data` }}
+                    {{ `Apply Change To Example Internationalization` }}
                   </v-tooltip>
                 </v-toolbar>
               </v-card-title>
@@ -856,6 +891,39 @@ const uischemasString = computed<string | undefined>(() => {
             </v-card>
           </v-window-item>
           <v-window-item :key="5">
+            <v-card>
+              <v-card-title>
+                <v-toolbar flat>
+                  <v-toolbar-title>Config</v-toolbar-title>
+                  <v-spacer></v-spacer>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ props }">
+                      <v-btn icon @click="reloadMonacoConfig" v-bind="props">
+                        <v-icon>$reload</v-icon>
+                      </v-btn>
+                    </template>
+                    {{ `Reload Example Config` }}
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ props }">
+                      <v-btn icon @click="saveMonacoConfig" v-bind="props">
+                        <v-icon>$save</v-icon>
+                      </v-btn>
+                    </template>
+                    {{ `Apply Change To Example Config` }}
+                  </v-tooltip>
+                </v-toolbar>
+              </v-card-title>
+              <v-divider class="mx-4"></v-divider>
+              <monaco-editor
+                language="json"
+                v-model="configModel"
+                style="height: calc(100vh - 100px)"
+                :editorBeforeMount="registerValidations"
+              ></monaco-editor>
+            </v-card>
+          </v-window-item>
+          <v-window-item :key="6">
             <v-card>
               <v-card-title>
                 <v-toolbar flat>
