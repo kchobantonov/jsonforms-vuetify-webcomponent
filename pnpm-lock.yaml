@@ -204,6 +204,9 @@ importers:
       '@types/node':
         specifier: ^20.12.5
         version: 20.17.47
+      '@types/splitpanes':
+        specifier: ^2.2.6
+        version: 2.2.6
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
         version: 5.2.4(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))
@@ -285,6 +288,9 @@ importers:
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.5.3)
+      splitpanes:
+        specifier: ^3.2.0
+        version: 3.2.0(vue@3.5.13(typescript@5.4.5))
       typedoc:
         specifier: ~0.25.3
         version: 0.25.13(typescript@5.4.5)

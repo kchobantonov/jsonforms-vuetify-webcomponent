@@ -9,6 +9,7 @@ import { default as SlotRenderer } from './SlotRenderer.vue';
 import { default as TemplateLabelRenderer } from './TemplateLabelRenderer.vue';
 import { default as TemplateLayoutRenderer } from './TemplateLayoutRenderer.vue';
 import { default as TemplateRenderer } from './TemplateRenderer.vue';
+import { default as SplitLayoutRenderer } from './SplitLayoutRenderer.vue';
 
 import { entry as buttonRendererEntry } from './ButtonRenderer.entry';
 import { entry as dataProviderRendererEntry } from './DataProviderRenderer.entry';
@@ -21,6 +22,7 @@ import { entry as slotRendererEntry } from './SlotRenderer.entry';
 import { entry as templateLabelRendererEntry } from './TemplateLabelRenderer.entry';
 import { entry as templateLayoutRendererEntry } from './TemplateLayoutRenderer.entry';
 import { entry as templateRendererEntry } from './TemplateRenderer.entry';
+import { entry as splitLayoutRendererEntry } from './SplitLayoutRenderer.entry';
 
 export const extraVuetifyRenderers = [
   buttonRendererEntry,
@@ -34,6 +36,7 @@ export const extraVuetifyRenderers = [
   templateLabelRendererEntry,
   templateLayoutRendererEntry,
   templateRendererEntry,
+  splitLayoutRendererEntry,
 ];
 
 export {
@@ -48,4 +51,5 @@ export {
   TemplateLabelRenderer,
   TemplateLayoutRenderer,
   TemplateRenderer,
+  SplitLayoutRenderer,
 };

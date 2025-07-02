@@ -1,0 +1,45 @@
+{
+  "type": "SplitLayout",
+  "elements": [
+    {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "label": "Name",
+          "scope": "#/properties/name"
+        },
+        {
+          "type": "Control",
+          "label": "Birth Date",
+          "scope": "#/properties/birthDate"
+        }
+      ]
+    },
+    {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/nationality"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/occupation"
+        }
+      ]
+    }
+  ],
+  "options": {
+    "vertical": true,
+    "vuetify": {
+      "splitpanes": {},
+      "pane[0]": {
+        "min-size": 20
+      },
+      "pane[1]": {
+        "min-size": 20
+      }
+    }
+  }
+}

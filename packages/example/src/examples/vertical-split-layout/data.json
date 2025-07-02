@@ -1,0 +1,8 @@
+{
+  "name": "John Atanasoff",
+  "vegetarian": false,
+  "birthDate": "1903-10-04",
+  "postalCode": "12345",
+  "nationality": "US",
+  "occupation": "inventor"
+}

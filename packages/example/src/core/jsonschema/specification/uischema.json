@@ -33,6 +33,9 @@
     },
     {
       "$ref": "#/definitions/button"
+    },
+    {
+      "$ref": "#/definitions/splitlayout"
     }
   ],
   "definitions": {
@@ -73,6 +76,9 @@
           },
           {
             "$ref": "#/definitions/button"
+          },
+          {
+            "$ref": "#/definitions/splitlayout"
           }
         ]
       }
@@ -501,6 +507,41 @@
           "type": "Button should have a string property \"type\""
         },
         "additionalProperties": "Button should not have properties other than type, label, action, script, icon, color, params, i18n, options and rule"
+      }
+    },
+    "aplitlayout": {
+      "type": "object",
+      "$id": "#splitlayout",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "SplitLayout",
+          "default": "SplitLayout"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "elements"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "elements": "Layout should have an array property \"elements\"",
+          "type": "Layout should have a string property \"type\""
+        },
+        "additionalProperties": "Layout should not have properties other than type, elements, options and rule"
       }
     },
     "rule": {

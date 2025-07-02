@@ -61,6 +61,7 @@ import { input as templateLayout } from './template-layout';
 import { input as templateSlot } from './template-slot';
 import { input as time } from './time';
 import { input as verticalLayout } from './vertical-layout';
+import { input as verticalSplitLayout } from './vertical-split-layout';
 
 export * from './register';
 
@@ -128,4 +129,5 @@ export {
   templateSlot,
   time,
   verticalLayout,
+  verticalSplitLayout,
 };

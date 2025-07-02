@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Please enter your name"
+    },
+    "vegetarian": {
+      "type": "boolean"
+    },
+    "birthDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "nationality": {
+      "type": "string",
+      "enum": ["BG", "DE", "IT", "JP", "US", "RU", "Other"]
+    },
+    "occupation": {
+      "type": "string"
+    },
+    "postalCode": {
+      "type": "string",
+      "maxLength": 5
+    }
+  },
+  "required": ["occupation", "nationality"]
+}
