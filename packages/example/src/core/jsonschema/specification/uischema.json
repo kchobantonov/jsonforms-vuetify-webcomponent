@@ -509,7 +509,7 @@
         "additionalProperties": "Button should not have properties other than type, label, action, script, icon, color, params, i18n, options and rule"
       }
     },
-    "aplitlayout": {
+    "splitlayout": {
       "type": "object",
       "$id": "#splitlayout",
       "properties": {
