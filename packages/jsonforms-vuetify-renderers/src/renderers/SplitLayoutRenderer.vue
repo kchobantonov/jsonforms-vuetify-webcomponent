@@ -11,7 +11,7 @@
       :key="`${layout.path}-${(layout.uischema as Layout).elements.length}-${index}`"
       v-bind="vuetifyProps(`pane[${index}]`)"
     >
-      <v-sheet>
+      <v-sheet v-bind="vuetifyProps(`v-sheet[${index}]`)">
         <dispatch-renderer
           :schema="layout.schema"
           :uischema="element"
