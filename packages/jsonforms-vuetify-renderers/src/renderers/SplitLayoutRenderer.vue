@@ -1,6 +1,6 @@
 <template>
   <splitpanes
-    :horizontal="!appliedOptions.vertical"
+    :horizontal="!appliedOptions.horizontal"
     :rtl="rtl.isRtl.value"
     :class="['default-theme', 'splitpanes-vuetify']"
     v-if="layout.visible && (layout.uischema as Layout).elements.length > 0"

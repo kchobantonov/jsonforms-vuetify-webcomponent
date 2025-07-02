@@ -26,6 +26,7 @@ import { input as errorMessage } from './error-message';
 import { input as file } from './file';
 import { input as groupLayout } from './group-layout';
 import { input as horizontalLayout } from './horizontal-layout';
+import { input as horizontalSplitLayout } from './horizontal-split-layout';
 import { input as huge } from './huge';
 import { input as ifThenElse } from './if-then-else';
 import { input as integerType } from './integer-type';
@@ -61,7 +62,6 @@ import { input as templateLayout } from './template-layout';
 import { input as templateSlot } from './template-slot';
 import { input as time } from './time';
 import { input as verticalLayout } from './vertical-layout';
-import { input as verticalSplitLayout } from './vertical-split-layout';
 
 export * from './register';
 
@@ -94,6 +94,7 @@ export {
   file,
   groupLayout,
   horizontalLayout,
+  horizontalSplitLayout,
   huge,
   ifThenElse,
   integerType,
@@ -129,5 +130,4 @@ export {
   templateSlot,
   time,
   verticalLayout,
-  verticalSplitLayout,
 };

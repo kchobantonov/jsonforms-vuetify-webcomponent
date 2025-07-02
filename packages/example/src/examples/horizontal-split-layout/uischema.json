@@ -31,15 +31,10 @@
     }
   ],
   "options": {
-    "vertical": true,
+    "horizontal": true,
     "vuetify": {
       "splitpanes": {},
-      "pane[0]": {
-        "min-size": 20
-      },
-      "pane[1]": {
-        "min-size": 20
-      }
+      "pane": [{ "min-size": 20 }, { "min-size": 20 }]
     }
   }
 }

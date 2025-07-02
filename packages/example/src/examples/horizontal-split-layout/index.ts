@@ -8,8 +8,8 @@ export const input: ExampleInputDescription = { schema, uischema, data };
 
 registerExamples([
   {
-    name: 'vertical-split-layout',
-    label: 'Vertical Split Layout',
+    name: 'horizontal-split-layout',
+    label: 'Horizontal Split Layout',
     input,
   },
 ]);
