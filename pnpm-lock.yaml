@@ -173,13 +173,6 @@ importers:
         version: 2.2.10(typescript@5.4.5)
 
   packages/jsonforms-vuetify-renderers:
-    dependencies:
-      ag-grid-community:
-        specifier: ^34.0.0
-        version: 34.0.0
-      ag-grid-vue3:
-        specifier: ^34.0.0
-        version: 34.0.0(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@jsonforms/core':
         specifier: 3.6.0
@@ -238,6 +231,12 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.5.1
         version: 0.5.1
+      ag-grid-community:
+        specifier: ^34.0.0
+        version: 34.0.0
+      ag-grid-vue3:
+        specifier: ^34.0.0
+        version: 34.0.0(vue@3.5.13(typescript@5.4.5))
       ajv:
         specifier: ^8.6.1
         version: 8.17.1
