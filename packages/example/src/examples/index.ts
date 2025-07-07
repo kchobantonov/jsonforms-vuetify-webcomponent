@@ -1,4 +1,5 @@
 import { input as additionalProperties } from './additionalProperties';
+import { input as agGrid } from './ag-grid';
 import { input as allOf } from './allOf';
 import { input as allOfWithProps } from './allOf-with-props';
 import { input as anyOf } from './anyOf';
@@ -67,6 +68,7 @@ export * from './register';
 
 export {
   additionalProperties,
+  agGrid,
   allOf,
   allOfWithProps,
   anyOf,

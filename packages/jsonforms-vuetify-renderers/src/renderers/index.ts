@@ -10,6 +10,7 @@ import { default as TemplateLabelRenderer } from './TemplateLabelRenderer.vue';
 import { default as TemplateLayoutRenderer } from './TemplateLayoutRenderer.vue';
 import { default as TemplateRenderer } from './TemplateRenderer.vue';
 import { default as SplitLayoutRenderer } from './SplitLayoutRenderer.vue';
+import { default as AgGridArrayControlRenderer } from './AgGridArrayControlRenderer.vue';
 
 import { entry as buttonRendererEntry } from './ButtonRenderer.entry';
 import { entry as dataProviderRendererEntry } from './DataProviderRenderer.entry';
@@ -23,6 +24,7 @@ import { entry as templateLabelRendererEntry } from './TemplateLabelRenderer.ent
 import { entry as templateLayoutRendererEntry } from './TemplateLayoutRenderer.entry';
 import { entry as templateRendererEntry } from './TemplateRenderer.entry';
 import { entry as splitLayoutRendererEntry } from './SplitLayoutRenderer.entry';
+import { entry as agGridArrayControlRendererEntry } from './AgGridArrayControlRenderer.entry';
 
 export const extraVuetifyRenderers = [
   buttonRendererEntry,
@@ -37,6 +39,7 @@ export const extraVuetifyRenderers = [
   templateLayoutRendererEntry,
   templateRendererEntry,
   splitLayoutRendererEntry,
+  agGridArrayControlRendererEntry,
 ];
 
 export {
@@ -52,4 +55,5 @@ export {
   TemplateLayoutRenderer,
   TemplateRenderer,
   SplitLayoutRenderer,
+  AgGridArrayControlRenderer,
 };

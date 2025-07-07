@@ -1,0 +1,19 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "scope": "#/properties/comments",
+      "options": {
+        "variant": "ag-grid",
+        "agGridOptions": {
+          "columnDefs": [
+            { "field": "date", "rowDrag": true },
+            { "field": "message", "flex": 1 },
+            { "field": "enum", "resizable": false }
+          ]
+        }
+      }
+    }
+  ]
+}

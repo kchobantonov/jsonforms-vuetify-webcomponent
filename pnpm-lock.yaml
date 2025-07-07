@@ -173,6 +173,13 @@ importers:
         version: 2.2.10(typescript@5.4.5)
 
   packages/jsonforms-vuetify-renderers:
+    dependencies:
+      ag-grid-community:
+        specifier: ^34.0.0
+        version: 34.0.0
+      ag-grid-vue3:
+        specifier: ^34.0.0
+        version: 34.0.0(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@jsonforms/core':
         specifier: 3.6.0
@@ -2069,6 +2076,17 @@ packages:
 
   add-stream@1.0.0:
     resolution: {integrity: sha512-qQLMr+8o0WC4FZGQTcJiKBVC59JylcPSrTtk6usvmIDFUOCKegapy1VHQwRbFMOFyb/inzUVqHs+eMYKDM1YeQ==}
+
+  ag-charts-types@12.0.0:
+    resolution: {integrity: sha512-/SFzPVLnCzRDsEV6Lh/dqdbdgSowK23jBogYAWLZnQuHjM3o7wbV78yv4WXlQSb5TcubNk3GEdhRLgIMR17WIg==}
+
+  ag-grid-community@34.0.0:
+    resolution: {integrity: sha512-mSHETYazOYHxYpA4p4fea/iJhM7SW0t12gaSaoS4wOLUEwo0vI+Lgq3F9ZSAyErcXpj9MLCSmRqQrpzBn3epHQ==}
+
+  ag-grid-vue3@34.0.0:
+    resolution: {integrity: sha512-nN7KAfuTX196/WZck2Yn7G+tMk4vkqmuC/YSpGyZZEmHG/mvCSFanhm+sDYueiuYVLTGKv5q8EI9/iHK7bwgtA==}
+    peerDependencies:
+      vue: ^3.5.0
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -9217,6 +9235,17 @@ snapshots:
   acorn@8.14.1: {}
 
   add-stream@1.0.0: {}
+
+  ag-charts-types@12.0.0: {}
+
+  ag-grid-community@34.0.0:
+    dependencies:
+      ag-charts-types: 12.0.0
+
+  ag-grid-vue3@34.0.0(vue@3.5.13(typescript@5.4.5)):
+    dependencies:
+      ag-grid-community: 34.0.0
+      vue: 3.5.13(typescript@5.4.5)
 
   agent-base@6.0.2:
     dependencies:
