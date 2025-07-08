@@ -78,24 +78,33 @@
     </v-card-title>
 
     <v-card-text v-bind="vuetifyProps('v-card-text')">
-      <ag-grid-vue
-        :data-ag-theme-mode="dark ? 'dark' : 'light'"
-        :rowData="control.data"
-        v-bind="gridOptions"
-        :components="components"
-        :theme="agTheme"
-        :enableRtl="rtl.isRtl.value"
-        :rowSelection="rowSelection"
-        @grid-ready="onGridReady"
-        @selection-changed="onSelectionChanged"
-        @filter-changed="onFilterChanged"
-        @sort-changed="onSortChanged"
-        @row-drag-end="onRowDragEnd"
-        :style="{
-          width: appliedOptions.gridWidth || '100%',
-          height: appliedOptions.gridHeight || '400px',
-        }"
-      />
+      <Suspense>
+        <template #default>
+          <ag-grid-vue
+            :data-ag-theme-mode="dark ? 'dark' : 'light'"
+            :rowData="control.data"
+            v-bind="gridOptions"
+            :components="components"
+            :theme="agTheme"
+            :enableRtl="rtl.isRtl.value"
+            :rowSelection="rowSelection"
+            @grid-ready="onGridReady"
+            @selection-changed="onSelectionChanged"
+            @filter-changed="onFilterChanged"
+            @sort-changed="onSortChanged"
+            @row-drag-end="onRowDragEnd"
+            :style="{
+              width: appliedOptions.gridWidth || '100%',
+              height: appliedOptions.gridHeight || '400px',
+            }"
+          />
+        </template>
+        <template #fallback>
+          <div class="d-flex align-center justify-center" style="height: 400px">
+            <v-progress-circular indeterminate color="primary" size="48" />
+          </div>
+        </template>
+      </Suspense>
     </v-card-text>
   </v-card>
 </template>
@@ -127,29 +136,12 @@ import type {
   RowSelectionOptions,
   SelectionChangedEvent,
   SortChangedEvent,
+  Theme,
 } from 'ag-grid-community';
-import {
-  ClientSideRowModelModule,
-  colorSchemeVariable,
-  ColumnApiModule,
-  DateEditorModule,
-  DateFilterModule,
-  ModuleRegistry,
-  NumberEditorModule,
-  NumberFilterModule,
-  RowAutoHeightModule,
-  RowDragModule,
-  RowSelectionModule,
-  TextEditorModule,
-  TextFilterModule,
-  themeQuartz,
-  ValidationModule,
-} from 'ag-grid-community';
-
-import { AgGridVue } from 'ag-grid-vue3';
 import startCase from 'lodash/startCase';
 import {
   computed,
+  defineAsyncComponent,
   defineComponent,
   h,
   nextTick,
@@ -165,26 +157,57 @@ import {
   VCardText,
   VCardTitle,
   VIcon,
+  VProgressCircular,
   VSpacer,
   VToolbar,
   VToolbarTitle,
   VTooltip,
 } from 'vuetify/components';
 
-ModuleRegistry.registerModules([
-  ClientSideRowModelModule,
-  ColumnApiModule,
-  DateEditorModule,
-  DateFilterModule,
-  NumberEditorModule,
-  NumberFilterModule,
-  RowAutoHeightModule,
-  RowDragModule,
-  RowSelectionModule,
-  TextEditorModule,
-  TextFilterModule,
-  ValidationModule,
-]);
+const agTheme = ref<Theme | undefined>(undefined);
+
+const AgGridVue = defineAsyncComponent(() =>
+  Promise.all([import('ag-grid-vue3'), import('ag-grid-community')]).then(
+    ([vueModule, gridModule]) => {
+      const {
+        ClientSideRowModelModule,
+        ColumnApiModule,
+        DateEditorModule,
+        DateFilterModule,
+        NumberEditorModule,
+        NumberFilterModule,
+        RowAutoHeightModule,
+        RowDragModule,
+        RowSelectionModule,
+        TextEditorModule,
+        TextFilterModule,
+        ValidationModule,
+        ModuleRegistry,
+        themeQuartz,
+        colorSchemeVariable,
+      } = gridModule;
+
+      ModuleRegistry.registerModules([
+        ClientSideRowModelModule,
+        ColumnApiModule,
+        DateEditorModule,
+        DateFilterModule,
+        NumberEditorModule,
+        NumberFilterModule,
+        RowAutoHeightModule,
+        RowDragModule,
+        RowSelectionModule,
+        TextEditorModule,
+        TextFilterModule,
+        ValidationModule,
+      ]);
+
+      agTheme.value = themeQuartz.withPart(colorSchemeVariable);
+
+      return vueModule.AgGridVue;
+    },
+  ),
+);
 
 function isColDef(col: ColDef | ColGroupDef): col is ColDef {
   return !('children' in col);
@@ -244,6 +267,7 @@ const AgGridArrayControlRenderer = defineComponent({
     VCardText,
     VCardTitle,
     VIcon,
+    VProgressCircular,
     VSpacer,
     VToolbar,
     VToolbarTitle,
@@ -270,10 +294,6 @@ const AgGridArrayControlRenderer = defineComponent({
         dark.value = isDark;
       },
     );
-
-    const agTheme = computed(() => {
-      return themeQuartz.withPart(colorSchemeVariable);
-    });
 
     const suppressRowDrag = ref(!input.control.value.enabled);
 
