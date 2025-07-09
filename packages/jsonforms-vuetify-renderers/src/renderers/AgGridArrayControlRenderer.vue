@@ -114,6 +114,7 @@ import { useIcons } from '@/icons';
 import {
   composePaths,
   createDefaultValue,
+  mapStateToArrayControlProps,
   type ControlElement,
 } from '@jsonforms/core';
 import {
@@ -128,6 +129,7 @@ import type {
   ColDef,
   ColGroupDef,
   FilterChangedEvent,
+  GetRowIdFunc,
   GridApi,
   GridOptions,
   GridReadyEvent,
@@ -139,6 +141,7 @@ import type {
   Theme,
 } from 'ag-grid-community';
 import startCase from 'lodash/startCase';
+import uniqueId from 'lodash/uniqueId';
 import {
   computed,
   defineAsyncComponent,
@@ -181,6 +184,7 @@ const AgGridVue = defineAsyncComponent(() =>
         RowSelectionModule,
         TextEditorModule,
         TextFilterModule,
+        TooltipModule,
         ValidationModule,
         ModuleRegistry,
         themeQuartz,
@@ -199,6 +203,7 @@ const AgGridVue = defineAsyncComponent(() =>
         RowSelectionModule,
         TextEditorModule,
         TextFilterModule,
+        TooltipModule,
         ValidationModule,
       ]);
 
@@ -213,6 +218,13 @@ function isColDef(col: ColDef | ColGroupDef): col is ColDef {
   return !('children' in col);
 }
 
+const rowIdSymbol = Symbol('rowId');
+function ensureRowId(row: object) {
+  if (!(row as any)[rowIdSymbol]) {
+    (row as any)[rowIdSymbol] = uniqueId();
+  }
+}
+
 const components = {
   DispatchRendererCell: defineComponent({
     name: 'DispatchRendererCell',
@@ -222,8 +234,7 @@ const components = {
         type: Object as PropType<
           ICellRendererParams & {
             propertyName: string;
-            input: ReturnType<typeof useVuetifyArrayControl> &
-              ReturnType<typeof useJsonFormsArrayControl>;
+            control: ReturnType<typeof mapStateToArrayControlProps>;
           }
         >,
         required: true,
@@ -231,28 +242,36 @@ const components = {
     },
     setup({ params }) {
       return () => {
-        const { propertyName, node, input } = params;
-
-        const control = input.control;
+        const { propertyName, node, control } = params;
         const controlWithoutLabel = (scope: string): ControlElement => {
           return { type: 'Control', scope: scope, label: false };
         };
 
         function resolveUiSchema(propName: string) {
-          return control.value.schema.properties && propName
+          return control.schema.properties && propName
             ? controlWithoutLabel(`#/properties/${propName}`)
             : controlWithoutLabel('#');
         }
 
         return h(DispatchRenderer, {
-          schema: control.value.schema,
+          schema: control.schema,
           uischema: resolveUiSchema(propertyName),
-          path: composePaths(control.value.path, `${node.rowIndex}`),
-          enabled: control.value.enabled,
-          renderers: control.value.renderers,
-          cells: control.value.cells,
+          path: composePaths(control.path, `${node.sourceRowIndex}`),
+          enabled: control.enabled,
+          renderers: control.renderers,
+          cells: control.cells,
         });
       };
+    },
+    methods: {
+      // ag grid will check if we have a refresh function that will return true then it will reuse the renderer instead of recreating it
+      refresh(
+        _params: ICellRendererParams<any, any, any> & {
+          propertyName: string;
+        },
+      ) {
+        return true;
+      },
     },
   }),
 };
@@ -297,14 +316,38 @@ const AgGridArrayControlRenderer = defineComponent({
 
     const suppressRowDrag = ref(!input.control.value.enabled);
 
+    const schema = ref(input.control.value.schema);
+    watch(
+      () => input.control.value.schema,
+      (newSchema) => {
+        schema.value = newSchema;
+      },
+    );
+    const showSortButtons = ref(input.appliedOptions.value.showSortButtons);
+    watch(
+      () => input.appliedOptions.value.showSortButtons,
+      (newValue) => {
+        showSortButtons.value = newValue;
+      },
+    );
+    const enabled = ref(input.control.value.enabled);
+    watch(
+      () => input.control.value.enabled,
+      (newValue) => {
+        enabled.value = newValue;
+      },
+    );
+
     const gridOptions = computed<GridOptions>(() => {
       const baseOptions: GridOptions =
         props.uischema?.options?.agGridOptions || {};
 
-      const showSortButtons = ref(input.appliedOptions.value.showSortButtons);
+      let haveRowDragColumn = false;
       // Generate columnDefs from schema
       const schemaColumnDefs: ColDef[] = Object.entries(
-        input.control.value.schema.properties || {},
+        schema.value.type === 'object'
+          ? schema.value.properties || {}
+          : { '': { title: '' } }, // primitive
       ).map(([propertyName, propertySchema]: [string, any]) => {
         const baseDef: ColDef = {
           headerName: propertySchema.title ?? startCase(propertyName),
@@ -320,7 +363,7 @@ const AgGridArrayControlRenderer = defineComponent({
 
         if (isColDef(extraDef) && extraDef.rowDrag) {
           // another column is designated as reordering column
-          showSortButtons.value = false;
+          haveRowDragColumn = true;
         }
 
         const cellDef = isColDef(extraDef)
@@ -335,9 +378,12 @@ const AgGridArrayControlRenderer = defineComponent({
                       component: 'DispatchRendererCell',
                       params: {
                         propertyName,
-                        input: input,
+                        control: input.control.value,
                       },
                     };
+              },
+              cellRendererParams: {
+                deferRender: true,
               },
             }
           : {};
@@ -351,7 +397,7 @@ const AgGridArrayControlRenderer = defineComponent({
 
       const schemaColumnDefsControls: ColDef[] = [];
 
-      if (input.control.value.enabled && showSortButtons.value) {
+      if (enabled.value && showSortButtons.value && !haveRowDragColumn) {
         schemaColumnDefsControls.push({
           headerName: '',
           rowDrag: true,
@@ -364,6 +410,21 @@ const AgGridArrayControlRenderer = defineComponent({
       }
 
       delete baseOptions.rowData;
+
+      let getRowId: GetRowIdFunc | undefined = undefined;
+      if (schema.value.type === 'object' || schema.value.type === 'array') {
+        getRowId = (params) => {
+          const data = params.data;
+          if (typeof data === 'object' && data !== null) {
+            ensureRowId(data);
+            return (data as any)[rowIdSymbol];
+          } else {
+            // fallback
+            return String(data);
+          }
+        };
+      }
+
       return {
         ...baseOptions,
         columnDefs: [...schemaColumnDefsControls, ...schemaColumnDefs],
@@ -375,6 +436,7 @@ const AgGridArrayControlRenderer = defineComponent({
         },
         components,
         suppressRowDrag: baseOptions.suppressRowDrag || suppressRowDrag.value,
+        getRowId: getRowId,
       };
     });
 
@@ -406,7 +468,7 @@ const AgGridArrayControlRenderer = defineComponent({
     };
 
     const onRowDragEnd = (event: RowDragEndEvent) => {
-      const fromIndex = event.node.rowIndex ?? -1;
+      const fromIndex = event.node.sourceRowIndex ?? -1;
       const toIndex = event.overIndex;
       if (fromIndex === -1 || event.overIndex === -1 || fromIndex === toIndex) {
         return;
