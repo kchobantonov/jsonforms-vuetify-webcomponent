@@ -1,3 +1,4 @@
+import * as vscode from "vscode";
 import { watch } from "chokidar";
 import { existsSync } from "fs";
 import { join, normalize } from "path";
@@ -24,7 +25,8 @@ type Files = {
 export const showPreview = async (
   editorInstance: any,
   schemaPath: any,
-  extensionPath: string
+  extensionPath: string,
+  outputChannel: vscode.OutputChannel
 ) => {
   if (!existsSync(schemaPath)) {
     try {
@@ -77,7 +79,8 @@ export const showPreview = async (
     "preview",
     "JSONForms Vuetify Preview",
     extensionPath,
-    schemaPath
+    schemaPath,
+    outputChannel
   );
 };
 
@@ -86,20 +89,49 @@ const showWebview = async (
   id: string,
   name: string,
   extensionPath: string,
-  schemaPath: string
+  schemaPath: string,
+  outputChannel: vscode.OutputChannel
 ) => {
-  const webView = editorInstance.window.createWebviewPanel(
+  const panel = editorInstance.window.createWebviewPanel(
     "view-" + id,
     name,
     editorInstance.ViewColumn.Two,
     { enableScripts: true }
   );
 
+  interface Message {
+    command: "onChangeMessage";
+    event: { data: string; errors: string; additionalErrors: string };
+  }
+
+  // Listen for messages from the webview
+  panel.webview.onDidReceiveMessage((message: Message) => {
+    if (message.command === "onChangeMessage") {
+      outputChannel.clear();
+      outputChannel.appendLine("🔄 JSONForms Change Detected:");
+      outputChannel.appendLine("");
+
+      outputChannel.appendLine("Data:");
+      outputChannel.appendLine(message.event.data);
+      outputChannel.appendLine("");
+
+      outputChannel.appendLine("Errors:");
+      outputChannel.appendLine(message.event.errors);
+      outputChannel.appendLine("");
+
+      outputChannel.appendLine("Additional Errors:");
+      outputChannel.appendLine(message.event.additionalErrors);
+      outputChannel.appendLine("");
+
+      outputChannel.show(true);
+    }
+  });
+
   const pathPrefix = schemaPath.endsWith(normalize("/schema.json")) // no prefix if the file is called schema.json
     ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
     : schemaPath.endsWith(".schema.json")
-      ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
-      : schemaPath.substring(0, schemaPath.length - "json".length);
+    ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
+    : schemaPath.substring(0, schemaPath.length - "json".length);
 
   const uischemaPath = pathPrefix + "uischema.json";
   const uischemasPath = pathPrefix + "uischemas.json";
@@ -124,13 +156,8 @@ const showWebview = async (
     actions: { path: existsSync(actionsPath) ? actionsPath : "" },
   };
 
-  let html = await preparePreview(
-    webView,
-    editorInstance,
-    extensionPath,
-    files
-  );
-  webView.webview.html = html;
+  let html = await preparePreview(panel, editorInstance, extensionPath, files);
+  panel.webview.html = html;
 
   const watchPaths = Object.values(files)
     .filter((file) => file.path)
@@ -150,8 +177,8 @@ const showWebview = async (
       actions: { path: existsSync(actionsPath) ? actionsPath : "" },
     };
 
-    html = await preparePreview(webView, editorInstance, extensionPath, files);
-    webView.webview.html = html;
+    html = await preparePreview(panel, editorInstance, extensionPath, files);
+    panel.webview.html = html;
   });
 };
 
@@ -280,6 +307,8 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
   </vuetify-json-forms>
 
   <script type="module">
+    const vscode = acquireVsCodeApi();
+
     var style = ${
       files.style && files.style.data
         ? JSON.stringify(files.style.data).replace(/\//g, "\\/")
@@ -359,13 +388,28 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
       files.actions && files.actions.data ? files.actions.data : "// no actions"
     };
 
-    try {
-      if (typeof onChange === 'function') {
-        form.addEventListener('change', onChange);
+    form.addEventListener('change', (customEvent) => {
+      let [event] = customEvent.detail;
+
+      vscode.postMessage({
+        command: 'onChangeMessage',
+        event: {
+          data: event.data !== undefined ? JSON.stringify(event.data) : '',
+          errors: event.errors !== undefined ? JSON.stringify(event.errors) : '',
+          additionalErrors: event.additionalErrors !== undefined ? JSON.stringify(event.additionalErrors) : ''
+        }
+      });
+
+      try {
+        if (typeof onChange === 'function') {
+          onChange(customEvent);
+        }
+      } catch (e) {
+        // no onChange function
       }
-    } catch (e) {
-      // no onChange function
-    }
+
+    });
+    
 
     try {
       if (typeof onHandleAction === 'function') {
