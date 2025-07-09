@@ -42,7 +42,8 @@
     "commands": [
       {
         "command": "jsonforms-vuetify-tooling.showPreview",
-        "title": "%jsonforms-vuetify-tooling.showPreview.title%"
+        "title": "%jsonforms-vuetify-tooling.showPreview.title%",
+        "icon": "assets/preview.png"
       }
     ],
     "menus": {
@@ -50,7 +51,7 @@
         {
           "when": "editorLangId == json",
           "command": "jsonforms-vuetify-tooling.showPreview",
-          "group": "jsonforms"
+          "group": "navigation"
         }
       ],
       "explorer/context": [
