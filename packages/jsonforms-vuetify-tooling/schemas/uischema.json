@@ -1,0 +1,572 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://jsonforms.io/uischema",
+  "title": "UI schema meta-schema",
+  "type": "object",
+  "anyOf": [
+    {
+      "$ref": "#/definitions/control"
+    },
+    {
+      "$ref": "#/definitions/label"
+    },
+    {
+      "$ref": "#/definitions/horizontallayout"
+    },
+    {
+      "$ref": "#/definitions/verticallayout"
+    },
+    {
+      "$ref": "#/definitions/categorization"
+    },
+    {
+      "$ref": "#/definitions/group"
+    },
+    {
+      "$ref": "#/definitions/templatelayout"
+    },
+    {
+      "$ref": "#/definitions/template"
+    },
+    {
+      "$ref": "#/definitions/slot"
+    },
+    {
+      "$ref": "#/definitions/button"
+    },
+    {
+      "$ref": "#/definitions/splitlayout"
+    }
+  ],
+  "definitions": {
+    "elements": {
+      "type": "array",
+      "$id": "#elements",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/control"
+          },
+          {
+            "$ref": "#/definitions/label"
+          },
+          {
+            "$ref": "#/definitions/horizontallayout"
+          },
+          {
+            "$ref": "#/definitions/verticallayout"
+          },
+          {
+            "$ref": "#/definitions/categorization"
+          },
+          {
+            "$ref": "#/definitions/category"
+          },
+          {
+            "$ref": "#/definitions/group"
+          },
+          {
+            "$ref": "#/definitions/templatelayout"
+          },
+          {
+            "$ref": "#/definitions/template"
+          },
+          {
+            "$ref": "#/definitions/slot"
+          },
+          {
+            "$ref": "#/definitions/button"
+          },
+          {
+            "$ref": "#/definitions/splitlayout"
+          }
+        ]
+      }
+    },
+    "control": {
+      "type": "object",
+      "$id": "#control",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Control",
+          "default": "Control"
+        },
+        "label": {
+          "type": "string"
+        },
+        "i18n": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/definitions/scope"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "scope"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values",
+          "scope": "Control scope should match pattern \"^#\\/properties\\/{1}\"",
+          "suggestion": "Control suggestion should be array",
+          "options": "Control options should be object",
+          "label": "Control label should be string, boolean or label object"
+        },
+        "required": {
+          "scope": "Control should have an object property \"scope\"",
+          "type": "Control should have a string property \"type\""
+        },
+        "additionalProperties": "Control should not have properties other than type, label, scope, i18n, options, suggestion and rule"
+      }
+    },
+    "label": {
+      "type": "object",
+      "$id": "#label",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Label",
+          "default": "Label"
+        },
+        "text": {
+          "type": "string"
+        },
+        "i18n": {
+          "type": "string"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values",
+          "options": "Control options should be object",
+          "text": "Label text should be string"
+        },
+        "required": {
+          "type": "Label should have a string property \"type\""
+        },
+        "additionalProperties": "Label should not have properties other than type, text, i18n, options, and rule"
+      }
+    },
+    "horizontallayout": {
+      "type": "object",
+      "$id": "#horizontallayout",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "HorizontalLayout",
+          "default": "HorizontalLayout"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "elements"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "elements": "Layout should have an array property \"elements\"",
+          "type": "Layout should have a string property \"type\""
+        },
+        "additionalProperties": "Layout should not have properties other than type, elements, options and rule"
+      }
+    },
+    "verticallayout": {
+      "type": "object",
+      "$id": "#verticallayout",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "VerticalLayout",
+          "default": "VerticalLayout"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "elements"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "elements": "Layout should have an array property \"elements\"",
+          "type": "Layout should have a string property \"type\""
+        },
+        "additionalProperties": "Layout should not have properties other than type, elements, options and rule"
+      }
+    },
+    "categorization": {
+      "type": "object",
+      "$id": "#categorization",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Categorization",
+          "default": "Categorization"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/category"
+          }
+        }
+      },
+      "required": ["type", "elements"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "elements": "Categorization should have an array property \"elements\"",
+          "type": "Categorization should have a string property \"type\""
+        },
+        "additionalProperties": "Categorization should not have properties other than type. elements, and options"
+      }
+    },
+    "category": {
+      "type": "object",
+      "$id": "#category",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "type": {
+          "type": "string",
+          "const": "Category",
+          "default": "Category"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values",
+          "label": "Category label should be string"
+        },
+        "required": {
+          "type": "Category layout should have a string property \"type\"",
+          "elements": "Category layout should have an array property \"elements\""
+        },
+        "additionalProperties": "Category layout should not have properties other than type, elements, label, options and rule"
+      }
+    },
+    "group": {
+      "type": "object",
+      "$id": "#group",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Group",
+          "default": "Group"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "label": {
+          "type": "string"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "elements", "label"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values",
+          "label": "Group label should be string"
+        },
+        "required": {
+          "type": "Group layout should have a string property \"type\"",
+          "elements": "Group layout should have an array property \"elements\"",
+          "label": "Group layout should have a string property \"label\""
+        },
+        "additionalProperties": "Group layout should not have properties other than type, elements, label, options and rule"
+      }
+    },
+    "templatelayout": {
+      "type": "object",
+      "$id": "#templatelayout",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "TemplateLayout",
+          "default": "TemplateLayout"
+        },
+        "template": {
+          "type": "string"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "template"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "template": "TemplateLayout should have an string property \"template\"",
+          "type": "TemplateLayout should have a string property \"type\""
+        },
+        "additionalProperties": "TemplateLayout should not have properties other than type, template, elements, options and rule"
+      }
+    },
+    "template": {
+      "type": "object",
+      "$id": "#template",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Template",
+          "default": "Template"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "name"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "name": "Template should have an string property \"name\"",
+          "type": "Template should have a string property \"type\""
+        },
+        "additionalProperties": "Template should not have properties other than type, name, elements, options and rule"
+      }
+    },
+    "slot": {
+      "type": "object",
+      "$id": "#slot",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Slot",
+          "default": "Slot"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements",
+          "maxItems": 1
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "name"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "name": "Slot should have an string property \"name\"",
+          "type": "Slot should have a string property \"type\""
+        },
+        "additionalProperties": "Slot should not have properties other than type, name, elements, options and rule"
+      }
+    },
+    "button": {
+      "type": "object",
+      "$id": "#button",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "script": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "Button",
+          "default": "Button"
+        },
+        "i18n": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "label"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "name": "Button should have an string property \"label\"",
+          "type": "Button should have a string property \"type\""
+        },
+        "additionalProperties": "Button should not have properties other than type, label, action, script, icon, color, params, i18n, options and rule"
+      }
+    },
+    "splitlayout": {
+      "type": "object",
+      "$id": "#splitlayout",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "SplitLayout",
+          "default": "SplitLayout"
+        },
+        "elements": {
+          "$ref": "#/definitions/elements"
+        },
+        "options": {
+          "$ref": "#/definitions/options"
+        },
+        "rule": {
+          "$ref": "#/definitions/rule"
+        }
+      },
+      "required": ["type", "elements"],
+      "additionalProperties": false,
+      "errorMessage": {
+        "properties": {
+          "type": "type should be equal to one of the allowed values"
+        },
+        "required": {
+          "elements": "Layout should have an array property \"elements\"",
+          "type": "Layout should have a string property \"type\""
+        },
+        "additionalProperties": "Layout should not have properties other than type, elements, options and rule"
+      }
+    },
+    "rule": {
+      "$ref": "./rule.json"
+    },
+    "scope": {
+      "type": "string",
+      "$id": "#scope",
+      "pattern": "^#$|^#\\/$|^#\\/properties\\/{1}"
+    },
+    "options": {
+      "type": "object",
+      "$id": "#options",
+      "additionalProperties": true
+    }
+  },
+  "errorMessage": {
+    "properties": {
+      "type": "Root type should be equal to one of the allowed values",
+      "label": "Root label should be string"
+    },
+    "required": {
+      "elements": "Root should have an array property \"elements\"",
+      "type": "Root should have a string property \"type\""
+    },
+    "additionalProperties": "Root should not have properties other than type, elements, label, options and rule"
+  }
+}

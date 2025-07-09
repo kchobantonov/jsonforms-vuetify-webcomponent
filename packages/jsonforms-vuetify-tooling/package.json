@@ -95,7 +95,23 @@
           "scope": "resource"
         }
       }
-    }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "uischema.json",
+          "*.uischema.json"
+        ],
+        "url": "./schemas/uischema.json"
+      },
+      {
+        "fileMatch": [
+          "uischemas.json",
+          "*.uischemas.json"
+        ],
+        "url": "./schemas/uischemas.json"
+      }
+    ]
   },
   "scripts": {
     "clean": "rimraf --glob dist out jsonforms-vuetify-tooling-*.vsix",
