@@ -57,39 +57,63 @@ Open <http://localhost:8080/demo.html>
 
 ### Loading from CDN
 
-For example if we use version `3.6.0` of the webcomponent then using the below HTML snippet we can renders the demo form.
+For example if we use version `3.6.0` of the webcomponent then using the below HTML we can renders the demo form.
 
 ```html
-<vuetify-json-forms id="vuetify-json-forms"></vuetify-json-forms>
+<html>
+  <body>
+    <vuetify-json-forms id="vuetify-json-forms"></vuetify-json-forms>
 
-<script type="text/javascript">
-  let demo = {
-    properties: {
-      firstName: {
-        type: "string",
-        description: "The person's first name.",
-      },
-      lastName: {
-        type: "string",
-        description: "The person's last name.",
-      },
-      age: {
-        description:
-          "Age in years which must be equal to or greater than zero.",
-        type: "integer",
-        minimum: 0,
-      },
-    },
-  };
+    <script type="text/javascript">
+      let data = {
+        firstName: "Krasimir",
+      };
 
-  var form = document.getElementById("vuetify-json-forms");
-  form.setAttribute("schema", JSON.stringify(demo));
-</script>
+      const schema = {
+        $schema: "http://json-schema.org/draft-07/schema#",
+        type: "object",
+        properties: {
+          firstName: {
+            type: "string",
+            description: "The person's first name.",
+          },
+          lastName: {
+            type: "string",
+            description: "The person's last name.",
+          },
+          age: {
+            description:
+              "Age in years which must be equal to or greater than zero.",
+            type: "integer",
+            minimum: 0,
+          },
+        },
+      };
 
-<script
-  type="module"
-  src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.6.0/dist/vuetify-json-forms.min.js"
-></script>
+      const onChange = (customEvent) => {
+        let [event] = customEvent.detail;
+
+        if (event.errors && event.errors.length > 0) {
+          // just dump the errors in the JS console if there are errors
+          console.log("Form state errors:", JSON.stringify(event.errors));
+        } else {
+          // only override our data when there are no errors
+          data = event.data;
+        }
+      };
+
+      var form = document.getElementById("vuetify-json-forms");
+      form.setAttribute("data", JSON.stringify(data));
+      form.setAttribute("schema", JSON.stringify(schema));
+      form.addEventListener("change", onChange);
+    </script>
+
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.6.0/dist/vuetify-json-forms.min.js"
+    ></script>
+  </body>
+</html>
 ```
 
 ### Continuous Integration
