@@ -67,6 +67,7 @@ import { useFormContext } from '../util';
 
 import { VDefaultsProvider } from 'vuetify/components/VDefaultsProvider';
 import * as defaultDirectives from 'vuetify/directives';
+import DynamicElement from '../components/DynamicElement.vue';
 
 const VMonacoEditor = defineAsyncComponent(
   () => import('../components/VMonacoEditor.vue'),
@@ -205,9 +206,15 @@ const controlRenderer = defineComponent({
             ...this.defaultComponents,
             VMonacoEditor,
             ValidationIcon,
+            DynamicElement,
             ...override,
           }
-        : { ...this.defaultComponents, VMonacoEditor, ValidationIcon };
+        : {
+            ...this.defaultComponents,
+            VMonacoEditor,
+            ValidationIcon,
+            DynamicElement,
+          };
     },
   },
   methods: {

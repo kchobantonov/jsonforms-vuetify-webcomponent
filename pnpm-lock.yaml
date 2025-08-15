@@ -30,19 +30,19 @@ importers:
         specifier: workspace:*
         version: link:../jsonforms-vuetify-webcomponent
       '@jsonforms/core':
-        specifier: 3.6.0
-        version: 3.6.0
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1
       '@jsonforms/examples':
-        specifier: 3.6.0
-        version: 3.6.0(@jsonforms/core@3.6.0)(ajv@8.17.1)
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(ajv@8.17.1)
       '@jsonforms/vue':
-        specifier: 3.6.0
-        version: 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
-        specifier: 3.6.0
-        version: 3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(@jsonforms/vue@3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
       '@vue/compiler-dom':
-        specifier: ^3.4.21
+        specifier: ^3.5.0
         version: 3.5.13
       '@vueuse/core':
         specifier: ^10.9.0
@@ -81,11 +81,11 @@ importers:
         specifier: ^3.1.5
         version: 3.2.0(vue@3.5.13(typescript@5.4.5))
       vue:
-        specifier: ^3.4.21
+        specifier: ^3.5.0
         version: 3.5.13(typescript@5.4.5)
       vuetify:
-        specifier: ^3.7.5
-        version: 3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: ^3.9.0
+        version: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@fortawesome/fontawesome-free':
         specifier: ^6.5.2
@@ -164,7 +164,7 @@ importers:
         version: 7.7.6(rollup@4.40.2)(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))
       vite-plugin-vuetify:
         specifier: ^2.0.3
-        version: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        version: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
       vitest:
         specifier: ^1.4.0
         version: 1.6.1(@types/node@20.17.47)(jsdom@24.1.3)(sass@1.88.0)(stylus@0.57.0)
@@ -175,14 +175,14 @@ importers:
   packages/jsonforms-vuetify-renderers:
     devDependencies:
       '@jsonforms/core':
-        specifier: 3.6.0
-        version: 3.6.0
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1
       '@jsonforms/vue':
-        specifier: 3.6.0
-        version: 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
-        specifier: 3.6.0
-        version: 3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(@jsonforms/vue@3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -217,7 +217,7 @@ importers:
         specifier: ^1.6.0
         version: 1.6.1(vitest@1.6.1(@types/node@20.17.47)(jsdom@24.1.3)(sass@1.88.0)(stylus@0.57.0))
       '@vue/compiler-dom':
-        specifier: ^3.4.21
+        specifier: ^3.5.0
         version: 3.5.13
       '@vue/eslint-config-prettier':
         specifier: ^9.0.0
@@ -314,12 +314,12 @@ importers:
         version: 1.0.6(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))
       vite-plugin-vuetify:
         specifier: ^2.0.3
-        version: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        version: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
       vitest:
         specifier: ^1.4.0
         version: 1.6.1(@types/node@20.17.47)(jsdom@24.1.3)(sass@1.88.0)(stylus@0.57.0)
       vue:
-        specifier: ^3.4.21
+        specifier: ^3.5.0
         version: 3.5.13(typescript@5.4.5)
       vue-eslint-parser:
         specifier: ^9.4.2
@@ -328,8 +328,8 @@ importers:
         specifier: ^2.0.11
         version: 2.2.10(typescript@5.4.5)
       vuetify:
-        specifier: ^3.7.5
-        version: 3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: ^3.9.0
+        version: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
 
   packages/jsonforms-vuetify-tooling:
     dependencies:
@@ -404,14 +404,14 @@ importers:
         specifier: ^6.5.2
         version: 6.7.2
       '@jsonforms/core':
-        specifier: 3.6.0
-        version: 3.6.0
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1
       '@jsonforms/vue':
-        specifier: 3.6.0
-        version: 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
-        specifier: 3.6.0
-        version: 3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        specifier: 3.7.0-alpha.1
+        version: 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(@jsonforms/vue@3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -446,14 +446,14 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       vue:
-        specifier: ^3.4.21
+        specifier: ^3.5.0
         version: 3.5.13(typescript@5.4.5)
       vue-plugin-load-script:
         specifier: ^2.1.1
         version: 2.1.1
       vuetify:
-        specifier: ^3.7.5
-        version: 3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: ^3.9.0
+        version: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@rushstack/eslint-patch':
         specifier: ^1.8.0
@@ -526,7 +526,7 @@ importers:
         version: 7.7.6(rollup@4.40.2)(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))
       vite-plugin-vuetify:
         specifier: ^2.0.3
-        version: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+        version: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
       vitest:
         specifier: ^1.4.0
         version: 1.6.1(@types/node@20.17.47)(jsdom@24.1.3)(sass@1.88.0)(stylus@0.57.0)
@@ -977,31 +977,31 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@jsonforms/core@3.6.0':
-    resolution: {integrity: sha512-Qz7qJPf/yP4ybqknZ500zggIDZRJfcufu+3efp/xNWf05mpXvxN9TdfmA++BdXi5Nr4UAgjos2kFmQpZpQaCDw==}
+  '@jsonforms/core@3.7.0-alpha.1':
+    resolution: {integrity: sha512-rq0+bVMYZfvz3RWrX291ZipShG9gHwxvdAJDuDh+91Sxw3C0Lkv3zf43a7ySM9+9If0xKrbjeVkqu+/HjbRwZA==}
 
-  '@jsonforms/examples@3.6.0':
-    resolution: {integrity: sha512-CgXeUZ3OmnnoMUrRffT9krlkXKgious342+gaTf/aWiclLev65qqzs7C9r5I6ItzQow2PB9uQywwvL41821H9Q==}
+  '@jsonforms/examples@3.7.0-alpha.1':
+    resolution: {integrity: sha512-d8ceVhXkYj0LdizIFTL5JJVlGsTh1ky0a6+1UPohtNvF25xeGz2UtHnt2GkeW2TYjNU8r+FzDcCufZv+7YdHuQ==}
     peerDependencies:
-      '@jsonforms/core': 3.6.0
+      '@jsonforms/core': 3.7.0-alpha.1
 
-  '@jsonforms/vue-vuetify@3.6.0':
-    resolution: {integrity: sha512-3+4FxZNPmtu4Vy9pr7IEUVkaPmr7Geaq2Vlw1Z7g4IUr7Ohl0ZHoEKYUMkdvL9pcP/b7iDFvqTSsvkRZXSnjdg==}
+  '@jsonforms/vue-vuetify@3.7.0-alpha.1':
+    resolution: {integrity: sha512-Vi95tKV+sG2Qfzg5X1Z+s0R+5EMntgrmP/I+XzZKgbJnAonVRFjacaXXXK0ihUM7vEE/2FBziy0SCJ1zktt9lQ==}
     peerDependencies:
-      '@jsonforms/core': 3.6.0
-      '@jsonforms/vue': 3.6.0
+      '@jsonforms/core': 3.7.0-alpha.1
+      '@jsonforms/vue': 3.7.0-alpha.1
       ajv: ^8.6.1
       dayjs: ^1.10.6
       lodash: ^4.17.21
       maska: ^2.1.11
-      vue: ^3.4.21
-      vuetify: ^3.6.6
+      vue: ^3.5.0
+      vuetify: ^3.9.0
 
-  '@jsonforms/vue@3.6.0':
-    resolution: {integrity: sha512-KW74d2RBeGau15LseCXiSTiUZ+9nQEyxDgaHggD2iQssrGCBSMWHj2+tGw+hWRZrk4IK99j4j4PRT2mLdexJqw==}
+  '@jsonforms/vue@3.7.0-alpha.1':
+    resolution: {integrity: sha512-5bN0O3A6mgNPiE605ni805+lB+OJIpUj+YMr2bktFtlKYnzIQDFv4CA9smoGOnbQ46bfl/GEBn3phlicOotUGQ==}
     peerDependencies:
-      '@jsonforms/core': 3.6.0
-      vue: ^3.2.26
+      '@jsonforms/core': 3.7.0-alpha.1
+      vue: ^3.5.0
 
   '@lerna/child-process@6.6.2':
     resolution: {integrity: sha512-QyKIWEnKQFnYu2ey+SAAm1A5xjzJLJJj3bhIZd3QKyXKKjaJ0hlxam/OsWSltxTNbcyH1jRJjC6Cxv31usv0Ag==}
@@ -1160,24 +1160,28 @@ packages:
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@nrwl/nx-linux-arm64-musl@15.9.7':
     resolution: {integrity: sha512-zyStqjEcmbvLbejdTOrLUSEdhnxNtdQXlmOuymznCzYUEGRv+4f7OAepD3yRoR0a/57SSORZmmGQB7XHZoYZJA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@nrwl/nx-linux-x64-gnu@15.9.7':
     resolution: {integrity: sha512-saNK5i2A8pKO3Il+Ejk/KStTApUpWgCxjeUz9G+T8A+QHeDloZYH2c7pU/P3jA9QoNeKwjVO9wYQllPL9loeVg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@nrwl/nx-linux-x64-musl@15.9.7':
     resolution: {integrity: sha512-extIUThYN94m4Vj4iZggt6hhMZWQSukBCo8pp91JHnDcryBg7SnYmnikwtY1ZAFyyRiNFBLCKNIDFGkKkSrZ9Q==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@nrwl/nx-win32-arm64-msvc@15.9.7':
     resolution: {integrity: sha512-GSQ54hJ5AAnKZb4KP4cmBnJ1oC4ILxnrG1mekxeM65c1RtWg9NpBwZ8E0gU3xNrTv8ZNsBeKi/9UhXBxhsIh8A==}
@@ -1296,36 +1300,42 @@ packages:
     engines: {node: '>= 10.0.0'}
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   '@parcel/watcher-linux-arm-musl@2.5.1':
     resolution: {integrity: sha512-6E+m/Mm1t1yhB8X412stiKFG3XykmgdIOqhjWj+VL8oHkKABfu/gjFj8DvLrYVHSBNC+/u5PeNrujiSQ1zwd1Q==}
     engines: {node: '>= 10.0.0'}
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   '@parcel/watcher-linux-arm64-glibc@2.5.1':
     resolution: {integrity: sha512-LrGp+f02yU3BN9A+DGuY3v3bmnFUggAITBGriZHUREfNEzZh/GO06FF5u2kx8x+GBEUYfyTGamol4j3m9ANe8w==}
     engines: {node: '>= 10.0.0'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@parcel/watcher-linux-arm64-musl@2.5.1':
     resolution: {integrity: sha512-cFOjABi92pMYRXS7AcQv9/M1YuKRw8SZniCDw0ssQb/noPkRzA+HBDkwmyOJYp5wXcsTrhxO0zq1U11cK9jsFg==}
     engines: {node: '>= 10.0.0'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@parcel/watcher-linux-x64-glibc@2.5.1':
     resolution: {integrity: sha512-GcESn8NZySmfwlTsIur+49yDqSny2IhPeZfXunQi48DMugKeZ7uy1FX83pO0X22sHntJ4Ub+9k34XQCX+oHt2A==}
     engines: {node: '>= 10.0.0'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@parcel/watcher-linux-x64-musl@2.5.1':
     resolution: {integrity: sha512-n0E2EQbatQ3bXhcH2D1XIAANAcTZkQICBPVaxMeaCVBtOpBZpWJuf7LwyWPSBDITb7In8mqQgJ7gH8CILCURXg==}
     engines: {node: '>= 10.0.0'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@parcel/watcher-win32-arm64@2.5.1':
     resolution: {integrity: sha512-RFzklRvmc3PkjKjry3hLF9wD7ppR4AKcWNzH7kXR7GUe0Igb3Nz8fyPwtZCSquGrhU5HhUNDr/mKBqj7tqA2Vw==}
@@ -1416,56 +1426,67 @@ packages:
     resolution: {integrity: sha512-de6TFZYIvJwRNjmW3+gaXiZ2DaWL5D5yGmSYzkdzjBDS3W+B9JQ48oZEsmMvemqjtAFzE16DIBLqd6IQQRuG9Q==}
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm-musleabihf@4.40.2':
     resolution: {integrity: sha512-urjaEZubdIkacKc930hUDOfQPysezKla/O9qV+O89enqsqUmQm8Xj8O/vh0gHg4LYfv7Y7UsE3QjzLQzDYN1qg==}
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-arm64-gnu@4.40.2':
     resolution: {integrity: sha512-KlE8IC0HFOC33taNt1zR8qNlBYHj31qGT1UqWqtvR/+NuCVhfufAq9fxO8BMFC22Wu0rxOwGVWxtCMvZVLmhQg==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.40.2':
     resolution: {integrity: sha512-j8CgxvfM0kbnhu4XgjnCWJQyyBOeBI1Zq91Z850aUddUmPeQvuAy6OiMdPS46gNFgy8gN1xkYyLgwLYZG3rBOg==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-loongarch64-gnu@4.40.2':
     resolution: {integrity: sha512-Ybc/1qUampKuRF4tQXc7G7QY9YRyeVSykfK36Y5Qc5dmrIxwFhrOzqaVTNoZygqZ1ZieSWTibfFhQ5qK8jpWxw==}
     cpu: [loong64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-powerpc64le-gnu@4.40.2':
     resolution: {integrity: sha512-3FCIrnrt03CCsZqSYAOW/k9n625pjpuMzVfeI+ZBUSDT3MVIFDSPfSUgIl9FqUftxcUXInvFah79hE1c9abD+Q==}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-gnu@4.40.2':
     resolution: {integrity: sha512-QNU7BFHEvHMp2ESSY3SozIkBPaPBDTsfVNGx3Xhv+TdvWXFGOSH2NJvhD1zKAT6AyuuErJgbdvaJhYVhVqrWTg==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-musl@4.40.2':
     resolution: {integrity: sha512-5W6vNYkhgfh7URiXTO1E9a0cy4fSgfE4+Hl5agb/U1sa0kjOLMLC1wObxwKxecE17j0URxuTrYZZME4/VH57Hg==}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-linux-s390x-gnu@4.40.2':
     resolution: {integrity: sha512-B7LKIz+0+p348JoAL4X/YxGx9zOx3sR+o6Hj15Y3aaApNfAshK8+mWZEf759DXfRLeL2vg5LYJBB7DdcleYCoQ==}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.40.2':
     resolution: {integrity: sha512-lG7Xa+BmBNwpjmVUbmyKxdQJ3Q6whHjMjzQplOs5Z+Gj7mxPtWakGHqzMqNER68G67kmCX9qX57aRsW5V0VOng==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.40.2':
     resolution: {integrity: sha512-tD46wKHd+KJvsmije4bUskNuvWKFcTOIM9tZ/RrmIvcXnbi0YK/cKS9FzFtAm7Oxi2EhV5N2OpfFB348vSQRXA==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@rollup/rollup-win32-arm64-msvc@4.40.2':
     resolution: {integrity: sha512-Bjv/HG8RRWLNkXwQQemdsWw4Mg+IJ29LK+bJPW2SCzPKOUaMmPEppQlu/Fqk1d7+DX3V7JbFdbkh/NMmurT6Pg==}
@@ -7075,8 +7096,8 @@ packages:
       typescript:
         optional: true
 
-  vuetify@3.8.5:
-    resolution: {integrity: sha512-W/mTaNDyO6NRqAQmnkMUn9TYvRb//BPF/vk7h3+2xNJOyI9ev90JmYjrihOtb+6QDrB79wVUH0Y+0OjYK73GsA==}
+  vuetify@3.9.5:
+    resolution: {integrity: sha512-rJBSo1FeKcJJaqTfVHbOdpFXCmgeEIGzrh6HBEMGjSflan6voPIMSiK2dTCUU4t9JeghwvJtoAE5eBuqYIkFVA==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
@@ -7807,35 +7828,35 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@jsonforms/core@3.6.0':
+  '@jsonforms/core@3.7.0-alpha.1':
     dependencies:
       '@types/json-schema': 7.0.15
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
       lodash: 4.17.21
 
-  '@jsonforms/examples@3.6.0(@jsonforms/core@3.6.0)(ajv@8.17.1)':
+  '@jsonforms/examples@3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(ajv@8.17.1)':
     dependencies:
-      '@jsonforms/core': 3.6.0
+      '@jsonforms/core': 3.7.0-alpha.1
       ajv-i18n: 4.2.0(ajv@8.17.1)
       lodash: 4.17.21
     transitivePeerDependencies:
       - ajv
 
-  '@jsonforms/vue-vuetify@3.6.0(@jsonforms/core@3.6.0)(@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)':
+  '@jsonforms/vue-vuetify@3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(@jsonforms/vue@3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)':
     dependencies:
-      '@jsonforms/core': 3.6.0
-      '@jsonforms/vue': 3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))
+      '@jsonforms/core': 3.7.0-alpha.1
+      '@jsonforms/vue': 3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5))
       ajv: 8.17.1
       dayjs: 1.11.13
       lodash: 4.17.21
       maska: 2.1.11
       vue: 3.5.13(typescript@5.4.5)
-      vuetify: 3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+      vuetify: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
 
-  '@jsonforms/vue@3.6.0(@jsonforms/core@3.6.0)(vue@3.5.13(typescript@5.4.5))':
+  '@jsonforms/vue@3.7.0-alpha.1(@jsonforms/core@3.7.0-alpha.1)(vue@3.5.13(typescript@5.4.5))':
     dependencies:
-      '@jsonforms/core': 3.6.0
+      '@jsonforms/core': 3.7.0-alpha.1
       lodash: 4.17.21
       vue: 3.5.13(typescript@5.4.5)
 
@@ -9061,11 +9082,11 @@ snapshots:
 
   '@vue/tsconfig@0.5.1': {}
 
-  '@vuetify/loader-shared@2.1.0(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)':
+  '@vuetify/loader-shared@2.1.0(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)':
     dependencies:
       upath: 2.0.1
       vue: 3.5.13(typescript@5.4.5)
-      vuetify: 3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+      vuetify: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
 
   '@vueuse/core@10.11.1(vue@3.5.13(typescript@5.4.5))':
     dependencies:
@@ -14961,14 +14982,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-vuetify@2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5):
+  vite-plugin-vuetify@2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5):
     dependencies:
-      '@vuetify/loader-shared': 2.1.0(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+      '@vuetify/loader-shared': 2.1.0(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
       debug: 4.4.1(supports-color@8.1.1)
       upath: 2.0.1
       vite: 5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0)
       vue: 3.5.13(typescript@5.4.5)
-      vuetify: 3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+      vuetify: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
     transitivePeerDependencies:
       - supports-color
 
@@ -15080,12 +15101,12 @@ snapshots:
     optionalDependencies:
       typescript: 5.4.5
 
-  vuetify@3.8.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5)):
+  vuetify@3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5)):
     dependencies:
       vue: 3.5.13(typescript@5.4.5)
     optionalDependencies:
       typescript: 5.4.5
-      vite-plugin-vuetify: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.8.5)
+      vite-plugin-vuetify: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
 
   w3c-xmlserializer@5.0.0:
     dependencies:
