@@ -33,8 +33,8 @@
   "options": {
     "horizontal": true,
     "vuetify": {
-      "splitpanes": {},
-      "pane": [{ "min-size": 20 }, { "min-size": 20 }]
+      "v-splitpanes": {},
+      "v-pane": [{ "min-size": 20 }, { "min-size": 20 }]
     }
   }
 }

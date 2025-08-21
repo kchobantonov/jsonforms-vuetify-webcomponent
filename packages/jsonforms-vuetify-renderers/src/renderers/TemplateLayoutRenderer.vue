@@ -68,6 +68,8 @@ import { useFormContext } from '../util';
 import { VDefaultsProvider } from 'vuetify/components/VDefaultsProvider';
 import * as defaultDirectives from 'vuetify/directives';
 import DynamicElement from '../components/DynamicElement.vue';
+import VPane from '../components/VPane.vue';
+import VSplitpanes from '../components/VSplitpanes.vue';
 
 const VMonacoEditor = defineAsyncComponent(
   () => import('../components/VMonacoEditor.vue'),
@@ -201,20 +203,15 @@ const controlRenderer = defineComponent({
         ),
       );
 
-      return override
-        ? {
-            ...this.defaultComponents,
-            VMonacoEditor,
-            ValidationIcon,
-            DynamicElement,
-            ...override,
-          }
-        : {
-            ...this.defaultComponents,
-            VMonacoEditor,
-            ValidationIcon,
-            DynamicElement,
-          };
+      return {
+        ...this.defaultComponents,
+        VMonacoEditor,
+        ValidationIcon,
+        DynamicElement,
+        VSplitpanes,
+        VPane,
+        ...(override ? override : {}),
+      };
     },
   },
   methods: {

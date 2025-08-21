@@ -1,0 +1,60 @@
+{
+  "type": "SplitLayout",
+  "elements": [
+    {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "label": "First Name",
+          "scope": "#/properties/profile/properties/firstName"
+        },
+        {
+          "type": "Control",
+          "label": "Last Name",
+          "scope": "#/properties/profile/properties/lastName"
+        },
+        {
+          "type": "Control",
+          "label": "Age",
+          "scope": "#/properties/profile/properties/age"
+        }
+      ]
+    },
+    {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "Control",
+          "label": "Bio",
+          "scope": "#/properties/profile/properties/bio",
+          "options": {
+            "multi": true
+          }
+        },
+        {
+          "type": "Control",
+          "label": "Email",
+          "scope": "#/properties/contact/properties/email"
+        },
+        {
+          "type": "Control",
+          "label": "Phone",
+          "scope": "#/properties/contact/properties/phone",
+          "options": {
+            "placeholder": "(###)-###-####",
+            "mask": "(###)-###-####"
+          }
+        }
+      ]
+    }
+  ],
+  "options": {
+    "vuetify": {
+      "v-splitpanes": {
+        "style": "height: 100vh"
+      },
+      "v-pane": [{ "min-size": 10 }, { "min-size": 10 }]
+    }
+  }
+}

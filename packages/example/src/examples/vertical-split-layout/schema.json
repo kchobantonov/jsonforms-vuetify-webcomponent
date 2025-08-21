@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "profile": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "The user's first name."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The user's last name."
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 18,
+          "maximum": 120,
+          "description": "The user's age."
+        },
+        "bio": {
+          "type": "string",
+          "description": "A brief biography or description of the user."
+        }
+      },
+      "required": ["firstName", "lastName"]
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The user's phone number."
+        }
+      },
+      "required": ["email"]
+    }
+  },
+  "required": ["profile", "contact"]
+}

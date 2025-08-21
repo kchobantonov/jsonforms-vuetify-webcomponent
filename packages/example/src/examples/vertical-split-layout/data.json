@@ -1,0 +1,12 @@
+{
+  "profile": {
+    "firstName": "Alex",
+    "lastName": "Johnson",
+    "age": 32,
+    "bio": "Software developer with a passion for open-source projects."
+  },
+  "contact": {
+    "email": "alex.j@example.com",
+    "phone": "555-123-4567"
+  }
+}

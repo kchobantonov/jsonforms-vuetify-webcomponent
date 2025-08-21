@@ -36,6 +36,7 @@ import {
 } from '@jsonforms/vue';
 import {
   ControlWrapper,
+  determineClearValue,
   DisabledIconFocus,
   useJsonForms,
   useVuetifyControl,
@@ -62,12 +63,11 @@ const controlRenderer = defineComponent({
   setup(props: RendererProps<ControlElement>) {
     const jsonforms = useJsonForms();
 
+    const clearValue = determineClearValue('');
+    const adaptValue = (value: any) => value || clearValue;
+
     return {
-      ...useVuetifyControl(
-        useJsonFormsControl(props),
-        (value) => value || undefined,
-        300,
-      ),
+      ...useVuetifyControl(useJsonFormsControl(props), adaptValue, 300),
       jsonforms,
     };
   },

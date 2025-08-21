@@ -6,6 +6,8 @@ import {
   parseAndTransformUISchemaRegistryEntries,
   ResolvedJsonForms,
   TemplateComponentsKey,
+  VPane,
+  VSplitpanes,
   type ActionEvent,
   type JsonFormsProps,
   type VuetifyConfig,
@@ -21,8 +23,6 @@ import type { ErrorObject } from 'ajv';
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { Pane, Splitpanes } from 'splitpanes';
-import 'splitpanes/dist/splitpanes.css';
 import {
   computed,
   inject,
@@ -623,12 +623,11 @@ const uischemasString = computed<string | undefined>(() => {
               </v-card-title>
               <v-divider class="mx-4"></v-divider>
               <div class="json-forms">
-                <splitpanes
-                  :class="['default-theme', 'splitpanes-vuetify']"
+                <v-splitpanes
                   :rtl="appStore.rtl"
                   v-if="appStore.layout === 'demo-and-data'"
                 >
-                  <pane min-size="20" style="overflow: visible">
+                  <v-pane min-size="20" style="overflow: visible">
                     <v-card style="overflow: visible">
                       <v-card-title>
                         <v-toolbar flat>
@@ -677,8 +676,8 @@ const uischemasString = computed<string | undefined>(() => {
                         @handleAction="onHandleAction"
                       ></resolved-json-forms>
                     </v-card>
-                  </pane>
-                  <pane>
+                  </v-pane>
+                  <v-pane>
                     <v-card>
                       <v-card-title>
                         <v-toolbar flat>
@@ -718,8 +717,8 @@ const uischemasString = computed<string | undefined>(() => {
                         :editorBeforeMount="registerValidations"
                       ></monaco-editor>
                     </v-card>
-                  </pane>
-                </splitpanes>
+                  </v-pane>
+                </v-splitpanes>
                 <div v-else>
                   <vuetify-json-forms-wrapper
                     v-if="appStore.useWebComponentView"
@@ -999,32 +998,3 @@ const uischemasString = computed<string | undefined>(() => {
     </div>
   </div>
 </template>
-<style lang="scss" scoped>
-:deep(.default-theme) {
-  &.splitpanes--vertical > .splitpanes__splitter,
-  .splitpanes--vertical > .splitpanes__splitter {
-    border-left: 1px solid rgb(var(--v-theme-on-surface-variant));
-  }
-
-  &.splitpanes--horizontal > .splitpanes__splitter,
-  .splitpanes--horizontal > .splitpanes__splitter {
-    border-top: 1px solid rgb(var(--v-theme-on-surface-variant));
-  }
-
-  .splitpanes__splitter {
-    background-color: rgb(var(--v-theme-surface));
-    &:before,
-    &:after {
-      background-color: rgb(var(--v-theme-on-surface-variant));
-    }
-    &:hover:before,
-    &:hover:after {
-      background-color: rgb(var(--v-theme-on-surface-variant));
-    }
-  }
-
-  .splitpanes__pane {
-    background-color: rgb(var(--v-theme-surface));
-  }
-}
-</style>

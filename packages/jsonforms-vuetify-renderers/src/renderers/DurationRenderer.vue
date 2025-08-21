@@ -193,6 +193,7 @@ import {
 } from '@jsonforms/vue';
 import {
   ControlWrapper,
+  determineClearValue,
   DisabledIconFocus,
   useTranslator,
   useVuetifyControl,
@@ -374,7 +375,8 @@ const controlRenderer = defineComponent({
     const t = useTranslator();
     const showMenu = ref(false);
 
-    const adaptValue = (value: any) => value || undefined;
+    const clearValue = determineClearValue('');
+    const adaptValue = (value: any) => value || clearValue;
     const control = useVuetifyControl(useJsonFormsControl(props), adaptValue);
 
     const useMask = control.appliedOptions.value.mask !== false;
