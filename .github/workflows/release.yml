@@ -1,4 +1,4 @@
-name: Release to npm
+name: Release Workflow
 on:
   release:
     types:
@@ -7,31 +7,72 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18]
 
     steps:
+      # -----------------------------
+      # Checkout repository
+      # -----------------------------
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # -----------------------------
+      # Setup Node.js and pnpm
+      # -----------------------------
       - name: Setup Node.js
-        uses: "actions/setup-node@v3"
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
-          registry-url: "https://registry.npmjs.org"
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
 
-      - uses: pnpm/action-setup@v4.0.0
-        name: Install pnpm
-        id: pnpm-install
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
         with:
           version: 10
           run_install: false
 
-      - name: "Install Packages"
-        run: pnpm i --frozen-lockfile
+      # -----------------------------
+      # Install all dependencies
+      # -----------------------------
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: "Build"
+      # -----------------------------
+      # Build all packages
+      # -----------------------------
+      - name: Build packages
         run: pnpm run build
 
-      - name: Publish to npm
-        run: npx lerna publish --no-private from-git --yes
+      # -----------------------------
+      # Publish public npm packages
+      # -----------------------------
+      - name: Publish npm packages
+        run: |
+          echo "Publishing public npm packages (excluding tooling)..."
+          pnpm -r publish --no-git-checks --filter '!jsonforms-vuetify-tooling'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # -----------------------------
+      # Determine if tooling should be deployed
+      # -----------------------------
+      - name: Check if VS Code tooling should be deployed
+        id: tooling-check
+        run: |
+          echo "TOOLING=false" >> $GITHUB_ENV
+          if [[ "${GITHUB_EVENT_RELEASE_BODY}" == *"Deploy tooling: true"* ]]; then
+            echo "TOOLING=true" >> $GITHUB_ENV
+          fi
+
+      # -----------------------------
+      # Publish VS Code Extension conditionally
+      # -----------------------------
+      - name: Publish VS Code Extension
+        if: env.TOOLING == 'true'
+        run: |
+          cd packages/jsonforms-vuetify-tooling
+          npx vsce publish
+        env:
+          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}

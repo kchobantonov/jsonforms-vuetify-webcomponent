@@ -1,2 +1,8 @@
 packages:
-  - 'packages/*'
+  - "packages/*"
+
+catalog:
+  "@jsonforms/core": "3.7.0-alpha.1"
+  "@jsonforms/vue": "3.7.0-alpha.1"
+  "@jsonforms/vue-vuetify": "3.7.0-alpha.1"
+  "@jsonforms/examples": "3.7.0-alpha.1"

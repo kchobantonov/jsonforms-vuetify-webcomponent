@@ -50,7 +50,7 @@ export default defineConfig({
 
             // Handle scoped packages like @vue/cli
             if (packageName.startsWith('@')) {
-              packageName = packageName.replace('@', '').replace(/[\\/]/, '_');
+              packageName = packageName.replace('@', '').replace(/[\\/]/g, '_');
             }
 
             // Remove version information from package name
@@ -74,7 +74,7 @@ export default defineConfig({
             if (packageName && packageName.startsWith('@')) {
               packageName = packageName
                 .replace('@', '') // Remove '@'
-                .replace(/[\\/]/, '_'); // Replace '/' with '_'
+                .replace(/[\\/]/g, '_'); // Replace '/' with '_'
             }
 
             // Remove version information (anything after the '@')
@@ -94,7 +94,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       // support runtime compilation of Vue components
       vue: 'vue/dist/vue.esm-bundler.js',
-      'vuetify/labs/VNumberInput': 'vuetify/components/VNumberInput',
     },
   },
 });
