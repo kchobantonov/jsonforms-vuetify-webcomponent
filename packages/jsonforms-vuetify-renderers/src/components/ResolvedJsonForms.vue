@@ -88,6 +88,28 @@ watch(
       // fixes: https://github.com/eclipsesource/jsonforms/pull/2478
       const generatorData = isObject(value) ? value : {};
       resolvedSchema.schema = Generate.jsonSchema(generatorData);
+      if (!props.state.uischema) {
+        // override the uischema as well so that we can specify some vuetify specific options for container
+        resolvedUiSchema.value = Generate.uiSchema(
+          resolvedSchema.schema,
+          'VerticalLayout',
+          undefined,
+          resolvedSchema.schema,
+        );
+
+        if (resolvedUiSchema.value.type === 'VerticalLayout') {
+          resolvedUiSchema.value.options = {
+            vuetify: {
+              'v-container': {
+                fluid: true,
+              },
+              'v-row': {
+                'no-gutters': true,
+              },
+            },
+          };
+        }
+      }
     }
   },
 );
