@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   defaultMiddleware,
+  Generate,
   type JsonFormsCore,
   type JsonSchema,
   type Middleware,
@@ -9,6 +10,7 @@ import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
 import { normalizeId } from 'ajv/dist/compile/resolve';
 import * as JsonRefs from 'json-refs';
 import _get from 'lodash/get';
+import isObject from 'lodash/isObject';
 import isFunction from 'lodash/isFunction';
 import {
   computed,
@@ -68,7 +70,10 @@ const resolvedUiSchema = ref(
 const emits = defineEmits(['change', 'handle-action']);
 
 const onChange = (event: JsonFormsChangeEvent): void => {
+  // assign the current data before emitting the event
+  // fixes: https://github.com/eclipsesource/jsonforms/pull/2478
   data.value = event.data;
+
   emits('change', event);
 };
 
@@ -76,6 +81,14 @@ watch(
   () => props.state.data,
   (value) => {
     data.value = value;
+
+    if (!props.state.schema) {
+      // if we do not update that then at the moment the core will
+      // use the previously generated schema since it doesn't update the generated schema upon data changes
+      // fixes: https://github.com/eclipsesource/jsonforms/pull/2478
+      const generatorData = isObject(value) ? value : {};
+      resolvedSchema.schema = Generate.jsonSchema(generatorData);
+    }
   },
 );
 watch(

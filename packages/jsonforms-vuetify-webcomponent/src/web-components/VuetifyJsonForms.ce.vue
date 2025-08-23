@@ -349,7 +349,6 @@ export default defineComponent({
     });
 
     const onChange = (event: any) => {
-      state.data = event.data;
       emit('change', event);
     };
 

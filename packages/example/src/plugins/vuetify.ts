@@ -9,15 +9,14 @@ import 'vuetify/styles';
 // just make sure that the locales are loaded
 
 import { faIconAliases, mdiIconAliases } from '@jsonforms/vue-vuetify';
-import dayjs from 'dayjs';
 import { computed, watch } from 'vue';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 import { fa, aliases as faAliases } from 'vuetify/iconsets/fa';
 import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
 import { aliases as appFaAliases } from '../icons/fa';
 import { aliases as appMdiAliases } from '../icons/mdi';
 import { useAppStore } from '../store';
-import * as components from 'vuetify/components';
-import * as directives from 'vuetify/directives';
 
 export function getCustomThemes(blueprint: string) {
   const getThemeColors = (blueprint: string) => {
@@ -172,8 +171,6 @@ function createVuetifyInstance(
         VCheckbox: { color: 'primary' },
       };
 
-  dayjs.locale(locale);
-
   return createVuetify({
     components,
     directives,
@@ -219,7 +216,6 @@ export function buildVuetify() {
     () => appStore.jsonforms.locale,
     (locale: string) => {
       vuetify.locale.current.value = locale;
-      dayjs.locale(locale);
     },
   );
 

@@ -5,12 +5,11 @@ import { bg, de, en } from 'vuetify/locale';
 
 // just make sure that the locales are loaded
 
-import dayjs from 'dayjs';
+import { useAppStore } from '@/store';
+import { faIconAliases, mdiIconAliases } from '@jsonforms/vue-vuetify';
 import { watch } from 'vue';
 import { fa, aliases as faAliases } from 'vuetify/iconsets/fa';
 import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
-import { mdiIconAliases, faIconAliases } from '@jsonforms/vue-vuetify';
-import { useAppStore } from '@/store';
 
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
@@ -85,8 +84,6 @@ function createVuetifyInstance(
   iconset: string,
   locale: string,
 ) {
-  dayjs.locale(locale);
-
   const theme = {
     defaultTheme: dark ? 'dark' : 'light',
     themes: getCustomThemes(blueprint).reduce(
@@ -132,7 +129,6 @@ export function buildVuetify() {
     () => appStore.locale,
     (locale: string) => {
       vuetify.locale.current.value = locale;
-      dayjs.locale(locale);
     },
   );
 
