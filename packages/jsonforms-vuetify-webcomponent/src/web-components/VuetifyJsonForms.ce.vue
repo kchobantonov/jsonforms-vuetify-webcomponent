@@ -1,300 +1,422 @@
 <template>
   <Suspense>
-    <vuetify-json-forms
-      :data="data"
-      :schema="schema"
-      :schemaUrl="schemaUrl"
-      :uischema="uischema"
-      :config="config"
-      :readonly="readonly"
-      :uischemas="uischemas"
-      :validationMode="validationMode"
-      :customStyle="customStyle"
-      :translations="translations"
-      :additionalErrors="additionalErrors"
-      :uidata="uidata"
-      @change="onChange"
-    ></vuetify-json-forms>
+    <div>
+      <!-- Vuetify theme variables -->
+      <dynamic-element
+        tag="style"
+        type="text/css"
+        id="vuetify-theme-stylesheet"
+      >
+        {{ vuetifyThemeCss }}
+      </dynamic-element>
+
+      <!-- Custom CSS from prop -->
+      <dynamic-element tag="style" type="text/css">
+        {{ customStyleToUse }}
+      </dynamic-element>
+      <dynamic-element tag="slot" name="jsonforms-header">
+        <!-- Place custom content inside <div slot="jsonforms-header"></div> within <vuetify-json-forms> to fill this slot -->
+      </dynamic-element>
+
+      <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
+        <v-theme-provider :theme="theme">
+          <v-defaults-provider :defaults="appStore.defaults">
+            <div v-if="error !== undefined">
+              <v-container style="height: 400px">
+                <v-row
+                  class="fill-height"
+                  align-content="center"
+                  justify="center"
+                >
+                  <v-col class="text-subtitle-1 text-center error" cols="12">
+                    {{ error }}
+                  </v-col>
+                </v-row>
+              </v-container>
+            </div>
+
+            <resolved-json-forms
+              v-else
+              :state="state as JsonFormsProps"
+              :vuetify-config="vuetifyConfig"
+              @change="onChange"
+            ></resolved-json-forms>
+          </v-defaults-provider>
+        </v-theme-provider>
+      </v-locale-provider>
+
+      <dynamic-element tag="slot" name="jsonforms-footer">
+        <!-- Place custom content inside <div slot="jsonforms-footer"></div> within <vuetify-json-forms> to fill this slot -->
+      </dynamic-element>
+    </div>
   </Suspense>
 </template>
 
 <script lang="ts">
 import { useAppStore } from '@/store';
-import { type ValidationMode } from '@jsonforms/core';
-import { type JsonFormsChangeEvent } from '@jsonforms/vue';
+import {
+  createTranslator,
+  DynamicElement,
+  extraVuetifyRenderers,
+  type FormContext,
+  FormContextKey,
+  HandleActionEmitterKey,
+  type JsonFormsProps,
+  parseAndTransformUISchemaRegistryEntries,
+  ResolvedJsonForms,
+  type VuetifyConfig,
+} from '@chobantonov/jsonforms-vuetify-renderers';
+import {
+  defaultMiddleware,
+  type JsonFormsUISchemaRegistryEntry,
+  type Translator,
+  type ValidationMode,
+} from '@jsonforms/core';
+import { extendedVuetifyRenderers } from '@jsonforms/vue-vuetify';
 import isPlainObject from 'lodash/isPlainObject';
 import {
-  defineAsyncComponent,
+  computed,
   defineComponent,
-  watch,
+  inject,
+  markRaw,
   type PropType,
+  reactive,
+  type Ref,
+  ref,
+  toRef,
+  watch,
 } from 'vue';
+import { type ThemeInstance } from 'vuetify';
+import {
+  VCol,
+  VContainer,
+  VDefaultsProvider,
+  VLocaleProvider,
+  VRow,
+  VThemeProvider,
+} from 'vuetify/components';
+import { extractAndInjectFonts } from '../util/inject-fonts';
 
-const VuetifyJsonForms = defineAsyncComponent(
-  () => import('../components/VuetifyJsonForms.vue'),
-);
+const ThemeSymbol = Symbol.for('vuetify:theme');
 
-const vuetifyFormWc = defineComponent({
+export default defineComponent({
+  name: 'VuetifyJsonFormsWebComponent',
   components: {
-    VuetifyJsonForms,
+    ResolvedJsonForms,
+    VThemeProvider,
+    VLocaleProvider,
+    VDefaultsProvider,
+    VContainer,
+    VRow,
+    VCol,
+    DynamicElement,
   },
   emits: ['change', 'handle-action'],
   props: {
-    data: {
-      type: String,
-      validator: function (value) {
-        try {
-          const data = typeof value == 'string' ? JSON.parse(value) : value;
-
-          return data !== undefined && data !== null;
-        } catch (e) {
-          return false;
-        }
-      },
-    },
+    data: { type: [Object, String, Number, Boolean, Array, null] as any },
     schema: {
-      type: String,
-      validator: function (value) {
+      type: [Object, String] as any,
+      validator: (value: any) => {
         try {
-          const schema = typeof value == 'string' ? JSON.parse(value) : value;
-
-          return schema !== undefined && schema !== null;
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || isPlainObject(obj);
+        } catch {
           return false;
         }
       },
-    },
-    schemaUrl: {
-      type: String,
     },
     uischema: {
-      type: String,
-      validator: function (value) {
+      type: [Object, String] as any,
+      validator: (value: any) => {
         try {
-          const uischema = typeof value == 'string' ? JSON.parse(value) : value;
-
-          return uischema !== undefined && uischema !== null;
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || isPlainObject(obj);
+        } catch {
           return false;
         }
       },
     },
+    schemaUrl: { type: String },
     config: {
-      type: String,
-      validator: function (value) {
+      type: [Object, String] as any,
+      validator: (value: any) => {
         try {
-          const config = typeof value == 'string' ? JSON.parse(value) : value;
-
-          return config !== undefined && config !== null;
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || isPlainObject(obj);
+        } catch {
           return false;
         }
       },
-    },
-    readonly: {
-      required: false,
-      type: Boolean,
-      default: undefined,
     },
     uischemas: {
-      type: String,
-      validator: function (value) {
+      type: [Array, String] as any,
+      validator: (value: any) => {
         try {
-          const uischemas =
-            typeof value == 'string' ? JSON.parse(value) : value;
-
-          return (
-            uischemas !== undefined &&
-            uischemas !== null &&
-            Array.isArray(uischemas)
-          );
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || Array.isArray(obj);
+        } catch {
           return false;
         }
       },
     },
-    validationMode: {
-      type: [String] as PropType<ValidationMode>,
-      default: 'ValidateAndShow',
-      validator: function (value) {
-        return (
-          value === 'ValidateAndShow' ||
-          value === 'ValidateAndHide' ||
-          value === 'NoValidation'
-        );
-      },
-    },
-    locale: {
-      required: false,
-      type: String,
-      default: undefined,
-    },
-    customStyle: {
-      type: String,
-      default: '.v-application__wrap { min-height: 0px; }',
-    },
     translations: {
-      type: String,
-      validator: function (value) {
+      type: [Object, String] as any,
+      validator: (value: any) => {
         try {
-          const translations =
-            typeof value == 'string' ? JSON.parse(value) : value;
-
-          return translations !== null;
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || isPlainObject(obj);
+        } catch {
           return false;
         }
       },
     },
     additionalErrors: {
-      type: String,
-      validator: function (value) {
+      type: [Array, String] as any,
+      validator: (value: any) => {
         try {
-          const additionalErrors =
-            typeof value == 'string' ? JSON.parse(value) : value;
-
-          return (
-            additionalErrors !== undefined &&
-            additionalErrors !== null &&
-            Array.isArray(additionalErrors)
-          );
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || Array.isArray(obj);
+        } catch {
           return false;
         }
       },
-    },
-    dark: {
-      required: false,
-      type: Boolean,
-      default: undefined,
-    },
-    rtl: {
-      required: false,
-      type: Boolean,
-      default: undefined,
     },
     uidata: {
-      type: String,
-      default: () => {
-        return '{}';
-      },
-      validator: function (value) {
+      type: [Object, String] as any,
+      validator: (value: any) => {
         try {
-          const data = typeof value == 'string' ? JSON.parse(value) : value;
-
-          return data !== undefined && data !== null;
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || isPlainObject(obj);
+        } catch {
           return false;
         }
       },
     },
+    readonly: { type: Boolean, default: false },
+    validationMode: {
+      type: String as PropType<ValidationMode>,
+      default: 'ValidateAndShow',
+      validator: (v: string) =>
+        v === 'ValidateAndShow' ||
+        v === 'ValidateAndHide' ||
+        v === 'NoValidation',
+    },
+    locale: { type: String, default: 'en' },
+    dark: { type: Boolean, default: false },
+    rtl: { type: Boolean, default: false },
     vuetifyOptions: {
-      type: String,
-      default: () => {
-        return '{}';
-      },
-      validator: function (value) {
+      type: [Object, String] as any,
+      default: () => ({}),
+      validator: (value: any) => {
         try {
-          const options = typeof value == 'string' ? JSON.parse(value) : value;
-
-          return (
-            options !== undefined && options !== null && isPlainObject(options)
-          );
-        } catch (e) {
+          const obj = typeof value === 'string' ? JSON.parse(value) : value;
+          return obj == null || isPlainObject(obj);
+        } catch {
           return false;
         }
       },
     },
-  },
-  methods: {
-    onChange(event: JsonFormsChangeEvent): void {
-      this.$emit('change', event);
+    customStyle: {
+      type: String,
+      default: '.v-application__wrap { min-height: 0px; }',
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const appStore = useAppStore();
-    appStore.rtl = props.rtl !== undefined ? props.rtl : false;
-    appStore.dark = props.dark !== undefined ? props.dark : false;
-    appStore.locale = props.locale !== undefined ? props.locale : 'en';
+    appStore.rtl = props.rtl ?? false;
+    appStore.dark = props.dark ?? false;
+    appStore.locale = props.locale ?? 'en';
 
-    const updateAppStore = (vuetifyOptions: string | undefined | object) => {
-      if (vuetifyOptions === undefined) {
-        return;
-      }
-      try {
-        const options =
-          typeof vuetifyOptions === 'string'
-            ? JSON.parse(vuetifyOptions)
-            : vuetifyOptions;
+    const error = ref<string | undefined>(undefined);
 
-        if (isPlainObject(options)) {
-          appStore.defaults = options.defaults;
-          appStore.blueprint = options.blueprint;
-
-          if (options.icons?.defaultSet) {
-            appStore.iconset = options.icons.defaultSet;
-          }
-
-          if (
-            props.dark === undefined &&
-            typeof options.theme?.dark === 'boolean'
-          ) {
-            appStore.dark = options.theme.dark;
-          }
+    const normalize = (val: any) => {
+      if (typeof val === 'string') {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return val;
         }
-      } catch (e) {
-        console.log('vuetify-options error:', e);
       }
+      return val;
     };
 
-    updateAppStore(props.vuetifyOptions);
+    const dataNormalized = computed(() => normalize(props.data));
+    const schemaNormalized = computed(() => {
+      const s = normalize(props.schema);
+      if (s && !s.$id) s.$id = '/';
+      return s;
+    });
+    const uiSchemaNormalized = computed(() => normalize(props.uischema));
+    const configNormalized = computed(() => normalize(props.config));
+    const translationsNormalized = computed(() =>
+      normalize(props.translations),
+    );
+    const additionalErrorsNormalized = computed(
+      () => normalize(props.additionalErrors) || [],
+    );
+    const uidataNormalized = computed(() => normalize(props.uidata) || {});
+    const uischemasNormalized = computed<JsonFormsUISchemaRegistryEntry[]>(() =>
+      parseAndTransformUISchemaRegistryEntries(
+        normalize(props.uischemas) || [],
+      ),
+    );
+
+    const i18nToUse = ref<{ locale: string; translate: Translator }>({
+      locale: appStore.locale,
+      translate: createTranslator(
+        appStore.locale,
+        translationsNormalized.value,
+      ),
+    });
+
+    const context: Ref<FormContext> = ref({
+      uidata: reactive(uidataNormalized.value),
+    });
+    const renderers = markRaw([
+      ...extendedVuetifyRenderers,
+      ...extraVuetifyRenderers,
+    ]);
+
+    const state = reactive<JsonFormsProps>({
+      data: dataNormalized.value,
+      schema: schemaNormalized.value,
+      schemaUrl: props.schemaUrl,
+      uischema: uiSchemaNormalized.value,
+      renderers,
+      cells: undefined,
+      config: configNormalized.value,
+      readonly: props.readonly,
+      uischemas: uischemasNormalized.value,
+      validationMode: props.validationMode,
+      i18n: i18nToUse.value,
+      additionalErrors: additionalErrorsNormalized.value,
+      middleware: defaultMiddleware,
+    });
+
+    const theme = computed(() => (appStore.dark ? 'dark' : 'light'));
+    const vuetifyConfig = computed<VuetifyConfig>(() => ({
+      theme: theme.value,
+      rtl: appStore.rtl,
+      defaults: appStore.defaults,
+    }));
+
+    const customStyleToUse = computed(() => props.customStyle);
+    const themeInstance = inject<ThemeInstance | undefined>(
+      ThemeSymbol,
+      undefined,
+    );
+    const vuetifyThemeCss = computed(() => {
+      let css = themeInstance?.styles.value ?? '';
+      if (css.startsWith(':root {'))
+        css = ':host {' + css.slice(':root {'.length);
+      return css;
+    });
+
+    // ===== Watchers =====
+    watch(dataNormalized, (v) => (state.data = v));
+    watch(schemaNormalized, (v) => (state.schema = v), { deep: true });
+    watch(uiSchemaNormalized, (v) => (state.uischema = v), { deep: true });
+    watch(
+      () => props.schemaUrl,
+      (v) => (state.schemaUrl = v),
+    );
+    watch(configNormalized, (v) => (state.config = v), { deep: true });
+    watch(uischemasNormalized, (v) => (state.uischemas = v), { deep: true });
+    watch(
+      () => props.readonly,
+      (v) => (state.readonly = v),
+    );
+    watch(
+      () => props.validationMode,
+      (v) => (state.validationMode = v as ValidationMode),
+    );
+    watch(
+      translationsNormalized,
+      (v) => {
+        i18nToUse.value = {
+          locale: appStore.locale,
+          translate: createTranslator(appStore.locale, v),
+        };
+        state.i18n = i18nToUse.value;
+      },
+      { deep: true },
+    );
+    watch(additionalErrorsNormalized, (v) => (state.additionalErrors = v), {
+      deep: true,
+    });
+    watch(uidataNormalized, (v) => (context.value.uidata = reactive(v)), {
+      deep: true,
+    });
+
+    const onChange = (event: any) => {
+      state.data = event.data;
+      emit('change', event);
+    };
+
+    const updateAppStoreFromVuetifyOptions = (vuetifyOptions: any) => {
+      if (!vuetifyOptions) return;
+      const options = normalize(vuetifyOptions);
+      if (!isPlainObject(options)) return;
+      if (options.defaults && isPlainObject(options.defaults))
+        appStore.defaults = options.defaults;
+      if (options.blueprint) appStore.blueprint = options.blueprint;
+      if (options.icons?.defaultSet)
+        appStore.iconset = options.icons.defaultSet;
+      if (props.dark === undefined && typeof options.theme?.dark === 'boolean')
+        appStore.dark = options.theme.dark;
+    };
+    updateAppStoreFromVuetifyOptions(props.vuetifyOptions);
+    watch(
+      () => props.vuetifyOptions,
+      (v, oldV) => {
+        if (v !== oldV) updateAppStoreFromVuetifyOptions(v);
+      },
+      { deep: true },
+    );
 
     watch(
       () => props.rtl,
-      (value, oldValue) => {
-        if (value !== oldValue) {
-          appStore.rtl = value !== undefined ? value : false;
-        }
-      },
+      (v) => (appStore.rtl = v ?? false),
     );
     watch(
       () => props.dark,
-      (value, oldValue) => {
-        if (value !== oldValue) {
-          appStore.dark = value !== undefined ? value : false;
-        }
-      },
+      (v) => (appStore.dark = v ?? false),
     );
     watch(
       () => props.locale,
-      (value, oldValue) => {
-        if (value !== oldValue) {
-          appStore.locale = value !== undefined ? value : 'en';
-        }
-      },
-    );
-    watch(
-      () => props.vuetifyOptions,
-      (value, oldValue) => {
-        if (value !== oldValue) {
-          if (value) {
-            updateAppStore(value);
-          } else {
-            updateAppStore({
-              defaults: {},
-              blueprint: 'md1',
-              iconset: 'mdi',
-            });
-          }
-        }
+      (v) => {
+        appStore.locale = v ?? 'en';
+        i18nToUse.value = {
+          locale: appStore.locale,
+          translate: createTranslator(
+            appStore.locale,
+            translationsNormalized.value,
+          ),
+        };
+        state.i18n = i18nToUse.value;
       },
     );
 
     return {
       appStore,
+      state,
+      theme,
+      vuetifyConfig,
+      customStyleToUse,
+      vuetifyThemeCss,
+      error,
+      onChange,
+      context,
     };
   },
+  provide() {
+    return {
+      [HandleActionEmitterKey]: this.$root!.$emit,
+      [FormContextKey]: toRef(this, 'context'),
+    };
+  },
+  mounted() {
+    extractAndInjectFonts(this.$el.getRootNode());
+  },
 });
-
-export default vuetifyFormWc;
 </script>

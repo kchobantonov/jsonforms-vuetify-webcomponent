@@ -6,7 +6,7 @@ import preset from './preset.json';
 import schema from './schema.json';
 import uidata from './uidata.json';
 import uischema from './uischema.json';
-import uischemas from './uischemas.json';
+import uischemas from './uischemas.js';
 import style from './style.js';
 
 export const input = {

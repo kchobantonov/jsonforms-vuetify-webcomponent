@@ -52,11 +52,7 @@ import { useAppStore } from '../store';
 
 import { useAppTheme } from '@/plugins/vuetify';
 import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
-
-import type {
-  JsonFormsUISchemaRegistryEntry,
-  UISchemaElement,
-} from '@jsonforms/core';
+import webComponentUrl from '@/assets/webcomponent.svg';
 
 const vuetifyRenderers = [
   ...extendedVuetifyRenderers,
@@ -81,8 +77,6 @@ const errors = ref<
 const snackbar = ref(false);
 const snackbarText = ref('');
 const snackbarTimeout = ref(3000);
-
-const renderers = markRaw(vuetifyRenderers);
 
 const schemaModel = shallowRef<monaco.editor.ITextModel | undefined>(undefined);
 const uischemaModel = shallowRef<monaco.editor.ITextModel | undefined>(
@@ -111,7 +105,7 @@ const initialState = (exampleProp: ExampleDescription): JsonFormsProps => {
     data: example.input.data,
     schema: example.input.schema,
     uischema: example.input.uischema,
-    renderers: renderers,
+    renderers: markRaw(vuetifyRenderers),
     cells: undefined, // not defined
     config: { ...appStore.jsonforms.config, ...(example.input.config ?? {}) },
     readonly: appStore.jsonforms.readonly,
@@ -186,7 +180,7 @@ const saveMonacoSchema = () => {
   saveMonacoModel(
     schemaModel,
     (modelValue) => {
-      state.schema = JSON.parse(modelValue);
+      state.schema = modelValue ? JSON.parse(modelValue) : undefined;
     },
     'New schema applied',
   );
@@ -499,6 +493,9 @@ const handleAction = (action: Action) => {
   if (action) {
     const newState = action.apply(state);
     if (newState) {
+      if (newState.renderers) {
+        newState.renderers = markRaw(newState.renderers);
+      }
       Object.assign(state, newState);
     }
   }
@@ -514,13 +511,13 @@ const vuetifyDefaults = inject(DefaultsSymbol);
 const vuetifyIcons = inject(IconSymbol);
 
 const vuetifyOptions = computed(() => {
-  return JSON.stringify({
+  return {
     defaults: unref(vuetifyDefaults),
     blueprint: appStore.blueprint,
     icons: {
       defaultSet: vuetifyIcons?.defaultSet,
     },
-  } as Partial<VuetifyOptions>);
+  } as Partial<VuetifyOptions>;
 });
 
 const theme = useAppTheme();
@@ -531,52 +528,24 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
   defaults: {},
 }));
 
-const uischemaString = computed<string | undefined>(() => {
-  let uischema = state.uischema;
-  if (uischema) {
-    const transformNode = (node: UISchemaElement): UISchemaElement => {
-      const transformed = { ...node } as UISchemaElement;
-
-      if (
-        'rule' in transformed &&
-        transformed.rule?.condition &&
-        typeof transformed.rule.condition === 'object' &&
-        'validate' in transformed.rule.condition &&
-        typeof transformed.rule.condition.validate === 'function'
-      ) {
-        (transformed.rule.condition.validate as unknown) =
-          transformed.rule.condition.validate.toString();
-      }
-
-      if ('elements' in transformed && Array.isArray(transformed.elements)) {
-        transformed.elements = transformed.elements.map(transformNode);
-      }
-
-      return transformed;
-    };
-
-    uischema = transformNode(uischema);
-  }
-
-  return uischema ? JSON.stringify(uischema) : undefined;
-});
-
-const uischemasString = computed<string | undefined>(() => {
-  let uischemas:
-    | (
-        | JsonFormsUISchemaRegistryEntry
-        | { tester: string; uischema: UISchemaElement }
-      )[]
-    | undefined = state.uischemas;
-  if (uischemas) {
-    uischemas = uischemas.map((item) => ({
-      ...item,
-      tester: item.tester.toString(),
-    }));
-  }
-
-  return uischemas ? JSON.stringify(uischemas) : undefined;
-});
+const wrapperProps = computed(() => ({
+  customStyle: `.v-application__wrap { min-height: 0px; }`,
+  data: state.data,
+  schema: state.schema,
+  uischema: state.uischema,
+  uischemas: state.uischemas,
+  additionalErrors: state.additionalErrors,
+  config: state.config,
+  validationMode: state.validationMode,
+  readonly: state.readonly,
+  locale: state.i18n?.locale ?? 'en',
+  rtl: appStore.rtl,
+  dark: appStore.dark,
+  translations: state.i18n?.translations,
+  vuetifyOptions,
+  onChange: onWebComponentChange,
+  onHandleAction: onWebComponentHandleAction,
+}));
 </script>
 
 <template>
@@ -638,36 +607,36 @@ const uischemasString = computed<string | undefined>(() => {
                       <v-divider class="mx-4"></v-divider>
                       <vuetify-json-forms-wrapper
                         v-if="appStore.useWebComponentView"
-                        :custom-style="`.v-application__wrap { min-height: 0px; }`"
-                        :data="
-                          state.data ? JSON.stringify(state.data) : undefined
-                        "
-                        :schema="
-                          state.schema
-                            ? JSON.stringify(state.schema)
-                            : undefined
-                        "
-                        :uischema="uischemaString"
-                        :uischemas="uischemasString"
-                        :config="
-                          state.config
-                            ? JSON.stringify(state.config)
-                            : undefined
-                        "
-                        :validationMode="state.validationMode"
-                        :readonly="state.readonly"
-                        :locale="state.i18n?.locale ?? 'en'"
-                        :rtl="appStore.rtl"
-                        :dark="appStore.dark"
-                        :translations="
-                          state.i18n?.translations
-                            ? JSON.stringify(state.i18n?.translations)
-                            : '{}'
-                        "
-                        :vuetify-options="vuetifyOptions"
-                        @change="onWebComponentChange"
-                        @handleAction="onWebComponentHandleAction"
-                      ></vuetify-json-forms-wrapper>
+                        v-bind="wrapperProps"
+                      >
+                        <v-row
+                          slot="jsonforms-header"
+                          justify="end"
+                          class="pr-4 mt-1"
+                        >
+                          <v-col cols="auto">
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ props }">
+                                <v-img
+                                  v-bind="props"
+                                  height="24"
+                                  width="24"
+                                  :src="webComponentUrl"
+                                />
+                              </template>
+                              <div class="text-center">
+                                <div class="font-weight-medium">
+                                  WebComponent View
+                                </div>
+                                <div class="text-caption">
+                                  Form rendered via webcomponent slot<br />
+                                  <em>(jsonforms-header)</em>
+                                </div>
+                              </div>
+                            </v-tooltip>
+                          </v-col>
+                        </v-row>
+                      </vuetify-json-forms-wrapper>
                       <resolved-json-forms
                         v-else
                         :state="state as JsonFormsProps"
@@ -722,29 +691,7 @@ const uischemasString = computed<string | undefined>(() => {
                 <div v-else>
                   <vuetify-json-forms-wrapper
                     v-if="appStore.useWebComponentView"
-                    :custom-style="`.v-application__wrap { min-height: 0px; }`"
-                    :data="state.data ? JSON.stringify(state.data) : undefined"
-                    :schema="
-                      state.schema ? JSON.stringify(state.schema) : undefined
-                    "
-                    :uischema="uischemaString"
-                    :uischemas="uischemasString"
-                    :config="
-                      state.config ? JSON.stringify(state.config) : undefined
-                    "
-                    :validationMode="state.validationMode"
-                    :readonly="state.readonly"
-                    :locale="state.i18n?.locale ?? 'en'"
-                    :rtl="appStore.rtl"
-                    :dark="appStore.dark"
-                    :translations="
-                      state.i18n?.translations
-                        ? JSON.stringify(state.i18n?.translations)
-                        : '{}'
-                    "
-                    :vuetify-options="vuetifyOptions"
-                    @change="onWebComponentChange"
-                    @handleAction="onWebComponentHandleAction"
+                    v-bind="wrapperProps"
                   ></vuetify-json-forms-wrapper>
                   <resolved-json-forms
                     v-else
@@ -967,25 +914,7 @@ const uischemasString = computed<string | undefined>(() => {
     <div class="json-forms" v-else>
       <vuetify-json-forms-wrapper
         v-if="appStore.useWebComponentView"
-        :custom-style="`.v-application__wrap { min-height: 0px; }`"
-        :data="state.data ? JSON.stringify(state.data) : undefined"
-        :schema="state.schema ? JSON.stringify(state.schema) : undefined"
-        :uischema="uischemaString"
-        :uischemas="uischemasString"
-        :config="state.config ? JSON.stringify(state.config) : undefined"
-        :validationMode="state.validationMode"
-        :readonly="state.readonly"
-        :locale="state.i18n?.locale ?? 'en'"
-        :rtl="appStore.rtl"
-        :dark="appStore.dark"
-        :translations="
-          state.i18n?.translations
-            ? JSON.stringify(state.i18n?.translations)
-            : '{}'
-        "
-        :vuetify-options="vuetifyOptions"
-        @change="onWebComponentChange"
-        @handleAction="onWebComponentHandleAction"
+        v-bind="wrapperProps"
       ></vuetify-json-forms-wrapper>
 
       <resolved-json-forms

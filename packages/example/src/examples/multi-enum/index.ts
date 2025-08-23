@@ -8,7 +8,7 @@ export const input: ExampleInputDescription = { schema, uischema, data };
 
 registerExamples([
   {
-    name: 'multi-array',
+    name: 'multi-enum',
     label: 'Multi Enum',
     input,
   },

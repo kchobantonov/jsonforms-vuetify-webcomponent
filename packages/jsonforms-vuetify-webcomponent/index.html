@@ -15,7 +15,6 @@
     <div id="app"></div>
     <!-- <script type="module" src="./dist/vuetify-json-forms.js"></script> -->
     <script type="module" src="./src/web-component.ts"></script>
-
     <vuetify-json-forms> </vuetify-json-forms>
 
     <script type="module">
@@ -26,40 +25,28 @@
 
       const form = document.querySelector('vuetify-json-forms');
 
-      if (input && input.data) {
-        form.setAttribute('data', JSON.stringify(input.data));
-      }
-      if (input && input.schema) {
-        form.setAttribute('schema', JSON.stringify(input.schema));
-      }
-      if (input && input.uischema) {
-        form.setAttribute('uischema', JSON.stringify(input.uischema));
-      }
-      if (input && input.uischemas) {
-        form.setAttribute('uischemas', JSON.stringify(input.uischemas));
-      }
-      if (input && input.config) {
-        form.setAttribute('config', JSON.stringify(input.config));
-      }
-      if (input && input.style) {
-        form.setAttribute('custom-style', input.style);
-      }
-      if (input && input.i18n) {
-        form.setAttribute('translations', JSON.stringify(input.i18n));
-      }
-      if (input && input.uidata) {
-        form.setAttribute('uidata', JSON.stringify(input.uidata));
-      }
-      if (input && input.preset) {
-        form.setAttribute('vuetify-options', JSON.stringify(input.preset));
+      // Pass props directly as JS properties
+      if (input) {
+        if (input.data) form.data = input.data;
+        if (input.schema) form.schema = input.schema;
+        if (input.uischema) form.uischema = input.uischema;
+        if (input.uischemas) form.uischemas = input.uischemas;
+        if (input.config) form.config = input.config;
+        if (input.style) form.customStyle = input.style;
+        if (input.i18n) form.translations = input.i18n;
+        if (input.uidata) form.uidata = input.uidata;
+        if (input.preset) form.vuetifyOptions = input.preset;
+
+        if (input.actions?.onChange) {
+          form.addEventListener('change', input.actions.onChange);
+        }
+        if (input.actions?.onHandleAction) {
+          form.addEventListener('handle-action', input.actions.onHandleAction);
+        }
       }
 
-      if (input && input.actions && input.actions.onChange) {
-        form.addEventListener('change', input.actions.onChange);
-      }
-      if (input && input.actions && input.actions.onHandleAction) {
-        form.addEventListener('handle-action', input.actions.onHandleAction);
-      }
+      // Append the component to the DOM
+      document.getElementById('app').appendChild(form);
     </script>
   </body>
 </html>

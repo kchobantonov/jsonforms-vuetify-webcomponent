@@ -17,7 +17,11 @@ export default defineComponent({
         {
           ...attrs, // forward all HTML attributes and event listeners
         },
-        slots.default ? slots.default() : undefined, // render children if any
+        Object.keys(slots).length
+          ? Object.fromEntries(
+              Object.entries(slots).map(([name, slotFn]) => [name, slotFn]),
+            )
+          : undefined,
       );
   },
 });
