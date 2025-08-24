@@ -132,38 +132,32 @@ function toBlueprint(value: string): Blueprint {
   return md1;
 }
 
-function createVuetifyInstance(
-  dark: boolean,
-  blueprint: string,
-  variant: string,
-  iconset: string,
-  locale: string,
-) {
-  const defaults = variant
+function createVuetifyInstance(appStore: ReturnType<typeof useAppStore>) {
+  const defaults = appStore.variant
     ? {
         VField: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VTextField: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VCombobox: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VSelect: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VAutocomplete: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VTextarea: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VNumberInput: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VDateInput: {
-          variant: variant,
+          variant: appStore.variant,
         },
         VCheckbox: { color: 'primary' },
       }
@@ -174,23 +168,23 @@ function createVuetifyInstance(
   return createVuetify({
     components,
     directives,
-    blueprint: toBlueprint(blueprint),
+    blueprint: toBlueprint(appStore.blueprint),
     locale: {
-      locale: locale,
+      locale: appStore.jsonforms.locale,
       fallback: 'en',
       messages: { en, bg, de },
     },
     icons: {
-      defaultSet: iconset, // Set the default icon set
+      defaultSet: appStore.iconset, // Set the default icon set
       sets: {
         mdi,
         fa,
       },
-      aliases: toIconSetAliases(iconset),
+      aliases: toIconSetAliases(appStore.iconset),
     },
     theme: {
-      defaultTheme: dark ? 'dark' : 'light',
-      themes: getCustomThemes(blueprint).reduce(
+      defaultTheme: appStore.dark ? 'dark' : 'light',
+      themes: getCustomThemes(appStore.blueprint).reduce(
         (acc: Record<string, ThemeDefinition>, current) => {
           acc[current.name] = current;
           return acc;
@@ -204,13 +198,7 @@ function createVuetifyInstance(
 
 export function buildVuetify() {
   const appStore = useAppStore();
-  const vuetify = createVuetifyInstance(
-    appStore.dark,
-    appStore.blueprint,
-    appStore.variant,
-    appStore.iconset,
-    appStore.jsonforms.locale,
-  );
+  const vuetify = createVuetifyInstance(appStore);
 
   watch(
     () => appStore.jsonforms.locale,

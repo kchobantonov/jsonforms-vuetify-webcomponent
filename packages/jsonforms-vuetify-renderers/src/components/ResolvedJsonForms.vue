@@ -50,6 +50,7 @@ import {
 } from '../core';
 import { resolveUISchemaValidations } from '../util';
 import type Ajv from 'ajv';
+import { generateJsonSchema } from './schema';
 
 const props = defineProps<{
   state: JsonFormsProps;
@@ -86,16 +87,18 @@ watch(
       // if we do not update that then at the moment the core will
       // use the previously generated schema since it doesn't update the generated schema upon data changes
       // fixes: https://github.com/eclipsesource/jsonforms/pull/2478
-      const generatorData = isObject(value) ? value : {};
-      resolvedSchema.schema = Generate.jsonSchema(generatorData);
+      resolvedSchema.schema = generateJsonSchema(value);
       if (!props.state.uischema) {
         // override the uischema as well so that we can specify some vuetify specific options for container
         resolvedUiSchema.value = Generate.uiSchema(
           resolvedSchema.schema,
-          'VerticalLayout',
+          undefined,
           undefined,
           resolvedSchema.schema,
-        );
+        ) ?? {
+          type: 'VerticalLayout',
+          elements: [],
+        };
 
         if (resolvedUiSchema.value.type === 'VerticalLayout') {
           resolvedUiSchema.value.options = {
@@ -109,6 +112,30 @@ watch(
             },
           };
         }
+      }
+    } else if (!props.state.uischema) {
+      // override the uischema as well so that we can specify some vuetify specific options for container
+      resolvedUiSchema.value = Generate.uiSchema(
+        resolvedSchema.schema ?? props.state.schema,
+        undefined,
+        undefined,
+        resolvedSchema.schema,
+      ) ?? {
+        type: 'VerticalLayout',
+        elements: [],
+      };
+
+      if (resolvedUiSchema.value.type === 'VerticalLayout') {
+        resolvedUiSchema.value.options = {
+          vuetify: {
+            'v-container': {
+              fluid: true,
+            },
+            'v-row': {
+              'no-gutters': true,
+            },
+          },
+        };
       }
     }
   },

@@ -78,15 +78,10 @@ function toBlueprint(value: string): Blueprint {
   return md1;
 }
 
-function createVuetifyInstance(
-  dark: boolean,
-  blueprint: string,
-  iconset: string,
-  locale: string,
-) {
+function createVuetifyInstance(appStore: ReturnType<typeof useAppStore>) {
   const theme = {
-    defaultTheme: dark ? 'dark' : 'light',
-    themes: getCustomThemes(blueprint).reduce(
+    defaultTheme: appStore.dark ? 'dark' : 'light',
+    themes: getCustomThemes(appStore.blueprint).reduce(
       (acc: Record<string, ThemeDefinition>, current) => {
         acc[current.name] = current;
         return acc;
@@ -98,19 +93,19 @@ function createVuetifyInstance(
   return createVuetify({
     components,
     directives,
-    blueprint: toBlueprint(blueprint),
+    blueprint: toBlueprint(appStore.blueprint),
     locale: {
-      locale: locale,
+      locale: appStore.locale,
       fallback: 'en',
       messages: { en, bg, de },
     },
     icons: {
-      defaultSet: iconset, // Set the default icon set
+      defaultSet: appStore.iconset, // Set the default icon set
       sets: {
         mdi,
         fa,
       },
-      aliases: toIconSetAliases(iconset),
+      aliases: toIconSetAliases(appStore.iconset),
     },
     theme: theme,
   });
@@ -118,12 +113,7 @@ function createVuetifyInstance(
 
 export function buildVuetify() {
   const appStore = useAppStore();
-  const vuetify = createVuetifyInstance(
-    appStore.dark,
-    appStore.blueprint,
-    appStore.iconset,
-    appStore.locale,
-  );
+  const vuetify = createVuetifyInstance(appStore);
 
   watch(
     () => appStore.locale,
