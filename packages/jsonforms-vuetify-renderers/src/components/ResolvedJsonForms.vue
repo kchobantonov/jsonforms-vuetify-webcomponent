@@ -10,7 +10,6 @@ import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
 import { normalizeId } from 'ajv/dist/compile/resolve';
 import * as JsonRefs from 'json-refs';
 import _get from 'lodash/get';
-import isObject from 'lodash/isObject';
 import isFunction from 'lodash/isFunction';
 import {
   computed,

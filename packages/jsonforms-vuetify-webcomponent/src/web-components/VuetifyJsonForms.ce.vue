@@ -1,7 +1,6 @@
 <template>
   <Suspense>
     <div>
-      <!-- Vuetify theme variables -->
       <dynamic-element
         tag="style"
         type="text/css"
@@ -10,7 +9,6 @@
         {{ vuetifyThemeCss }}
       </dynamic-element>
 
-      <!-- Custom CSS from prop -->
       <dynamic-element tag="style" type="text/css">
         {{ customStyleToUse }}
       </dynamic-element>
@@ -202,7 +200,7 @@ export default defineComponent({
         v === 'NoValidation',
     },
     locale: { type: String, default: 'en' },
-    dark: { type: Boolean, default: false },
+    dark: { type: Boolean, default: undefined },
     rtl: { type: Boolean, default: false },
     vuetifyOptions: {
       type: [Object, String] as any,
