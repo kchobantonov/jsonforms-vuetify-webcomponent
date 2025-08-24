@@ -19,8 +19,8 @@
       <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
         <v-theme-provider :theme="theme">
           <v-defaults-provider :defaults="appStore.defaults">
-            <div v-if="error !== undefined">
-              <v-container style="height: 400px">
+            <v-sheet>
+              <v-container style="height: 400px" v-if="error !== undefined">
                 <v-row
                   class="fill-height"
                   align-content="center"
@@ -31,14 +31,14 @@
                   </v-col>
                 </v-row>
               </v-container>
-            </div>
 
-            <resolved-json-forms
-              v-else
-              :state="state as JsonFormsProps"
-              :vuetify-config="vuetifyConfig"
-              @change="onChange"
-            ></resolved-json-forms>
+              <resolved-json-forms
+                v-else
+                :state="state as JsonFormsProps"
+                :vuetify-config="vuetifyConfig"
+                @change="onChange"
+              ></resolved-json-forms>
+            </v-sheet>
           </v-defaults-provider>
         </v-theme-provider>
       </v-locale-provider>
@@ -91,6 +91,7 @@ import {
   VDefaultsProvider,
   VLocaleProvider,
   VRow,
+  VSheet,
   VThemeProvider,
 } from 'vuetify/components';
 import { extractAndInjectFonts } from '../util/inject-fonts';
@@ -107,6 +108,7 @@ export default defineComponent({
     VContainer,
     VRow,
     VCol,
+    VSheet,
     DynamicElement,
   },
   emits: ['change', 'handle-action'],

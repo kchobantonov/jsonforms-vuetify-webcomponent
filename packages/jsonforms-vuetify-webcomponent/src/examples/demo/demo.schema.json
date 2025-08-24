@@ -16,7 +16,6 @@
       "maximum": 100
     }
   },
-
   "additionalProperties": {
     "type": "string",
     "title": "Additional Properties"
