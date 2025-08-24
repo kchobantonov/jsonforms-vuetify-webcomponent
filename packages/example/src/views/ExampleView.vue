@@ -629,7 +629,7 @@ const wrapperProps = computed(() => ({
                                   WebComponent View
                                 </div>
                                 <div class="text-caption">
-                                  Form rendered via webcomponent slot<br />
+                                  Icon rendered via webcomponent slot<br />
                                   <em>(jsonforms-header)</em>
                                 </div>
                               </div>
