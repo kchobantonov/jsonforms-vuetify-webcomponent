@@ -137,29 +137,30 @@
     <script type="module">
       import { examples } from './src/examples/index.js';
 
-      let currentExampleIndex = 0;
+      let currentExampleId = null;
       const form = document.querySelector('vuetify-json-forms');
       const exampleIcon = document.getElementById('exampleIcon');
       const exampleList = document.getElementById('exampleList');
 
-      // Function to load an example
-      function loadExample(exampleIndex) {
-        // Check if examples array exists and index is valid
+      // Function to find example by ID
+      function findExampleById(exampleId) {
+        if (!examples || examples.length === 0) {
+          return null;
+        }
+        return examples.find((example) => example.id === exampleId);
+      }
+
+      // Function to load an example by ID
+      function loadExample(exampleId) {
+        // Check if examples array exists
         if (!examples || examples.length === 0) {
           console.warn('No examples available');
           return;
         }
 
-        if (exampleIndex < 0 || exampleIndex >= examples.length) {
-          console.warn(
-            `Invalid example index: ${exampleIndex}. Available: 0-${examples.length - 1}`,
-          );
-          return;
-        }
-
-        const example = examples[exampleIndex];
+        const example = findExampleById(exampleId);
         if (!example) {
-          console.warn(`Example at index ${exampleIndex} is null or undefined`);
+          console.warn(`Example with ID '${exampleId}' not found`);
           return;
         }
 
@@ -192,7 +193,7 @@
           }
         }
 
-        currentExampleIndex = exampleIndex;
+        currentExampleId = exampleId;
         console.log('Selected example:', example);
       }
 
@@ -207,14 +208,22 @@
 
       // Populate example list
       function populateExampleList() {
+        if (!examples || examples.length === 0) {
+          console.warn('No examples available for list');
+          return;
+        }
+
         exampleList.innerHTML = '';
         examples.forEach((example, index) => {
           const item = document.createElement('div');
           item.className = 'example-item';
           item.innerHTML = `<div class="example-item-name">${example.title || `Example ${index + 1}`}</div>`;
 
+          // Store the example ID in a data attribute for easier access
+          item.dataset.exampleId = example.id;
+
           item.addEventListener('click', () => {
-            loadExample(index);
+            loadExample(example.id);
             exampleList.classList.remove('show');
           });
 
@@ -240,7 +249,19 @@
 
       // Initialize
       populateExampleList();
-      loadExample(1); // Load first example by default
+
+      // Load first example by ID if available
+      if (examples && examples.length > 0) {
+        // get the demo example and if not registered get the first available
+        const example = findExampleById('demo') ?? examples[0];
+        if (example?.id) {
+          loadExample(example.id);
+        } else {
+          console.warn('First example does not have an ID');
+        }
+      } else {
+        console.warn('No examples available to load');
+      }
     </script>
   </body>
 </html>
