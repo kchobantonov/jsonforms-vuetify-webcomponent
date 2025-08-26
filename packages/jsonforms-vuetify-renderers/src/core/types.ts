@@ -9,7 +9,6 @@ import type {
   UISchemaElement,
   ValidationMode,
 } from '@jsonforms/core';
-import type { MaybeReadonly } from '@jsonforms/vue';
 import type { Ajv, ErrorObject } from 'ajv';
 import type {
   Component,
@@ -23,6 +22,7 @@ import type {
   Ref,
   SetupContext,
 } from 'vue';
+import type { DefaultsOptions } from 'vuetify/lib/composables/defaults.mjs';
 
 export const AsyncFunction = Object.getPrototypeOf(async function (
   _event: ActionEvent,
@@ -52,18 +52,12 @@ export type ResolvedSchema = {
   error?: string;
 };
 
-type DefaultsInstance =
-  | undefined
-  | {
-      [key: string]: undefined | Record<string, unknown>;
-      global?: Record<string, unknown>;
-    };
-type DefaultsOptions = Partial<DefaultsInstance>;
-
 export type VuetifyConfig = {
+  components?: Record<string, any>;
+  directives?: Record<string, any>;
+  defaults: DefaultsOptions;
   theme: string;
   rtl: boolean;
-  defaults: DefaultsOptions;
 };
 
 export interface FormContext {

@@ -1,22 +1,31 @@
+import { defaultVuetifyOptions, type VuetifyOptions } from '../plugins/options';
 import { reactive } from 'vue';
 
-type DefaultsInstance =
-  | undefined
-  | {
-      [key: string]: undefined | Record<string, unknown>;
-      global?: Record<string, unknown>;
-    };
-type DefaultsOptions = Partial<DefaultsInstance>;
+export interface AppStore {
+  rtl: boolean;
+  dark: boolean | undefined;
+  locale: string;
 
-const appstore = reactive({
+  vuetifyOptions: VuetifyOptions;
+}
+
+const defaultAppStore: AppStore = {
   rtl: false,
-  dark: false,
-  iconset: 'mdi',
-  blueprint: 'md1',
+  dark: undefined as boolean | undefined,
   locale: 'en',
-  defaults: {} as DefaultsOptions,
-});
 
-export const useAppStore = () => {
+  vuetifyOptions: defaultVuetifyOptions,
+};
+
+let appstore: any = null;
+
+export const useAppStore = (overrides?: Partial<AppStore>): AppStore => {
+  if (!appstore) {
+    // Initialize with defaults merged with any overrides
+    appstore = reactive({
+      ...defaultAppStore,
+      ...(overrides || {}),
+    });
+  }
   return appstore;
 };

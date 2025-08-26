@@ -1,0 +1,8 @@
+@font-face {
+  font-family: Hallelujah;
+  src: url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
+}
+
+.main-form {
+  font-family: Hallelujah, cursive;
+}

@@ -1,0 +1,235 @@
+{
+  "type": "TemplateLayout",
+  "template": "<v-card class=\"main-form\" flat><slot name=\"toolbar\"></slot><v-container style=\"pa-0\" fluid><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot v-if=\"element.name != 'toolbar'\" :name=\"element.name\"></slot></v-col></v-row></v-container></v-card>",
+  "elements": [
+    {
+      "type": "TemplateLayout",
+      "template": "<v-toolbar><v-toolbar-title>{{translate('Job Application', 'Job Application')}}</v-toolbar-title><v-toolbar-items class='d-flex align-center'><div v-for=\"element in elements\" :key=\"element.name\"><slot :name=\"element.name\"></slot></div></v-toolbar-items></v-toolbar>",
+      "name": "toolbar",
+      "elements": [
+        {
+          "type": "TemplateLayout",
+          "template": "<v-select variant='plain' density='compact' hide-details='true' :model-value='context.locale' @update:modelValue='(value) => context.fireActionEvent(\"changeLang\", {\"lang\": value})' :items='[{\"label\": context.translate(\"static-text.English\", \"English\"), \"value\": \"en\"}, {\"label\": context.translate(\"static-text.Bulgarian\", \"Bulgarian\"), \"value\": \"bg\"}]' item-title='label' item-value='value'></v-select>"
+        },
+        {
+          "type": "TemplateLayout",
+          "template": "<v-btn icon @click='() => context.fireActionEvent(\"toggleDarkMode\")'><v-icon>{{ context.vuetify.dark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon></v-btn>"
+        }
+      ]
+    },
+    {
+      "type": "Categorization",
+      "elements": [
+        {
+          "type": "Category",
+          "label": "static-text.category.personal-information",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "Template",
+                  "name": "applicant"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "static-text.category.position-information",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "Template",
+                  "name": "jobDetails"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "static-text.category.skills",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/skills"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "static-text.category.experience",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "ListWithDetail",
+                  "scope": "#/properties/experience",
+                  "options": {
+                    "detail": {
+                      "type": "VerticalLayout",
+                      "elements": [
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/companyName"
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/role"
+                        },
+                        {
+                          "type": "HorizontalLayout",
+                          "elements": [
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/startDate"
+                            },
+                            {
+                              "type": "Control",
+                              "scope": "#/properties/endDate"
+                            }
+                          ],
+                          "options": {
+                            "vuetify": {
+                              "v-container": {
+                                "class": "pa-0"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "type": "Control",
+                          "scope": "#/properties/description",
+                          "options": {
+                            "multi": true
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "static-text.category.job-preferences",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/preferences/properties/remoteWork",
+                      "options": {
+                        "toggle": true
+                      }
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/preferences/properties/relocation",
+                      "options": {
+                        "toggle": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/preferences/properties/workType"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "static-text.category.agreements",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/agreements/properties/termsAccepted"
+                },
+                {
+                  "type": "Control",
+                  "scope": "#/properties/agreements/properties/subscribeNewsletter"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "static-text.category.resume",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/resume",
+                  "options": {
+                    "formatMaximum": "512000",
+                    "vuetify": {
+                      "v-file-input": {
+                        "showSize": true
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Category",
+          "label": "static-text.category.references",
+          "elements": [
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "Control",
+                  "scope": "#/properties/references",
+                  "options": {}
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "options": {
+        "vertical": false,
+        "variant": "stepper",
+        "showNavButtons": true,
+        "vuetify": {
+          "v-stepper": {
+            "alt-labels": false,
+            "flat": true
+          }
+        }
+      }
+    }
+  ]
+}

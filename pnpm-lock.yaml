@@ -341,6 +341,9 @@ importers:
       '@chobantonov/jsonforms-vuetify-renderers':
         specifier: workspace:*
         version: link:../jsonforms-vuetify-renderers
+      '@date-io/dayjs':
+        specifier: ^3.2.0
+        version: 3.2.0(dayjs@1.11.13)
       '@fontsource/roboto':
         specifier: ^4.5.8
         version: 4.5.8
@@ -359,6 +362,9 @@ importers:
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
+      '@vueuse/core':
+        specifier: ^10.11.1
+        version: 10.11.1(vue@3.5.13(typescript@5.4.5))
       ajv:
         specifier: ^8.6.1
         version: 8.17.1
@@ -634,6 +640,17 @@ packages:
   '@csstools/css-tokenizer@3.0.3':
     resolution: {integrity: sha512-UJnjoFsmxfKUdNYdWgOB0mWUypuLvAfQPH1+pyvRJs6euowbFkFC6P13w1l8mJyi3vxYMxc9kld5jZEGRQs6bw==}
     engines: {node: '>=18'}
+
+  '@date-io/core@3.2.0':
+    resolution: {integrity: sha512-hqwXvY8/YBsT9RwQITG868ZNb1MVFFkF7W1Ecv4P472j/ZWa7EFcgSmxy8PUElNVZfvhdvfv+a8j6NWJqOX5mA==}
+
+  '@date-io/dayjs@3.2.0':
+    resolution: {integrity: sha512-+3LV+3N+cpQbEtmrFo8odg07k02AFY7diHgbi2EKYYANOOCPkDYUjDr2ENiHuYNidTs3tZwzDKckZoVNN4NXxg==}
+    peerDependencies:
+      dayjs: ^1.8.17
+    peerDependenciesMeta:
+      dayjs:
+        optional: true
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -5945,6 +5962,14 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.3
 
   '@csstools/css-tokenizer@3.0.3': {}
+
+  '@date-io/core@3.2.0': {}
+
+  '@date-io/dayjs@3.2.0(dayjs@1.11.13)':
+    dependencies:
+      '@date-io/core': 3.2.0
+    optionalDependencies:
+      dayjs: 1.11.13
 
   '@discoveryjs/json-ext@0.5.7': {}
 

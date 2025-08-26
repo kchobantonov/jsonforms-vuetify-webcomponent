@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { appstoreLayouts, useAppStore, type AppstoreLayouts } from '../store';
 
 const appStore = useAppStore();
@@ -63,6 +64,14 @@ const layouts = appstoreLayouts.map((value: AppstoreLayouts) => ({
   text: layoutMapping[value] ?? value,
   value: value,
 }));
+
+const darkModeValue = computed({
+  get: () =>
+    appStore.dark === undefined ? 'system' : appStore.dark ? 'dark' : 'light',
+  set: (value) => {
+    appStore.dark = value === 'system' ? undefined : value === 'dark';
+  },
+});
 </script>
 
 <template>
@@ -90,23 +99,28 @@ const layouts = appstoreLayouts.map((value: AppstoreLayouts) => ({
       <v-row>
         <v-col>
           <v-btn-toggle
-            v-model="appStore.dark"
+            v-model="darkModeValue"
             borderless
-            mandatory
             group
             color="primary"
-            style="display: grid; grid-template-columns: 1fr 1fr"
+            style="display: grid; grid-template-columns: 1fr 1fr 1fr"
           >
-            <v-btn :value="false">
+            <v-btn :value="'light'">
               <span class="hidden-sm-and-down">Light</span>
 
               <v-icon right> $light </v-icon>
             </v-btn>
 
-            <v-btn :value="true">
+            <v-btn :value="'dark'">
               <span class="hidden-sm-and-down">Dark</span>
 
               <v-icon right> $dark </v-icon>
+            </v-btn>
+
+            <v-btn :value="'system'">
+              <span class="hidden-sm-and-down">System</span>
+
+              <v-icon right> $lightdark </v-icon>
             </v-btn>
           </v-btn-toggle>
         </v-col>

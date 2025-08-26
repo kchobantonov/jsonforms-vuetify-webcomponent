@@ -1,9 +1,9 @@
+import type { ExampleDescription } from '@/core/types';
 import { getExamples } from '@/examples';
-import { getExamples as getJsonFormsExamples } from '@jsonforms/examples';
 import type { ValidationMode } from '@jsonforms/core';
+import { getExamples as getJsonFormsExamples } from '@jsonforms/examples';
 import { useLocalStorage } from '@vueuse/core';
 import { markRaw, reactive, ref, watch } from 'vue';
-import type { ExampleDescription } from '@/core/types';
 
 export const appstoreLayouts = ['', 'demo-and-data'] as const;
 export type AppstoreLayouts = (typeof appstoreLayouts)[number];
@@ -34,7 +34,10 @@ const appstore = reactive({
     'use-webcomponent',
     false as boolean,
   ),
-  dark: useLocalStorage('vuetify-example-dark', false),
+  dark: useLocalStorage(
+    'vuetify-example-dark',
+    undefined as undefined | boolean,
+  ),
   theme: useLocalStorage('vuetify-example-theme', 'light'),
   drawer: useHistoryHashQuery('drawer', true as boolean),
   settings: false,

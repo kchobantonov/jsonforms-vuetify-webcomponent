@@ -1,11 +1,7 @@
 <template>
   <Suspense>
     <div>
-      <dynamic-element
-        tag="style"
-        type="text/css"
-        id="vuetify-theme-stylesheet"
-      >
+      <dynamic-element tag="style" type="text/css" :id="stylesheetId">
         {{ vuetifyThemeCss }}
       </dynamic-element>
 
@@ -18,7 +14,7 @@
 
       <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
         <v-theme-provider :theme="theme">
-          <v-defaults-provider :defaults="appStore.defaults">
+          <v-defaults-provider :defaults="appStore.vuetifyOptions.defaults">
             <v-sheet>
               <v-container style="height: 400px" v-if="error !== undefined">
                 <v-row
@@ -51,6 +47,8 @@
 </template>
 
 <script lang="ts">
+import { isValidVuetifyOptions, type VuetifyOptions } from '@/plugins/options';
+import buildVuetify from '@/plugins/vuetify';
 import { useAppStore } from '@/store';
 import {
   createTranslator,
@@ -58,6 +56,7 @@ import {
   extraVuetifyRenderers,
   type FormContext,
   FormContextKey,
+  getLightDarkTheme,
   HandleActionEmitterKey,
   type JsonFormsProps,
   parseAndTransformUISchemaRegistryEntries,
@@ -71,11 +70,12 @@ import {
   type ValidationMode,
 } from '@jsonforms/core';
 import { extendedVuetifyRenderers } from '@jsonforms/vue-vuetify';
+import { useMediaQuery } from '@vueuse/core';
 import isPlainObject from 'lodash/isPlainObject';
 import {
   computed,
   defineComponent,
-  inject,
+  getCurrentInstance,
   markRaw,
   type PropType,
   reactive,
@@ -84,7 +84,7 @@ import {
   toRef,
   watch,
 } from 'vue';
-import { type ThemeInstance } from 'vuetify';
+import { useTheme } from 'vuetify';
 import {
   VCol,
   VContainer,
@@ -99,7 +99,7 @@ import { extractAndInjectFonts } from '../util/inject-fonts';
 const ThemeSymbol = Symbol.for('vuetify:theme');
 
 export default defineComponent({
-  name: 'VuetifyJsonFormsWebComponent',
+  name: 'VuetifyJsonForms',
   components: {
     ResolvedJsonForms,
     VThemeProvider,
@@ -205,16 +205,8 @@ export default defineComponent({
     dark: { type: Boolean, default: undefined },
     rtl: { type: Boolean, default: false },
     vuetifyOptions: {
-      type: [Object, String] as any,
-      default: () => ({}),
-      validator: (value: any) => {
-        try {
-          const obj = typeof value === 'string' ? JSON.parse(value) : value;
-          return obj == null || isPlainObject(obj);
-        } catch {
-          return false;
-        }
-      },
+      type: [Object as PropType<VuetifyOptions>, String] as any,
+      validator: isValidVuetifyOptions,
     },
     customStyle: {
       type: String,
@@ -222,13 +214,6 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const appStore = useAppStore();
-    appStore.rtl = props.rtl ?? false;
-    appStore.dark = props.dark ?? false;
-    appStore.locale = props.locale ?? 'en';
-
-    const error = ref<string | undefined>(undefined);
-
     const normalize = (val: any) => {
       if (typeof val === 'string') {
         try {
@@ -239,6 +224,23 @@ export default defineComponent({
       }
       return val;
     };
+
+    const app = getCurrentInstance()?.appContext.app;
+    const vuetifyOptions: VuetifyOptions | null | undefined = normalize(
+      props.vuetifyOptions,
+    );
+    const appStore = useAppStore({
+      vuetifyOptions: vuetifyOptions ?? {},
+    });
+
+    // Configure Vuetify and other plugins here
+    app!.use(buildVuetify(appStore));
+
+    appStore.rtl = props.rtl ?? false;
+    appStore.dark = props.dark ?? false;
+    appStore.locale = props.locale ?? vuetifyOptions?.locale?.locale ?? 'en';
+
+    const error = ref<string | undefined>(undefined);
 
     const dataNormalized = computed(() => normalize(props.data));
     const schemaNormalized = computed(() => {
@@ -293,24 +295,46 @@ export default defineComponent({
       middleware: defaultMiddleware,
     });
 
-    const theme = computed(() => (appStore.dark ? 'dark' : 'light'));
-    const vuetifyConfig = computed<VuetifyConfig>(() => ({
-      theme: theme.value,
-      rtl: appStore.rtl,
-      defaults: appStore.defaults,
-    }));
+    const themeInstance = useTheme();
+    const isPreferredDark = useMediaQuery('(prefers-color-scheme: dark)');
+
+    const theme = ref('light');
+    watch(
+      () => appStore.dark,
+      (dark) => {
+        const exists = (themeName: string) =>
+          themeName in themeInstance.themes.value;
+
+        theme.value = getLightDarkTheme(
+          dark ?? isPreferredDark.value,
+          theme.value,
+          exists,
+        );
+      },
+      { immediate: true },
+    );
+
+    const stylesheetId =
+      typeof appStore.vuetifyOptions.theme === 'object'
+        ? (appStore.vuetifyOptions.theme.stylesheetId ??
+          'vuetify-theme-stylesheet')
+        : 'vuetify-theme-stylesheet';
 
     const customStyleToUse = computed(() => props.customStyle);
-    const themeInstance = inject<ThemeInstance | undefined>(
-      ThemeSymbol,
-      undefined,
-    );
     const vuetifyThemeCss = computed(() => {
       let css = themeInstance?.styles.value ?? '';
       if (css.startsWith(':root {'))
         css = ':host {' + css.slice(':root {'.length);
       return css;
     });
+
+    const vuetifyConfig = computed<VuetifyConfig>(() => ({
+      components: appStore.vuetifyOptions.components ?? {},
+      directives: appStore.vuetifyOptions.directives ?? {},
+      defaults: appStore.vuetifyOptions.defaults ?? {},
+      theme: theme.value,
+      rtl: appStore.rtl,
+    }));
 
     // ===== Watchers =====
     watch(dataNormalized, (v) => (state.data = v));
@@ -352,34 +376,13 @@ export default defineComponent({
       emit('change', event);
     };
 
-    const updateAppStoreFromVuetifyOptions = (vuetifyOptions: any) => {
-      if (!vuetifyOptions) return;
-      const options = normalize(vuetifyOptions);
-      if (!isPlainObject(options)) return;
-      if (options.defaults && isPlainObject(options.defaults))
-        appStore.defaults = options.defaults;
-      if (options.blueprint) appStore.blueprint = options.blueprint;
-      if (options.icons?.defaultSet)
-        appStore.iconset = options.icons.defaultSet;
-      if (props.dark === undefined && typeof options.theme?.dark === 'boolean')
-        appStore.dark = options.theme.dark;
-    };
-    updateAppStoreFromVuetifyOptions(props.vuetifyOptions);
-    watch(
-      () => props.vuetifyOptions,
-      (v, oldV) => {
-        if (v !== oldV) updateAppStoreFromVuetifyOptions(v);
-      },
-      { deep: true },
-    );
-
     watch(
       () => props.rtl,
       (v) => (appStore.rtl = v ?? false),
     );
     watch(
       () => props.dark,
-      (v) => (appStore.dark = v ?? false),
+      (v) => (appStore.dark = v),
     );
     watch(
       () => props.locale,
@@ -400,6 +403,7 @@ export default defineComponent({
       appStore,
       state,
       theme,
+      stylesheetId,
       vuetifyConfig,
       customStyleToUse,
       vuetifyThemeCss,

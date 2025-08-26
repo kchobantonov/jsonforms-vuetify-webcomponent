@@ -119,8 +119,6 @@
     </style>
   </head>
   <body>
-    <!-- <script type="module" src="./dist/vuetify-json-forms.js"></script> -->
-    <script type="module" src="./src/web-component.ts"></script>
     <vuetify-json-forms>
       <div class="example-selector" slot="jsonforms-footer">
         <div class="example-icon" id="exampleIcon">
@@ -253,7 +251,7 @@
       // Load first example by ID if available
       if (examples && examples.length > 0) {
         // get the demo example and if not registered get the first available
-        const example = findExampleById('demo') ?? examples[0];
+        const example = findExampleById('job') ?? examples[0];
         if (example?.id) {
           loadExample(example.id);
         } else {
@@ -263,5 +261,7 @@
         console.warn('No examples available to load');
       }
     </script>
+
+    <script type="module" src="./src/web-component.ts"></script>
   </body>
 </html>

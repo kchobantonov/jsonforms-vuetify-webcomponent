@@ -1,0 +1,195 @@
+[
+  {
+    "tester": "(jsonSchema, schemaPath, path) => { return NOT_APPLICABLE; }",
+    "uischema": {
+      "type": "TemplateLayout",
+      "name": "applicant",
+      "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "TemplateLayout",
+              "template": "<v-container class='align-stretch'><v-row><v-col><v-img :src='data.applicant.profilePicture' v-if='data.applicant && data.applicant.profilePicture'></v-img></v-col></v-row><v-row class='mt-auto'><v-col><slot name='upload'></slot></v-col></v-row></v-container>",
+              "elements": [
+                {
+                  "type": "Control",
+                  "name": "upload",
+                  "scope": "#/properties/applicant/properties/profilePicture",
+                  "options": {
+                    "formatMaximum": "51200",
+                    "vuetify": {
+                      "v-file-input": {
+                        "showSize": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "VerticalLayout",
+              "elements": [
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/applicant/properties/firstName"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/applicant/properties/lastName"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/applicant/properties/gender"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/applicant/properties/dateOfBirth"
+                    }
+                  ]
+                },
+                {
+                  "type": "HorizontalLayout",
+                  "elements": [
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/applicant/properties/email"
+                    },
+                    {
+                      "type": "Control",
+                      "scope": "#/properties/applicant/properties/phoneNumber",
+                      "options": {
+                        "placeholder": "+# (###) ###-####",
+                        "mask": "+# (###) ###-####",
+                        "returnMaskedValue": true
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "options": {
+            "vuetify": {
+              "v-container": {
+                "fluid": true
+              },
+              "v-row": {
+                "no-gutters": true
+              },
+              "v-col": [
+                {
+                  "cols": 3
+                },
+                {
+                  "cols": 9
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "Template",
+          "name": "applicantAddress"
+        }
+      ]
+    }
+  },
+  {
+    "tester": "(jsonSchema, schemaPath, path) => { return NOT_APPLICABLE; }",
+    "uischema": {
+      "type": "Group",
+      "label": "static-text.group.address-information",
+      "name": "applicantAddress",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/applicant/properties/address/properties/street"
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/applicant/properties/address/properties/city"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/applicant/properties/address/properties/state"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/applicant/properties/address/properties/zipCode"
+            }
+          ],
+          "options": {
+            "vuetify": {
+              "v-container": {
+                "class": "pa-0"
+              }
+            }
+          }
+        }
+      ],
+      "options": {
+        "vuetify": {
+          "v-card": {
+            "elevation": 0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tester": "(jsonSchema, schemaPath, path) => { return NOT_APPLICABLE; }",
+    "uischema": {
+      "type": "TemplateLayout",
+      "name": "jobDetails",
+      "template": "<v-container><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+      "elements": [
+        {
+          "type": "Control",
+          "scope": "#/properties/jobDetails/properties/position"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/jobDetails/properties/salaryExpectation",
+          "options": {
+            "vuetify": {
+              "v-text-field": {
+                "prepend-inner-icon": "mdi-currency-usd"
+              }
+            }
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/jobDetails/properties/availableStartDate"
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/jobDetails/properties/availableStartTime",
+          "options": {
+            "format": "time",
+            "ampm": true,
+            "timeFormat": "hh:mm a",
+            "timeSaveFormat": "HH:mm"
+          }
+        },
+        {
+          "type": "Control",
+          "scope": "#/properties/jobDetails/properties/availableStartDateTime"
+        }
+      ]
+    }
+  }
+]

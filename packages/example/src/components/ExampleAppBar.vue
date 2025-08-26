@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useAppStore } from '../store';
 import JsonFormsLogo from '../assets/JsonFormsLogo.vue';
-import ThemeChanger from './ThemeChanger.vue';
 import webComponentUrl from '@/assets/webcomponent.svg';
+import ThemeSwitcher from './ThemeSwitcher.vue';
 
 const appStore = useAppStore();
 </script>
@@ -73,7 +73,9 @@ const appStore = useAppStore();
               }}
             </v-tooltip>
           </v-col>
-          <v-col><theme-changer /> </v-col>
+          <v-col>
+            <theme-switcher></theme-switcher>
+          </v-col>
           <v-col>
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">

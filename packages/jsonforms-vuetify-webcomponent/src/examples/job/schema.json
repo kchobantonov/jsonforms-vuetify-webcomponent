@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Job Application",
+  "description": "A schema for a job application form capturing personal details, job preferences, experience, and other necessary information.",
+  "type": "object",
+  "dynamicDefaults": {
+    "now": {
+      "func": "date",
+      "args": {
+        "date": "now"
+      }
+    }
+  },
+  "properties": {
+    "now": {
+      "type": "string",
+      "format": "date"
+    },
+    "applicant": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "lastName": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["male", "female", "prefer_not_to_say"]
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "formatMaximum": { "$data": "/now" }
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "pattern": "^\\+?[1-9]\\d{0,2}[-\\s]?\\(?\\d{1,4}\\)?[-\\s]?\\d{1,4}[-\\s]?\\d{1,9}$"
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": {
+              "type": "string"
+            },
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "zipCode": {
+              "type": "string",
+              "pattern": "^\\d{5}(-\\d{4})?$"
+            }
+          },
+          "required": ["street", "city", "state", "zipCode"]
+        },
+        "profilePicture": {
+          "type": "string",
+          "format": "uri",
+          "contentMediaType": "image/*",
+          "contentEncoding": "base64"
+        }
+      },
+      "required": ["firstName", "lastName", "gender", "dateOfBirth", "email"]
+    },
+    "jobDetails": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "type": "string"
+        },
+        "salaryExpectation": {
+          "type": "number",
+          "minimum": 30000,
+          "maximum": 200000
+        },
+        "availableStartDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "availableStartTime": {
+          "type": "string",
+          "pattern": "^([01]?[0-9]|2[0-3]):([0-5][0-9])$"
+        },
+        "availableStartDateTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["position", "salaryExpectation", "availableStartDate"]
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "Individual skill name."
+      },
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "experience": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "formatMinimum": { "$data": "1/startDate" }
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": ["companyName", "role", "startDate"]
+      },
+      "maxItems": 20
+    },
+    "preferences": {
+      "type": "object",
+      "properties": {
+        "remoteWork": {
+          "type": "boolean"
+        },
+        "relocation": {
+          "type": "boolean"
+        },
+        "workType": {
+          "type": "string",
+          "enum": ["FULL_TIME", "PART_TIME", "CONTRACT"]
+        }
+      },
+      "required": ["workType"]
+    },
+    "agreements": {
+      "type": "object",
+      "properties": {
+        "termsAccepted": {
+          "type": "boolean",
+          "enum": [true]
+        },
+        "subscribeNewsletter": {
+          "type": "boolean"
+        }
+      },
+      "required": ["termsAccepted"]
+    },
+    "resume": {
+      "type": "string",
+      "format": "binary",
+      "contentMediaType": "application/pdf",
+      "contentEncoding": "base64"
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "relation": {
+            "type": "string"
+          }
+        },
+        "minProperties": 1
+      },
+      "maxItems": 20
+    }
+  },
+  "required": [
+    "applicant",
+    "jobDetails",
+    "skills",
+    "experience",
+    "preferences",
+    "agreements"
+  ]
+}

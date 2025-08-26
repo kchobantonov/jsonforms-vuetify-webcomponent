@@ -1,6 +1,105 @@
 {
   "blueprint": "md1",
+  "defaults": {
+    "VNumberInput": {
+      "inset": "true"
+    }
+  },
   "theme": {
-    "dark": true
+    "defaultTheme": "purpleDreams",
+    "variations": {
+      "colors": ["primary", "secondary", "accent"],
+      "lighten": 5,
+      "darken": 5
+    },
+    "themes": {
+      "purpleDreams": {
+        "dark": false,
+        "colors": {
+          "primary": "#7C4DFF",
+          "secondary": "#E91E63",
+          "accent": "#00BCD4",
+          "error": "#F44336",
+          "warning": "#FF9800",
+          "info": "#2196F3",
+          "success": "#4CAF50",
+          "background": "#FAFAFA",
+          "surface": "#FFFFFF",
+          "gradient-start": "#667eea",
+          "gradient-end": "#764ba2",
+          "on-primary": "#FFFFFF",
+          "on-secondary": "#FFFFFF",
+          "on-accent": "#FFFFFF",
+          "on-error": "#FFFFFF",
+          "on-warning": "#000000",
+          "on-info": "#FFFFFF",
+          "on-success": "#FFFFFF",
+          "on-background": "#212121",
+          "on-surface": "#212121"
+        },
+        "variables": {
+          "border-color": "#E0E0E0",
+          "border-opacity": 0.12,
+          "high-emphasis-opacity": 0.87,
+          "medium-emphasis-opacity": 0.6,
+          "disabled-opacity": 0.38,
+          "idle-opacity": 0.04,
+          "hover-opacity": 0.04,
+          "focus-opacity": 0.12,
+          "selected-opacity": 0.08,
+          "activated-opacity": 0.12,
+          "pressed-opacity": 0.12,
+          "dragged-opacity": 0.08,
+          "theme-kbd": "#212529",
+          "theme-on-kbd": "#FFFFFF",
+          "theme-code": "#F5F5F5",
+          "theme-on-code": "#000000"
+        }
+      },
+      "Basil": {
+        "dark": false,
+        "colors": {
+          "primary": "#356859",
+          "secondary": "#FD5523",
+          "accent": "#37966F",
+          "info": "#356859"
+        }
+      },
+      "Crane": {
+        "dark": false,
+        "colors": {
+          "primary": "#5D1049",
+          "secondary": "#E30425",
+          "accent": "#4E0D3A",
+          "info": "#5D1049"
+        }
+      },
+      "Fortnightly": {
+        "dark": false,
+        "colors": {
+          "primary": "#6B38FB",
+          "secondary": "#6B38FB",
+          "info": "#6B38FB"
+        }
+      },
+      "Owl": {
+        "dark": false,
+        "colors": {
+          "primary": "#FFDE03",
+          "secondary": "#0336FF",
+          "accent": "#FF0266",
+          "info": "#FFDE03"
+        }
+      },
+      "Shrine": {
+        "dark": false,
+        "colors": {
+          "primary": "#FEDBD0",
+          "secondary": "#FEEAE6",
+          "accent": "#442C2E",
+          "info": "#FEDBD0"
+        }
+      }
+    }
   }
 }

@@ -47,7 +47,7 @@ import {
   type ResolvedSchema,
   type VuetifyConfig,
 } from '../core';
-import { resolveUISchemaValidations } from '../util';
+import { getLightDarkTheme, resolveUISchemaValidations } from '../util';
 import type Ajv from 'ajv';
 import { generateJsonSchema } from './schema';
 
@@ -203,7 +203,7 @@ watch(
   (vuetifyConfig) => {
     Object.assign(vuetifyConfigToUse, vuetifyConfig);
     vuetifyConfigToUse.dark =
-      vuetifyTheme.themes.value[vuetifyConfigToUse.theme]?.dark ?? false;
+      themeInstance.themes.value[vuetifyConfigToUse.theme]?.dark ?? false;
   },
   { deep: true },
 );
@@ -290,10 +290,10 @@ const errorMessage = computed(() => {
 const currentInstance = getCurrentInstance();
 const jsonformsCore = ref<JsonFormsCore | undefined>(undefined);
 
-const vuetifyTheme = useTheme();
+const themeInstance = useTheme();
 const vuetifyConfigToUse = reactive({
   ...props.vuetifyConfig,
-  dark: vuetifyTheme.themes.value[props.vuetifyConfig?.theme]?.dark ?? false,
+  dark: themeInstance.themes.value[props.vuetifyConfig?.theme]?.dark ?? false,
 });
 
 const readonly = ref(props.state.readonly);
@@ -409,13 +409,11 @@ watch(
   () => vuetifyConfigToUse.dark,
   (dark, oldDark) => {
     if (dark !== oldDark) {
-      let newTheme = dark
-        ? vuetifyConfigToUse.theme.replace('light', 'dark')
-        : vuetifyConfigToUse.theme.replace('dark', 'light');
-      if (!vuetifyTheme.themes.value[newTheme]) {
-        newTheme = dark ? 'dark' : 'light';
-      }
-      vuetifyConfigToUse.theme = newTheme;
+      vuetifyConfigToUse.theme = getLightDarkTheme(
+        dark,
+        vuetifyConfigToUse.theme,
+        (theme) => themeInstance.themes.value[theme] !== undefined,
+      );
     }
   },
 );

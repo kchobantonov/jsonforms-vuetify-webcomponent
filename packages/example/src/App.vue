@@ -7,8 +7,9 @@ import ExampleSettings from './components/ExampleSettings.vue';
 import ExampleView from './views/ExampleView.vue';
 import HomeView from './views/HomeView.vue';
 
-import type { DefaultsInstance } from 'vuetify';
-import { useAppTheme } from './plugins/vuetify';
+import { getLightDarkTheme } from '@chobantonov/jsonforms-vuetify-renderers';
+import { useMediaQuery } from '@vueuse/core';
+import { useTheme, type DefaultsInstance } from 'vuetify';
 import { useAppStore } from './store';
 
 const appStore = useAppStore();
@@ -16,8 +17,6 @@ const appStore = useAppStore();
 const example = computed(() =>
   appStore.examples.find((ex) => ex.name === appStore.exampleName),
 );
-
-const theme = useAppTheme();
 
 const appKey = ref(1);
 const DefaultsSymbol: InjectionKey<Ref<DefaultsInstance>> =
@@ -35,11 +34,27 @@ watch(
     deep: true,
   },
 );
+
+const themeInstance = useTheme();
+const isPreferredDark = useMediaQuery('(prefers-color-scheme: dark)');
+
+watch(
+  () => appStore.dark,
+  (dark) => {
+    const exists = (theme: string) => theme in themeInstance.themes.value;
+
+    appStore.theme = getLightDarkTheme(
+      dark ?? isPreferredDark.value,
+      appStore.theme,
+      exists,
+    );
+  },
+);
 </script>
 
 <template>
   <v-locale-provider :rtl="appStore.rtl" :locale="appStore.jsonforms.locale">
-    <v-theme-provider :theme="theme">
+    <v-theme-provider :theme="appStore.theme">
       <v-app :key="appKey">
         <example-app-bar></example-app-bar>
         <example-drawer></example-drawer>

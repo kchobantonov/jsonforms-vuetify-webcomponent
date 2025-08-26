@@ -1,4 +1,4 @@
-import { createVuetify, type Blueprint, type ThemeDefinition } from 'vuetify';
+import { createVuetify, type Blueprint } from 'vuetify';
 import { md1, md2, md3 } from 'vuetify/blueprints';
 
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -9,7 +9,7 @@ import 'vuetify/styles';
 // just make sure that the locales are loaded
 
 import { faIconAliases, mdiIconAliases } from '@jsonforms/vue-vuetify';
-import { computed, watch } from 'vue';
+import { watch } from 'vue';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import { fa, aliases as faAliases } from 'vuetify/iconsets/fa';
@@ -17,90 +17,8 @@ import { mdi, aliases as mdiAliases } from 'vuetify/iconsets/mdi';
 import { aliases as appFaAliases } from '../icons/fa';
 import { aliases as appMdiAliases } from '../icons/mdi';
 import { useAppStore } from '../store';
-
-export function getCustomThemes(blueprint: string) {
-  const getThemeColors = (blueprint: string) => {
-    switch (blueprint) {
-      case 'md1':
-        return (md1.theme as any).themes.light.colors;
-      case 'md2':
-        return (md2.theme as any).themes.light.colors;
-      default:
-        return (md3.theme as any).themes.light.colors;
-    }
-  };
-
-  const customThemes: (ThemeDefinition & { name: string })[] = [
-    {
-      name: 'light',
-      dark: false,
-      colors: getThemeColors(blueprint),
-    },
-    {
-      name: 'dark',
-      dark: true,
-      colors: {
-        primary: '#2196F3',
-        secondary: '#54B6B2',
-        error: '#CF6679',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#FB8C00',
-      },
-    },
-    {
-      name: 'Basil',
-      dark: false,
-      colors: {
-        primary: '#356859',
-        secondary: '#FD5523',
-        accent: '#37966F',
-        info: '#356859',
-      },
-    },
-    {
-      name: 'Crane',
-      dark: false,
-      colors: {
-        primary: '#5D1049',
-        secondary: '#E30425',
-        accent: '#4E0D3A',
-        info: '#5D1049',
-      },
-    },
-    {
-      name: 'Fortnightly',
-      dark: false,
-      colors: {
-        primary: '#6B38FB',
-        secondary: '#6B38FB',
-        info: '#6B38FB',
-      },
-    },
-    {
-      name: 'Owl',
-      dark: false,
-      colors: {
-        primary: '#FFDE03',
-        secondary: '#0336FF',
-        accent: '#FF0266',
-        info: '#FFDE03',
-      },
-    },
-    {
-      name: 'Shrine',
-      dark: false,
-      colors: {
-        primary: '#FEDBD0',
-        secondary: '#FEEAE6',
-        accent: '#442C2E',
-        info: '#FEDBD0',
-      },
-    },
-  ];
-
-  return customThemes;
-}
+import { themes } from './themes';
+import { getLightDarkTheme } from '@chobantonov/jsonforms-vuetify-renderers';
 
 function toIconSetAliases(iconset: string) {
   // we can add vue-vuetify icons setoverrides here if needed or use the default provided base on the iconset
@@ -183,14 +101,7 @@ function createVuetifyInstance(appStore: ReturnType<typeof useAppStore>) {
       aliases: toIconSetAliases(appStore.iconset),
     },
     theme: {
-      defaultTheme: appStore.dark ? 'dark' : 'light',
-      themes: getCustomThemes(appStore.blueprint).reduce(
-        (acc: Record<string, ThemeDefinition>, current) => {
-          acc[current.name] = current;
-          return acc;
-        },
-        {},
-      ),
+      themes: themes,
     },
     defaults: defaults,
   });
@@ -264,22 +175,5 @@ export function buildVuetify() {
 
   return vuetify;
 }
-
-export const useAppTheme = () => {
-  const appStore = useAppStore();
-
-  const theme = computed(() => {
-    const theme = getCustomThemes(appStore.blueprint).filter(
-      (t) => t.name === appStore.theme,
-    );
-    if (theme && theme[0] && theme[0].dark === appStore.dark) {
-      return theme[0].name;
-    }
-
-    return appStore.dark ? 'dark' : 'light';
-  });
-
-  return theme;
-};
 
 export default buildVuetify;
