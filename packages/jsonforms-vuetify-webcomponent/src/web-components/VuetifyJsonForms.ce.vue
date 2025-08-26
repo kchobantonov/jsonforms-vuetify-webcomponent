@@ -236,9 +236,9 @@ export default defineComponent({
     // Configure Vuetify and other plugins here
     app!.use(buildVuetify(appStore));
 
-    appStore.rtl = props.rtl === 'true';
+    appStore.rtl = props.rtl == 'true'; // handle bool type as well
     if (props.dark !== undefined) {
-      appStore.dark = props.dark === 'true' ? true : false;
+      appStore.dark = props.dark == 'true' ? true : false; // handle bool type as well
     }
     appStore.locale = props.locale ?? vuetifyOptions?.locale?.locale ?? 'en';
 
@@ -289,7 +289,7 @@ export default defineComponent({
       renderers,
       cells: undefined,
       config: configNormalized.value,
-      readonly: props.readonly === 'true',
+      readonly: props.readonly == 'true', // handle bool type as well
       uischemas: uischemasNormalized.value,
       validationMode: props.validationMode,
       i18n: i18nToUse.value,
@@ -353,7 +353,7 @@ export default defineComponent({
     watch(uischemasNormalized, (v) => (state.uischemas = v), { deep: true });
     watch(
       () => props.readonly,
-      (v) => (state.readonly = v === 'true'),
+      (v) => (state.readonly = v == 'true'), // handle bool type as well
     );
     watch(
       () => props.validationMode,
@@ -383,11 +383,11 @@ export default defineComponent({
 
     watch(
       () => props.rtl,
-      (v) => (appStore.rtl = v == 'true'),
+      (v) => (appStore.rtl = v == 'true'), // handle bool type as well
     );
     watch(
       () => props.dark,
-      (v) => (appStore.dark = v == undefined ? undefined : v === 'true'),
+      (v) => (appStore.dark = v == undefined ? undefined : v == 'true'), // handle bool type if passe as well
     );
     watch(
       () => props.locale,
