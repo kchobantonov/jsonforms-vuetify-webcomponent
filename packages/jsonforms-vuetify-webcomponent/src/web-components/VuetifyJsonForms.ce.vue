@@ -8,8 +8,8 @@
       <dynamic-element tag="style" type="text/css">
         {{ customStyleToUse }}
       </dynamic-element>
-      <dynamic-element tag="slot" name="jsonforms-header">
-        <!-- Place custom content inside <div slot="jsonforms-header"></div> within <vuetify-json-forms> to fill this slot -->
+      <dynamic-element tag="slot" name="form-header">
+        <!-- Place custom content inside <div slot="form-header"></div> within <vuetify-json-forms> to fill this slot -->
       </dynamic-element>
 
       <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
@@ -39,8 +39,8 @@
         </v-theme-provider>
       </v-locale-provider>
 
-      <dynamic-element tag="slot" name="jsonforms-footer">
-        <!-- Place custom content inside <div slot="jsonforms-footer"></div> within <vuetify-json-forms> to fill this slot -->
+      <dynamic-element tag="slot" name="form-footer">
+        <!-- Place custom content inside <div slot="form-footer"></div> within <vuetify-json-forms> to fill this slot -->
       </dynamic-element>
     </div>
   </Suspense>
@@ -237,7 +237,7 @@ export default defineComponent({
     app!.use(buildVuetify(appStore));
 
     appStore.rtl = props.rtl ?? false;
-    appStore.dark = props.dark ?? false;
+    appStore.dark = props.dark;
     appStore.locale = props.locale ?? vuetifyOptions?.locale?.locale ?? 'en';
 
     const error = ref<string | undefined>(undefined);

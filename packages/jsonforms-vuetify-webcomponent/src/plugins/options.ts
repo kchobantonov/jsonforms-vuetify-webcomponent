@@ -65,35 +65,48 @@ export function createVuetifyOptions(
           ...mdiIconAliases,
           ...(options.icons.aliases ?? {}),
         };
+        break;
       case 'fa':
         options.icons.aliases = {
           ...{ ...faAliases, ...{ calendar: 'far fa-calendar' } },
           ...faIconAliases,
           ...(options.icons.aliases ?? {}),
         };
+        break;
       default:
         if (!options.icons.sets?.[options.icons.defaultSet])
           console.warn(`Unknown iconSet: ${options.icons.defaultSet}`);
     }
   }
 
-  const vuetify = mergeDeep(defaultVuetifyOptions, options) as VuetifyOptions;
+  const vuetifyOptions = mergeDeep(
+    defaultVuetifyOptions,
+    options,
+  ) as VuetifyOptions;
 
-  if (vuetify.blueprint !== undefined) {
-    vuetify.blueprint = resolveBlueprint(vuetify.blueprint);
+  if (vuetifyOptions.blueprint !== undefined) {
+    vuetifyOptions.blueprint = resolveBlueprint(vuetifyOptions.blueprint);
   }
 
-  if (vuetify.date?.adapter) {
-    vuetify.date.adapter = resolveDateAdapter(vuetify.date.adapter);
+  if (vuetifyOptions.date?.adapter) {
+    vuetifyOptions.date.adapter = resolveDateAdapter(
+      vuetifyOptions.date.adapter,
+    );
     if (
-      vuetify.date.adapter === DayJsAdapter &&
-      vuetify.date.locale === undefined
+      vuetifyOptions.date.adapter === DayJsAdapter &&
+      vuetifyOptions.date.locale === undefined
     ) {
-      vuetify.date.locale = { dayjsBg, dayjsDe, dayjsEn, dayjsEs, dayjsFr };
+      vuetifyOptions.date.locale = {
+        dayjsBg,
+        dayjsDe,
+        dayjsEn,
+        dayjsEs,
+        dayjsFr,
+      };
     }
   }
 
-  return vuetify as VuetifyCreateOptions;
+  return vuetifyOptions as VuetifyCreateOptions;
 }
 
 export function resolveBlueprint(

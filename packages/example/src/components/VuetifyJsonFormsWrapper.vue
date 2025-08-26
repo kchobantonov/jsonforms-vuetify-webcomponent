@@ -1,5 +1,13 @@
 <script lang="ts">
-import { defineComponent, ref, h, useAttrs, watch, nextTick } from 'vue';
+import {
+  defineComponent,
+  ref,
+  h,
+  useAttrs,
+  watch,
+  nextTick,
+  computed,
+} from 'vue';
 import { VProgressLinear } from 'vuetify/components';
 import { useScriptTag } from '@vueuse/core';
 

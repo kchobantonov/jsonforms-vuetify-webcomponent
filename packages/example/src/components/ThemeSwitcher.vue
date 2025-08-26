@@ -48,11 +48,6 @@ function switchTheme(themeName: string) {
   theme.change(themeName);
   appStore.theme = themeName;
 }
-
-watch(
-  () => appStore.theme,
-  () => console.log('new theme', appStore.theme),
-);
 </script>
 
 <template>

@@ -52,6 +52,7 @@ import { useAppStore } from '../store';
 
 import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
 import webComponentUrl from '@/assets/webcomponent.svg';
+import { themes } from '@/plugins/themes';
 
 const vuetifyRenderers = [
   ...extendedVuetifyRenderers,
@@ -516,6 +517,10 @@ const vuetifyOptions = computed(() => {
     icons: {
       defaultSet: vuetifyIcons?.defaultSet,
     },
+    theme: {
+      defaultTheme: appStore.theme,
+      themes: themes,
+    },
   } as Partial<VuetifyOptions>;
 });
 
@@ -607,7 +612,7 @@ const wrapperProps = computed(() => ({
                         v-bind="wrapperProps"
                       >
                         <v-row
-                          slot="jsonforms-header"
+                          slot="form-header"
                           justify="end"
                           class="pr-4 mt-1"
                         >
@@ -627,7 +632,7 @@ const wrapperProps = computed(() => ({
                                 </div>
                                 <div class="text-caption">
                                   Icon rendered via webcomponent slot<br />
-                                  <em>(jsonforms-header)</em>
+                                  <em>(form-header)</em>
                                 </div>
                               </div>
                             </v-tooltip>
