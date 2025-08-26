@@ -192,7 +192,7 @@ export default defineComponent({
         }
       },
     },
-    readonly: { type: Boolean, default: false },
+    readonly: { type: String, default: 'false' },
     validationMode: {
       type: String as PropType<ValidationMode>,
       default: 'ValidateAndShow',
@@ -202,8 +202,8 @@ export default defineComponent({
         v === 'NoValidation',
     },
     locale: { type: String, default: 'en' },
-    dark: { type: Boolean, default: undefined },
-    rtl: { type: Boolean, default: false },
+    dark: { type: String, default: undefined },
+    rtl: { type: String, default: 'false' },
     vuetifyOptions: {
       type: [Object as PropType<VuetifyOptions>, String] as any,
       validator: isValidVuetifyOptions,
@@ -236,8 +236,10 @@ export default defineComponent({
     // Configure Vuetify and other plugins here
     app!.use(buildVuetify(appStore));
 
-    appStore.rtl = props.rtl ?? false;
-    appStore.dark = props.dark;
+    appStore.rtl = props.rtl === 'true';
+    if (props.dark !== undefined) {
+      appStore.dark = props.dark === 'true' ? true : false;
+    }
     appStore.locale = props.locale ?? vuetifyOptions?.locale?.locale ?? 'en';
 
     const error = ref<string | undefined>(undefined);
@@ -287,7 +289,7 @@ export default defineComponent({
       renderers,
       cells: undefined,
       config: configNormalized.value,
-      readonly: props.readonly,
+      readonly: props.readonly === 'true',
       uischemas: uischemasNormalized.value,
       validationMode: props.validationMode,
       i18n: i18nToUse.value,
@@ -298,21 +300,24 @@ export default defineComponent({
     const themeInstance = useTheme();
     const isPreferredDark = useMediaQuery('(prefers-color-scheme: dark)');
 
-    const theme = ref('light');
-    watch(
-      () => appStore.dark,
-      (dark) => {
-        const exists = (themeName: string) =>
-          themeName in themeInstance.themes.value;
+    const theme = computed(() => {
+      const dark = appStore.dark ?? isPreferredDark.value;
+      let defaultTheme = dark ? 'dark' : 'light';
+      if (
+        typeof appStore.vuetifyOptions.theme === 'object' &&
+        appStore.vuetifyOptions.theme.defaultTheme
+      ) {
+        defaultTheme = appStore.vuetifyOptions.theme.defaultTheme;
+      }
 
-        theme.value = getLightDarkTheme(
-          dark ?? isPreferredDark.value,
-          theme.value,
-          exists,
-        );
-      },
-      { immediate: true },
-    );
+      if (defaultTheme === 'system') {
+        defaultTheme = isPreferredDark.value ? 'dark' : 'light';
+      }
+      const exists = (themeName: string) =>
+        themeName in themeInstance.themes.value;
+
+      return getLightDarkTheme(dark, defaultTheme, exists);
+    });
 
     const stylesheetId =
       typeof appStore.vuetifyOptions.theme === 'object'
@@ -348,7 +353,7 @@ export default defineComponent({
     watch(uischemasNormalized, (v) => (state.uischemas = v), { deep: true });
     watch(
       () => props.readonly,
-      (v) => (state.readonly = v),
+      (v) => (state.readonly = v === 'true'),
     );
     watch(
       () => props.validationMode,
@@ -378,11 +383,11 @@ export default defineComponent({
 
     watch(
       () => props.rtl,
-      (v) => (appStore.rtl = v ?? false),
+      (v) => (appStore.rtl = v == 'true'),
     );
     watch(
       () => props.dark,
-      (v) => (appStore.dark = v),
+      (v) => (appStore.dark = v == undefined ? undefined : v === 'true'),
     );
     watch(
       () => props.locale,
