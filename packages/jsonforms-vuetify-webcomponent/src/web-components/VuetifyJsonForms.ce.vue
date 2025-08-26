@@ -98,6 +98,18 @@ import { extractAndInjectFonts } from '../util/inject-fonts';
 
 const ThemeSymbol = Symbol.for('vuetify:theme');
 
+const toBoolean = (val: any): boolean | undefined => {
+  if (typeof val === 'string') {
+    return val === 'true';
+  }
+
+  if (typeof val === 'boolean') {
+    return val;
+  }
+
+  return undefined;
+};
+
 export default defineComponent({
   name: 'VuetifyJsonForms',
   components: {
@@ -229,6 +241,7 @@ export default defineComponent({
     const vuetifyOptions: VuetifyOptions | null | undefined = normalize(
       props.vuetifyOptions,
     );
+
     const appStore = useAppStore({
       vuetifyOptions: vuetifyOptions ?? {},
     });
@@ -236,9 +249,9 @@ export default defineComponent({
     // Configure Vuetify and other plugins here
     app!.use(buildVuetify(appStore));
 
-    appStore.rtl = props.rtl == 'true'; // handle bool type as well
+    appStore.rtl = toBoolean(props.rtl) ?? false;
     if (props.dark !== undefined) {
-      appStore.dark = props.dark == 'true' ? true : false; // handle bool type as well
+      appStore.dark = toBoolean(props.dark);
     }
     appStore.locale = props.locale ?? vuetifyOptions?.locale?.locale ?? 'en';
 
@@ -289,7 +302,7 @@ export default defineComponent({
       renderers,
       cells: undefined,
       config: configNormalized.value,
-      readonly: props.readonly == 'true', // handle bool type as well
+      readonly: toBoolean(props.readonly),
       uischemas: uischemasNormalized.value,
       validationMode: props.validationMode,
       i18n: i18nToUse.value,
@@ -301,6 +314,15 @@ export default defineComponent({
     const isPreferredDark = useMediaQuery('(prefers-color-scheme: dark)');
 
     const theme = computed(() => {
+      // add props as deps as well
+      if (typeof props.vuetifyOptions === 'object') {
+        const opts = props.vuetifyOptions as VuetifyOptions;
+        if (typeof opts.theme === 'object') {
+          // add defaultTheme as deps, only touching is needed
+          opts.theme.defaultTheme;
+        }
+      }
+
       const dark = appStore.dark ?? isPreferredDark.value;
       let defaultTheme = dark ? 'dark' : 'light';
       if (
@@ -353,7 +375,7 @@ export default defineComponent({
     watch(uischemasNormalized, (v) => (state.uischemas = v), { deep: true });
     watch(
       () => props.readonly,
-      (v) => (state.readonly = v == 'true'), // handle bool type as well
+      (v) => (state.readonly = toBoolean(v)),
     );
     watch(
       () => props.validationMode,
@@ -383,11 +405,11 @@ export default defineComponent({
 
     watch(
       () => props.rtl,
-      (v) => (appStore.rtl = v == 'true'), // handle bool type as well
+      (v) => (appStore.rtl = toBoolean(v) ?? false),
     );
     watch(
       () => props.dark,
-      (v) => (appStore.dark = v == undefined ? undefined : v == 'true'), // handle bool type if passe as well
+      (v) => (appStore.dark = toBoolean(v)),
     );
     watch(
       () => props.locale,

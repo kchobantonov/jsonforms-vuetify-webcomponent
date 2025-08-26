@@ -7,6 +7,9 @@ import {
   watch,
   nextTick,
   computed,
+  isRef,
+  unref,
+  toRaw,
 } from 'vue';
 import { VProgressLinear } from 'vuetify/components';
 import { useScriptTag } from '@vueuse/core';
@@ -19,10 +22,19 @@ export default defineComponent({
     const loading = ref(true);
     const elRef = ref<HTMLElement | null>(null);
 
+    const normalize = (val: any) => {
+      if (isRef(val)) return unref(val);
+      if (typeof val === 'object' && val !== null) return toRaw(val);
+      return val;
+    };
+
     // Helper: assign props to the web component only if they differ
     const assignProps = (el: HTMLElement, props: Record<string, any>) => {
       Object.entries(props).forEach(([key, value]) => {
-        if ((el as any)[key] !== value) (el as any)[key] = value;
+        const raw = normalize(value);
+        if ((el as any)[key] !== raw) {
+          (el as any)[key] = raw;
+        }
       });
     };
 
