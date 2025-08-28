@@ -1,15 +1,13 @@
-import { createVuetify, type ThemeDefinition } from 'vuetify';
+import { createVuetify } from 'vuetify';
 
 // just make sure that the locales are loaded
 
-import { useAppStore, type AppStore } from '@/store';
+import { type AppStore } from '@/store';
 import { watch } from 'vue';
-import { fa } from 'vuetify/iconsets/fa';
-import { mdi } from 'vuetify/iconsets/mdi';
 import { createVuetifyOptions } from './options';
 
 function createVuetifyInstance(appStore: AppStore) {
-  return createVuetify(createVuetifyOptions(appStore.vuetifyOptions));
+  return createVuetify(createVuetifyOptions(appStore));
 }
 
 export function buildVuetify(appStore: AppStore) {

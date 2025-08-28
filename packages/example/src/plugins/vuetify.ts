@@ -18,7 +18,6 @@ import { aliases as appFaAliases } from '../icons/fa';
 import { aliases as appMdiAliases } from '../icons/mdi';
 import { useAppStore } from '../store';
 import { themes } from './themes';
-import { getLightDarkTheme } from '@chobantonov/jsonforms-vuetify-renderers';
 
 function toIconSetAliases(iconset: string) {
   // we can add vue-vuetify icons setoverrides here if needed or use the default provided base on the iconset
@@ -83,6 +82,19 @@ function createVuetifyInstance(appStore: ReturnType<typeof useAppStore>) {
         VCheckbox: { color: 'primary' },
       };
 
+  let defaultTheme = appStore.theme;
+  const themeNames = [
+    ...['light', 'dark', 'system'],
+    ...Object.keys(themes ?? {}),
+  ];
+
+  if (!themeNames.includes(defaultTheme)) {
+    defaultTheme =
+      appStore.dark === undefined ? 'system' : appStore.dark ? 'dark' : 'light';
+  }
+
+  appStore.theme = defaultTheme;
+
   return createVuetify({
     components,
     directives,
@@ -101,6 +113,7 @@ function createVuetifyInstance(appStore: ReturnType<typeof useAppStore>) {
       aliases: toIconSetAliases(appStore.iconset),
     },
     theme: {
+      defaultTheme: defaultTheme,
       themes: themes,
     },
     defaults: defaults,

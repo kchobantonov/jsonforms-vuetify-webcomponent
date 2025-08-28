@@ -17,8 +17,10 @@ import dayjsFr from 'dayjs/locale/fr';
 
 import { bg, de, en, es, fr } from 'vuetify/locale';
 import { faIconAliases, mdiIconAliases } from '@jsonforms/vue-vuetify';
+import type { AppStore } from '@/store';
 
 export const defaultVuetifyOptions: VuetifyOptions = {
+  'color-schema': 'system',
   components,
   directives,
   theme: {
@@ -49,13 +51,13 @@ export interface VuetifyOptions
   extends Omit<VuetifyCreateOptions, 'blueprint'> {
   // Blueprint can be actual Blueprint object or string reference
   blueprint?: VuetifyCreateOptions['blueprint'] | 'md1' | 'md2' | 'md3';
+  'color-schema'?: 'light' | 'dark' | 'system';
 }
 
 export interface Blueprint extends Omit<VuetifyCreateOptions, 'blueprint'> {}
 
-export function createVuetifyOptions(
-  options: VuetifyOptions,
-): VuetifyCreateOptions {
+export function createVuetifyOptions(appStore: AppStore): VuetifyCreateOptions {
+  const options = appStore.vuetifyOptions;
   if (options.icons?.defaultSet) {
     // inject icons
     switch (options.icons.defaultSet) {
@@ -106,6 +108,23 @@ export function createVuetifyOptions(
     }
   }
 
+  if (typeof vuetifyOptions.theme === 'object') {
+    if (vuetifyOptions.theme.defaultTheme) {
+      const themeNames = [
+        ...['light', 'dark', 'system'],
+        ...Object.keys(vuetifyOptions.theme.themes ?? {}),
+      ];
+
+      if (!themeNames.includes(vuetifyOptions.theme.defaultTheme)) {
+        vuetifyOptions.theme.defaultTheme =
+          appStore.dark === undefined
+            ? 'system'
+            : appStore.dark
+              ? 'dark'
+              : 'light';
+      }
+    }
+  }
   return vuetifyOptions as VuetifyCreateOptions;
 }
 

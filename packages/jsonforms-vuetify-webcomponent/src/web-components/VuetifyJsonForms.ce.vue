@@ -1,11 +1,16 @@
 <template>
   <Suspense>
     <div>
-      <dynamic-element tag="style" type="text/css" :id="stylesheetId">
+      <dynamic-element
+        tag="style"
+        type="text/css"
+        :id="stylesheetId"
+        :nonce="stylesheetNonce"
+      >
         {{ vuetifyThemeCss }}
       </dynamic-element>
 
-      <dynamic-element tag="style" type="text/css">
+      <dynamic-element tag="style" type="text/css" :nonce="stylesheetNonce">
         {{ customStyleToUse }}
       </dynamic-element>
       <dynamic-element tag="slot" name="form-header">
@@ -77,6 +82,7 @@ import {
   defineComponent,
   getCurrentInstance,
   markRaw,
+  onMounted,
   type PropType,
   reactive,
   type Ref,
@@ -242,7 +248,21 @@ export default defineComponent({
       props.vuetifyOptions,
     );
 
+    let dark: boolean | undefined = toBoolean(props.dark);
+
+    if (dark === undefined) {
+      // if dark is not yet defined by the props then check the vuetifyOptions
+      const colorSchema = vuetifyOptions?.['color-schema'];
+
+      if (colorSchema === 'dark') {
+        dark = true;
+      } else if (colorSchema === 'light') {
+        dark = false;
+      }
+    }
+
     const appStore = useAppStore({
+      dark,
       vuetifyOptions: vuetifyOptions ?? {},
     });
 
@@ -250,9 +270,6 @@ export default defineComponent({
     app!.use(buildVuetify(appStore));
 
     appStore.rtl = toBoolean(props.rtl) ?? false;
-    if (props.dark !== undefined) {
-      appStore.dark = toBoolean(props.dark);
-    }
     appStore.locale = props.locale ?? vuetifyOptions?.locale?.locale ?? 'en';
 
     const error = ref<string | undefined>(undefined);
@@ -323,7 +340,7 @@ export default defineComponent({
         }
       }
 
-      const dark = appStore.dark ?? isPreferredDark.value;
+      let dark = appStore.dark ?? isPreferredDark.value;
       let defaultTheme = dark ? 'dark' : 'light';
       if (
         typeof appStore.vuetifyOptions.theme === 'object' &&
@@ -346,6 +363,11 @@ export default defineComponent({
         ? (appStore.vuetifyOptions.theme.stylesheetId ??
           'vuetify-theme-stylesheet')
         : 'vuetify-theme-stylesheet';
+
+    const stylesheetNonce =
+      typeof appStore.vuetifyOptions.theme === 'object'
+        ? appStore.vuetifyOptions.theme.cspNonce
+        : undefined;
 
     const customStyleToUse = computed(() => props.customStyle);
     const vuetifyThemeCss = computed(() => {
@@ -408,10 +430,6 @@ export default defineComponent({
       (v) => (appStore.rtl = toBoolean(v) ?? false),
     );
     watch(
-      () => props.dark,
-      (v) => (appStore.dark = toBoolean(v)),
-    );
-    watch(
       () => props.locale,
       (v) => {
         appStore.locale = v ?? 'en';
@@ -426,11 +444,80 @@ export default defineComponent({
       },
     );
 
+    watch(
+      () => props.dark,
+      (dark, oldDark) => {
+        if (dark !== oldDark) {
+          let newDark = toBoolean(dark);
+          if (newDark === undefined) {
+            // check the vuetify options
+            if (props.vuetifyOptions?.['color-schema']) {
+              const colorSchema = vuetifyOptions?.['color-schema'];
+
+              if (colorSchema === 'dark') {
+                newDark = true;
+              } else if (colorSchema === 'light') {
+                newDark = false;
+              }
+            }
+          }
+
+          appStore.dark = newDark;
+        }
+      },
+    );
+    watch(
+      () => props.vuetifyOptions,
+      (vuetifyOptions, oldVuetifyOptions) => {
+        if (vuetifyOptions?.locale !== oldVuetifyOptions?.locale) {
+          appStore.locale =
+            props.locale ?? vuetifyOptions?.locale?.locale ?? 'en';
+        }
+
+        if (
+          toBoolean(props.dark) === undefined &&
+          vuetifyOptions?.['color-schema'] !==
+            oldVuetifyOptions?.['color-schema']
+        ) {
+          const colorSchema = vuetifyOptions?.['color-schema'];
+
+          if (colorSchema === 'dark') {
+            appStore.dark = true;
+          } else if (colorSchema === 'light') {
+            appStore.dark = false;
+          }
+        }
+      },
+      { deep: true },
+    );
+    const injectFontsStyle = (root: Node) => {
+      // Inject all @font-face rules from component's styles and Vuetify theme
+      extractAndInjectFonts(root, 'vuetify-json-forms-fonts');
+    };
+
+    const injectCustomFontsStyle = (css: string) => {
+      extractAndInjectFonts(css, 'vuetify-json-forms-fonts-custom');
+    };
+
+    onMounted(() => {
+      const vm = getCurrentInstance();
+
+      injectFontsStyle(vm?.proxy?.$el.getRootNode());
+      if (customStyleToUse.value) {
+        injectCustomFontsStyle(customStyleToUse.value);
+      }
+    });
+
+    watch(customStyleToUse, (newCss) => {
+      if (newCss) injectCustomFontsStyle(newCss);
+    });
+
     return {
       appStore,
       state,
       theme,
       stylesheetId,
+      stylesheetNonce,
       vuetifyConfig,
       customStyleToUse,
       vuetifyThemeCss,
@@ -444,9 +531,6 @@ export default defineComponent({
       [HandleActionEmitterKey]: this.$root!.$emit,
       [FormContextKey]: toRef(this, 'context'),
     };
-  },
-  mounted() {
-    extractAndInjectFonts(this.$el.getRootNode());
   },
 });
 </script>
