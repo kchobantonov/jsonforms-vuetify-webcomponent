@@ -96,8 +96,7 @@
                   "v-monaco-editor": {
                     "options": {
                       "minimap": { "enabled": false }
-                    },
-                    "height": "200px"
+                    }
                   }
                 }
               }

@@ -19,6 +19,7 @@
     #default="{ id, isDisabled, isDirty, isValid }"
   >
     <VField
+      ref="vFieldRef"
       :onClick="onControlClick"
       :onMousedown="onControlMousedown"
       :onClick:clear="onClear"
@@ -32,6 +33,7 @@
       :focused="isFocused"
       :error="isValid.value === false"
       :loading="props.loading"
+      :style="{ '--v-monaco-editor-control-height': controlHeight }"
       #default="{ props: { class: fieldClass } }"
     >
       <span v-if="props.prefix" class="v-text-field__prefix">
@@ -41,10 +43,7 @@
       <div
         ref="containerRef"
         :class="[fieldClass]"
-        :style="{
-          height: props.height ?? undefined,
-          minHeight: props.minHeight ?? undefined,
-        }"
+        :style="{ height: controlHeight }"
         v-intersect="[{ handler: onIntersect }, null, ['once']]"
       ></div>
 
@@ -65,12 +64,12 @@ import {
   ref,
   shallowRef,
   watch,
+  type CSSProperties,
 } from 'vue';
 import { useTheme } from 'vuetify';
 import { VField, VInput } from 'vuetify/components';
 
 import { callEvent, type VFieldProps, type VInputProps } from './common';
-
 import('../util/monaco-setup');
 
 interface MonacoEditorProps extends VInputProps, VFieldProps {
@@ -81,8 +80,9 @@ interface MonacoEditorProps extends VInputProps, VFieldProps {
   persistentPlaceholder?: boolean;
   noResize?: boolean;
 
-  height?: number | string;
-  minHeight?: number | string;
+  autoGrow?: boolean;
+  rows?: number | string;
+  maxRows?: number | string;
 
   modelValue: string | null;
   language?: string;
@@ -95,201 +95,250 @@ function onIntersect(
   _entries: IntersectionObserverEntry[],
 ) {
   if (!props.autofocus || !isIntersecting) return;
-
   onFocus();
-}
-
-function onFocus() {
-  editor.value?.focus();
-
-  if (!isFocused.value) isFocused.value = true;
-}
-
-function onControlMousedown(e: MouseEvent) {
-  emit('mousedown:control', e);
-
-  if (e.target === containerRef.value) return;
-
-  onFocus();
-  e.preventDefault();
-}
-
-function onControlClick(e: MouseEvent) {
-  onFocus();
-
-  emit('click:control', e);
-}
-
-function onClear(e: MouseEvent) {
-  e.stopPropagation();
-
-  onFocus();
-
-  nextTick(() => {
-    model.value = null;
-    if (editor.value && editor.value.getValue() !== model.value) {
-      editor.value.setValue(model.value || '');
-      emit('update:modelValue', model.value);
-    }
-
-    callEvent(props['onClick:clear'], e);
-  });
 }
 
 // Props
-const props = defineProps<MonacoEditorProps>();
+const props = withDefaults(defineProps<MonacoEditorProps>(), {
+  rows: 5,
+});
+
+function toNumber(
+  val: number | string | undefined,
+  fallback: number | string | undefined,
+) {
+  const n = parseFloat(val as any);
+  return isNaN(n) ? fallback : n;
+}
+
+const rows = computed(() => toNumber(props.rows, 5)!);
+const maxRows = computed(() => toNumber(props.maxRows, undefined));
 
 const { modelValue: _, ...inputProps } = VInput.filterProps(props);
 const { ...fieldProps } = VField.filterProps(props);
 
-const isPlainOrUnderlined = computed(() =>
-  ['plain', 'underlined'].includes(props.variant),
-);
-
-// Emit
 const emit = defineEmits([
   'update:modelValue',
   'focus',
   'blur',
   'click:control',
   'mousedown:control',
+  'update:rows',
 ]);
 
-const editor = shallowRef<monaco.editor.IStandaloneCodeEditor | undefined>(
-  undefined,
-);
+const editor = shallowRef<monaco.editor.IStandaloneCodeEditor | undefined>();
 const containerRef = ref<HTMLElement | null>(null);
+const vFieldRef = ref<InstanceType<typeof VField> | null>(null);
+
+const isFocused = ref(false);
+const model = ref(props.modelValue);
+const controlHeight = ref('');
+const isPlainOrUnderlined = computed(() =>
+  ['plain', 'underlined'].includes(props.variant),
+);
+
 const isActive = computed(
   () => props.persistentPlaceholder || isFocused.value || props.active,
 );
-const isFocused = ref(false);
 
-// Use Vuetify theme
 const vuetifyTheme = useTheme();
+const getVuetifyFont = () =>
+  containerRef.value?.parentElement
+    ? getComputedStyle(containerRef.value.parentElement).fontFamily
+    : 'Roboto, sans-serif';
 
-const model = ref(props.modelValue);
+const sizerStyle = computed<CSSProperties>(() => ({
+  position: 'absolute',
+  visibility: 'hidden',
+  whiteSpace: 'pre-wrap',
+  wordWrap: 'break-word',
+  width: containerRef.value?.offsetWidth + 'px',
+  fontFamily: getVuetifyFont(),
+  fontSize: '14px',
+  lineHeight: '20px',
+}));
 
-// Watch focused prop and focus the editor if needed
-watch(
-  () => props.focused,
-  (newFocused) => {
-    if (editor.value) {
-      if (newFocused) {
-        editor.value.focus();
-      }
-    }
-  },
-);
+// Focus / Control handlers
+function onFocus() {
+  if (editor.value) {
+    editor.value.focus();
+    isFocused.value = true;
+  }
+}
 
-watch(
-  () => props.modelValue,
-  (value) => {
-    model.value = value;
+function onControlMousedown(e: MouseEvent) {
+  emit('mousedown:control', e);
+  if (e.target === containerRef.value) return;
+  onFocus();
+  e.preventDefault();
+}
+
+function onControlClick(e: MouseEvent) {
+  onFocus();
+  emit('click:control', e);
+}
+
+function onClear(e: MouseEvent) {
+  e.stopPropagation();
+  onFocus();
+  nextTick(() => {
+    model.value = null;
     if (editor.value && editor.value.getValue() !== model.value) {
       editor.value.setValue(model.value || '');
-    }
-  },
-);
-
-// Watch disabled and readonly props and update the editor's options if needed
-watch(
-  [() => props.disabled, () => props.readonly],
-  ([newDisabled, newReadonly]) => {
-    if (editor.value) {
-      editor.value.updateOptions({
-        readOnly: newDisabled || newReadonly || undefined,
-      });
-    }
-  },
-);
-
-// Watch Vuetify theme and update Monaco Editor theme
-watch(
-  () => vuetifyTheme.current.value.dark,
-  (isDark) => {
-    if (editor.value) {
-      const monacoTheme = isDark ? 'vs-dark' : 'vs';
-      monaco.editor.setTheme(monacoTheme);
-    }
-  },
-);
-
-// Watch options prop and update the editor if there are changes
-watch(
-  () => props.options,
-  (newOptions) => {
-    if (editor.value) {
-      const { value, language, readOnly, ...restOptions } = newOptions || {}; // Handle null or undefined
-      // Apply only restOptions from props.options, excluding value, language, and readOnly
-      editor.value.updateOptions({ ...restOptions });
-    }
-  },
-);
-
-watch(
-  () => props.language,
-  (language, prev) => {
-    if (editor.value && language !== prev && language) {
-      const model = editor.value.getModel();
-      if (model) {
-        monaco.editor.setModelLanguage(model, language);
-      }
-    }
-  },
-);
-
-// Monaco Editor Setup
-onMounted(() => {
-  if (containerRef.value) {
-    editor.value = monaco.editor.create(containerRef.value!, {
-      ...(props.options ?? {}),
-      value: model.value ?? undefined,
-      language: props.language,
-      readOnly: props.disabled || props.readonly || undefined,
-      automaticLayout: true,
-      theme: vuetifyTheme.current.value.dark ? 'vs-dark' : 'vs',
-    });
-
-    editor.value?.onDidChangeModelContent(() => {
-      model.value = editor.value!.getValue();
       emit('update:modelValue', model.value);
-    });
-
-    editor.value?.onDidFocusEditorWidget(() => {
-      isFocused.value = true;
-      emit('focus');
-    });
-
-    editor.value?.onDidBlurEditorWidget(() => {
-      isFocused.value = false;
-      emit('blur');
-    });
-
-    if (props.initActions && props.initActions.length > 0) {
-      nextTick(() => {
-        if (props.initActions) {
-          for (const action of props.initActions) {
-            editor.value?.getAction(action)?.run();
-          }
-        }
-      });
     }
+    callEvent(props['onClick:clear'], e);
+  });
+}
+
+// Auto-grow using sizer
+function calculateInputHeight() {
+  if (!containerRef.value || !vFieldRef.value) return;
+
+  nextTick(() => {
+    const style = getComputedStyle(containerRef.value!);
+    const fieldStyle = getComputedStyle(vFieldRef.value!.$el);
+
+    const padding =
+      parseFloat(style.getPropertyValue('--v-field-padding-top')) +
+      parseFloat(style.getPropertyValue('--v-input-padding-top')) +
+      parseFloat(style.getPropertyValue('--v-field-padding-bottom'));
+
+    const lineHeight =
+      editor.value?.getOption(monaco.editor.EditorOption.lineHeight) || 20;
+
+    if (props.autoGrow) {
+      // Auto-grow logic using actual line count
+      const lineCount = editor.value?.getModel()?.getLineCount() || 1;
+      const minHeight = Math.max(
+        parseFloat(String(rows.value)) * lineHeight + padding,
+        parseFloat(fieldStyle.getPropertyValue('--v-input-control-height')),
+      );
+      const maxHeight =
+        (maxRows.value
+          ? parseFloat(maxRows.value as string) * lineHeight + padding
+          : Infinity) || Infinity;
+      const contentHeight = lineCount * lineHeight + padding;
+
+      const newHeight = clamp(contentHeight ?? 0, minHeight, maxHeight);
+      controlHeight.value = convertToUnit(newHeight);
+    } else {
+      // Respect `rows` even when autoGrow is not set
+      controlHeight.value = convertToUnit(
+        parseFloat(String(rows.value)) * lineHeight + padding,
+      );
+    }
+
+    editor.value?.layout();
+  });
+}
+
+// Watchers
+watch(
+  () => props.modelValue,
+  (val) => {
+    model.value = val;
+    if (editor.value && editor.value.getValue() !== val) {
+      editor.value.setValue(val || '');
+    }
+    calculateInputHeight();
+  },
+);
+
+watch(model, calculateInputHeight);
+watch(() => props.rows, calculateInputHeight);
+watch(() => props.maxRows, calculateInputHeight);
+
+// Monaco setup
+onMounted(() => {
+  if (!containerRef.value) return;
+
+  editor.value = monaco.editor.create(containerRef.value, {
+    ...(props.options ?? {}),
+    value: model.value ?? undefined,
+    language: props.language,
+    readOnly: props.disabled || props.readonly || undefined,
+    automaticLayout: true,
+    fontFamily: getVuetifyFont(),
+    lineHeight: 20,
+    minimap: { enabled: false },
+    scrollbar: { vertical: 'auto', horizontal: 'auto' },
+  });
+
+  updateMonacoTheme();
+  calculateInputHeight();
+
+  editor.value.onDidChangeModelContent(() => {
+    model.value = editor.value!.getValue();
+    emit('update:modelValue', model.value);
+    calculateInputHeight();
+  });
+
+  editor.value.onDidFocusEditorWidget(() => {
+    isFocused.value = true;
+    emit('focus');
+  });
+
+  editor.value.onDidBlurEditorWidget(() => {
+    isFocused.value = false;
+    emit('blur');
+  });
+
+  if (props.initActions?.length) {
+    nextTick(() => {
+      if (props.initActions) {
+        for (const action of props.initActions) {
+          editor.value?.getAction(action)?.run();
+        }
+      }
+    });
   }
 });
 
-onBeforeUnmount(() => {
-  editor.value?.dispose();
-});
+onBeforeUnmount(() => editor.value?.dispose());
+
+// Monaco theme
+function updateMonacoTheme() {
+  if (!editor.value || !containerRef.value) return;
+
+  const theme = vuetifyTheme.current.value;
+  const isDark = theme.dark;
+  const font = getVuetifyFont();
+
+  monaco.editor.defineTheme(isDark ? 'vuetify-dark' : 'vuetify-light', {
+    base: isDark ? 'vs-dark' : 'vs',
+    inherit: true,
+    rules: [],
+    colors: {
+      ...(theme.colors.surface && {
+        'editor.background': theme.colors.surface,
+      }),
+      ...(theme.colors['on-surface'] && {
+        'editor.foreground': theme.colors['on-surface'],
+      }),
+      ...(theme.colors.primary && {
+        'editorCursor.foreground': theme.colors.primary,
+      }),
+      ...(theme.colors['surface-light'] && {
+        'editor.lineHighlightBackground': theme.colors['surface-light'],
+      }),
+      ...(theme.colors['on-primary'] && {
+        'editor.selectionForeground': theme.colors['on-primary'],
+      }),
+    },
+  });
+
+  editor.value.updateOptions({ fontFamily: font });
+  monaco.editor.setTheme(isDark ? 'vuetify-dark' : 'vuetify-light');
+}
+
+watch(() => vuetifyTheme.current.value, updateMonacoTheme, { deep: true });
 </script>
 
 <script lang="ts">
 import { Intersect } from 'vuetify/directives';
-
-export default {
-  directives: {
-    intersect: Intersect,
-  },
-};
+import { clamp, convertToUnit } from 'vuetify/lib/util/helpers.mjs';
+export default { directives: { intersect: Intersect } };
 </script>
 
 <style scoped>
@@ -301,20 +350,12 @@ export default {
   width: calc(100% - 28px);
   overflow: auto;
   resize: vertical;
+  background-color: var(--v-theme-surface);
+  color: var(--v-theme-on-surface);
+  font-family: inherit;
 }
 
 .v-monaco-editor.v-monaco-editor--no-resize .v-field__input {
   resize: none;
-}
-
-/* Optional: Add styles for handles to show they are resizeable */
-.v-monaco-editor:not(.v-monaco-editor--no-resize) > .v-field__input::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
-  cursor: ns-resize;
 }
 </style>

@@ -10,6 +10,9 @@
         "language": "javascript",
         "vuetify": {
           "v-monaco-editor": {
+            "auto-grow": true,
+            "rows": 2,
+            "maxRows": 20,
             "prepend-icon": "mdi-script-text",
             "options": {
               "minimap": { "enabled": false }
@@ -29,10 +32,10 @@
         "language": "html",
         "vuetify": {
           "v-monaco-editor": {
+            "rows": 20,
             "options": {
               "minimap": { "enabled": true }
             },
-            "minHeight": "400px",
             "initActions": ["editor.action.formatDocument"]
           }
         }
@@ -52,10 +55,10 @@
         ":language": "language",
         "vuetify": {
           "v-monaco-editor": {
+            "rows": 10,
             "options": {
               "minimap": { "enabled": false }
             },
-            "height": "200px",
             "initActions": ["editor.action.formatDocument"]
           }
         }
