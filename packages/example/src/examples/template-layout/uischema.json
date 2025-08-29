@@ -107,7 +107,7 @@
       "elements": [
         {
           "type": "TemplateLayout",
-          "template": "<v-container fluid><v-row><v-col><v-monaco-editor language='json' readonly :model-value='JSON.stringify(data, null, 2)' autoGrow=true maxRows=15 :options='{ minimap: { enabled: false } }'></v-monaco-editor></v-col></v-row></v-container>"
+          "template": "<v-container fluid><v-row><v-col><v-monaco-editor language='json' readonly :model-value='JSON.stringify(data, null, 2)' :autoGrow='true' :maxRows='15' :options='{ minimap: { enabled: false } }'></v-monaco-editor></v-col></v-row></v-container>"
         }
       ]
     }

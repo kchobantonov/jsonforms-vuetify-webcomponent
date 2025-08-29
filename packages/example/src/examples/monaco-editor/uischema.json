@@ -3,13 +3,14 @@
   "elements": [
     {
       "type": "Control",
-      "label": "JavaScript",
+      "label": "JavaScript (using light theme)",
       "scope": "#/properties/javascript",
       "options": {
         "format": "code",
         "language": "javascript",
         "vuetify": {
           "v-monaco-editor": {
+            "theme": "light",
             "auto-grow": true,
             "rows": 2,
             "maxRows": 20,
