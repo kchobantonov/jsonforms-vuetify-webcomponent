@@ -9,7 +9,8 @@ const aliases: ExampleIconAliases = {
   palette: 'fas fa-palette',
   settings: 'fas fa-gear',
   formatText: 'fas fa-text',
-  formOnly: 'fas fa-window-restore',
+  iconFormWrapperShow: 'fas fa-compress',
+  iconFormWrapperHide: 'fas fa-expand',
   reload: 'fas fa-rotate-right',
   save: 'fas fa-floppy-disk',
 };

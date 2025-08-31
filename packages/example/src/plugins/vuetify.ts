@@ -70,6 +70,9 @@ function createVuetifyInstance(appStore: ReturnType<typeof useAppStore>) {
         VTextarea: {
           variant: appStore.variant,
         },
+        VMonacoEditor: {
+          variant: appStore.variant,
+        },
         VNumberInput: {
           variant: appStore.variant,
         },
@@ -163,6 +166,10 @@ export function buildVuetify() {
               ...vuetify.defaults.value?.VTextarea,
               variant: variant,
             },
+            VMonacoEditor: {
+              ...vuetify.defaults.value?.VTextarea,
+              variant: variant,
+            },
             VNumberInput: {
               ...vuetify.defaults.value?.VNumberInput,
               variant: variant,
@@ -179,6 +186,7 @@ export function buildVuetify() {
           delete vuetify.defaults.value?.VSelect?.variant;
           delete vuetify.defaults.value?.VAutocomplete?.variant;
           delete vuetify.defaults.value?.VTextarea?.variant;
+          delete vuetify.defaults.value?.VMonacoEditor?.variant;
           delete vuetify.defaults.value?.VNumberInput?.variant;
           delete vuetify.defaults.value?.VDateInput?.variant;
         }

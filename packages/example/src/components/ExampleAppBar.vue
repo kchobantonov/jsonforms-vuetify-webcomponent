@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useAppStore } from '../store';
 import JsonFormsLogo from '../assets/JsonFormsLogo.vue';
-import webComponentUrl from '@/assets/webcomponent.svg';
+import WebComponentLogo from '../assets/WebComponentLogo.vue';
+
 import ThemeSwitcher from './ThemeSwitcher.vue';
 
 const appStore = useAppStore();
@@ -37,13 +38,15 @@ const appStore = useAppStore();
                     :value="true"
                     @click="appStore.formOnly = !appStore.formOnly"
                   >
-                    <v-icon size="30" color="primary">$formOnly</v-icon>
+                    <v-icon size="30" color="primary">{{
+                      appStore.formOnly
+                        ? '$iconFormWrapperShow'
+                        : '$iconFormWrapperHide'
+                    }}</v-icon>
                   </v-btn>
                 </v-btn-toggle>
               </template>
-              {{
-                appStore.formOnly ? `Show Form Wrapper` : `Hide Form Wrapper`
-              }}
+              {{ appStore.formOnly ? `Show full app` : `Show form only` }}
             </v-tooltip>
           </v-col>
           <v-col>
@@ -62,7 +65,7 @@ const appStore = useAppStore();
                         !appStore.useWebComponentView
                     "
                   >
-                    <v-img height="24" width="24" :src="webComponentUrl" />
+                    <WebComponentLogo height="24" width="24"></WebComponentLogo>
                   </v-btn>
                 </v-btn-toggle>
               </template>

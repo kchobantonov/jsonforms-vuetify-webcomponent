@@ -18,6 +18,7 @@
       :required="control.required"
       :error-messages="control.errors"
       :model-value="control.data"
+      :clearable="control.enabled"
       v-bind="vuetifyProps('v-monaco-editor')"
       :language="language"
       @update:model-value="onChange"
@@ -44,8 +45,8 @@ import {
 import { defineComponent } from 'vue';
 import { defineAsyncComponent } from 'vue';
 
-const VMonacoEditor = defineAsyncComponent(
-  () => import('../components/VMonacoEditor.vue'),
+const VMonacoEditor = defineAsyncComponent(() =>
+  import('../components/VMonacoEditor').then((m) => m.VMonacoEditor),
 );
 
 const controlRenderer = defineComponent({

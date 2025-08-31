@@ -5,7 +5,13 @@
       "type": "Control",
       "scope": "#/properties/multilineString",
       "options": {
-        "multi": true
+        "multi": true,
+        "vuetify": {
+          "v-textarea": {
+            "prepend-icon": "mdi-text",
+            "append-icon": "mdi-alert-circle-outline"
+          }
+        }
       }
     },
     {

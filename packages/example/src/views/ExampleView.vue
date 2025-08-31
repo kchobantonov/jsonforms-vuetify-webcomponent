@@ -51,7 +51,8 @@ import type { MonacoApi } from '../core/monaco';
 import { useAppStore } from '../store';
 
 import { extraVuetifyRenderers } from '@chobantonov/jsonforms-vuetify-renderers';
-import webComponentUrl from '@/assets/webcomponent.svg';
+import WebComponentLogo from '@/assets/WebComponentLogo.vue';
+
 import { themes } from '@/plugins/themes';
 
 const vuetifyRenderers = [
@@ -619,12 +620,10 @@ const wrapperProps = computed(() => ({
                           <v-col cols="auto">
                             <v-tooltip bottom>
                               <template v-slot:activator="{ props }">
-                                <v-img
-                                  v-bind="props"
+                                <WebComponentLogo
                                   height="24"
                                   width="24"
-                                  :src="webComponentUrl"
-                                />
+                                ></WebComponentLogo>
                               </template>
                               <div class="text-center">
                                 <div class="font-weight-medium">

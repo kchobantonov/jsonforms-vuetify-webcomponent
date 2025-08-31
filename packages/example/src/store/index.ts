@@ -34,9 +34,19 @@ const appstore = reactive({
     'use-webcomponent',
     false as boolean,
   ),
-  dark: useLocalStorage(
+  dark: useLocalStorage<boolean | undefined>(
     'vuetify-example-dark',
     undefined as undefined | boolean,
+    {
+      serializer: {
+        read: (v: string) => {
+          if (v === 'true') return true;
+          if (v === 'false') return false;
+          return undefined;
+        },
+        write: (v: boolean | undefined) => (v === undefined ? '' : String(v)),
+      },
+    },
   ),
   theme: useLocalStorage('vuetify-example-theme', 'light'),
   drawer: useHistoryHashQuery('drawer', true as boolean),

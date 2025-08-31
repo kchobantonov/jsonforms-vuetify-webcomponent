@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAppStore } from '@/store';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useTheme } from 'vuetify';
 
 // Define interfaces for type safety
@@ -36,8 +36,11 @@ const availableThemes = computed<ThemeInfo[]>(() => {
 const appStore = useAppStore();
 
 const darkModeValue = computed({
-  get: () =>
-    appStore.dark === undefined ? 'system' : appStore.dark ? 'dark' : 'light',
+  get: () => {
+    if (appStore.dark === undefined) return 'system';
+    return appStore.dark ? 'dark' : 'light';
+  },
+
   set: (value) => {
     appStore.dark = value === 'system' ? undefined : value === 'dark';
   },
@@ -62,21 +65,20 @@ function switchTheme(themeName: string) {
             v-bind="{ ...menuProps, ...tooltipProps }"
             :model-value="appStore.dark"
           >
-            <v-icon size="30" color="primary">mdi-palette</v-icon>
+            <v-icon size="30" color="primary">$palette</v-icon>
           </v-btn>
         </template>
-        {{ 'Change Theme' }}
+        {{ 'Change Theme' }} {{ appStore.dark }}
       </v-tooltip>
     </template>
 
     <v-card min-width="280">
       <v-card-title class="text-subtitle-1">
-        <v-icon class="mr-2">mdi-palette</v-icon>
+        <v-icon class="mr-2">$palette</v-icon>
         {{ 'Theme Settings' }}
       </v-card-title>
 
       <v-card-text>
-        <!-- Theme Mode Toggle -->
         <div class="mb-4">
           <v-label class="text-caption mb-2">{{ 'Theme Mode' }}</v-label>
           <v-btn-toggle
@@ -99,7 +101,6 @@ function switchTheme(themeName: string) {
           </v-btn-toggle>
         </div>
 
-        <!-- Available Themes (only if multiple themes exist) -->
         <div v-if="availableThemes.length > 2">
           <v-label class="text-caption mb-2">{{ 'Available Themes' }}</v-label>
           <v-list density="compact" class="py-0">

@@ -1,69 +1,271 @@
 {
-  "type": "VerticalLayout",
+  "type": "Categorization",
   "elements": [
     {
-      "type": "Control",
-      "label": "JavaScript (using light theme)",
-      "scope": "#/properties/javascript",
-      "options": {
-        "format": "code",
-        "language": "javascript",
-        "vuetify": {
-          "v-monaco-editor": {
-            "theme": "light",
-            "auto-grow": true,
-            "rows": 2,
-            "maxRows": 20,
-            "prepend-icon": "mdi-script-text",
-            "options": {
-              "minimap": { "enabled": false }
+      "type": "Category",
+      "label": "Editor Basics",
+      "elements": [
+        {
+          "type": "VerticalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "label": "JavaScript (default theme, auto-grow)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "format": "code",
+                "language": "javascript",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "theme": "light",
+                    "auto-grow": true,
+                    "rows": 2,
+                    "maxRows": 10,
+                    "prepend-icon": "mdi-script-text",
+                    "options": {
+                      "minimap": { "enabled": true }
+                    },
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
             },
-            "noResize": true,
-            "initActions": ["editor.action.formatDocument"]
-          }
+            {
+              "type": "Control",
+              "label": "HTML",
+              "scope": "#/properties/html",
+              "options": {
+                "format": "code",
+                "language": "html",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "rows": 20,
+                    "options": {
+                      "minimap": { "enabled": true }
+                    },
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
+            },
+            {
+              "type": "Control",
+              "label": "Select Language Code",
+              "scope": "#/properties/language"
+            },
+            {
+              "type": "Control",
+              "label": "Code",
+              "scope": "#/properties/code",
+              "options": {
+                "format": "code",
+                ":language": "language",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "rows": 10,
+                    "options": {
+                      "minimap": { "enabled": false }
+                    },
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
+            }
+          ]
         }
-      }
+      ]
     },
     {
-      "type": "Control",
-      "label": "HTML",
-      "scope": "#/properties/html",
-      "options": {
-        "format": "code",
-        "language": "html",
-        "vuetify": {
-          "v-monaco-editor": {
-            "rows": 20,
-            "options": {
-              "minimap": { "enabled": true }
+      "type": "Category",
+      "label": "Editor Themes",
+      "elements": [
+        {
+          "type": "SplitLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "label": "JavaScript (default theme)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "format": "code",
+                "language": "javascript",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "theme": "light",
+                    "options": {
+                      "minimap": { "enabled": true }
+                    },
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
             },
-            "initActions": ["editor.action.formatDocument"]
+            {
+              "type": "Control",
+              "label": "JavaScript (current theme)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "format": "code",
+                "language": "javascript",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "options": {
+                      "minimap": { "enabled": true }
+                    },
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
+            },
+            {
+              "type": "Control",
+              "label": "JavaScript (basil theme)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "format": "code",
+                "language": "javascript",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "theme": "basil",
+                    "readonly": true,
+                    "options": {
+                      "minimap": { "enabled": true }
+                    },
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
+            }
+          ],
+          "options": {
+            "horizontal": true
           }
         }
-      }
+      ]
     },
     {
-      "type": "Control",
-      "label": "Select Language Code",
-      "scope": "#/properties/language"
-    },
-    {
-      "type": "Control",
-      "label": "Code",
-      "scope": "#/properties/code",
-      "options": {
-        "format": "code",
-        ":language": "language",
-        "vuetify": {
-          "v-monaco-editor": {
-            "rows": 10,
-            "options": {
-              "minimap": { "enabled": false }
+      "type": "Category",
+      "label": "Editor Comparison",
+      "elements": [
+        {
+          "type": "SplitLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "label": "JavaScript (monaco)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "format": "code",
+                "language": "javascript",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
             },
-            "initActions": ["editor.action.formatDocument"]
+            {
+              "type": "Control",
+              "label": "JavaScript (textarea)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "multi": true
+              }
+            }
+          ],
+          "options": {
+            "horizontal": true
           }
         }
-      }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "Auto-Grow Behavior",
+      "elements": [
+        {
+          "type": "SplitLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "label": "JavaScript (monaco)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "format": "code",
+                "language": "javascript",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "auto-grow": true,
+                    "rows": 3,
+                    "maxRows": 10,
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
+            },
+            {
+              "type": "Control",
+              "label": "JavaScript (textarea)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "multi": true,
+                "vuetify": {
+                  "v-textarea": {
+                    "auto-grow": true,
+                    "rows": 3,
+                    "maxRows": 10
+                  }
+                }
+              }
+            }
+          ],
+          "options": {
+            "horizontal": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "No Resize Behavior",
+      "elements": [
+        {
+          "type": "SplitLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "label": "JavaScript (monaco)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "format": "code",
+                "language": "javascript",
+                "vuetify": {
+                  "v-monaco-editor": {
+                    "no-resize": true,
+                    "initActions": ["editor.action.formatDocument"]
+                  }
+                }
+              }
+            },
+            {
+              "type": "Control",
+              "label": "JavaScript (textarea)",
+              "scope": "#/properties/javascript",
+              "options": {
+                "multi": true,
+                "vuetify": {
+                  "v-textarea": {
+                    "no-resize": true
+                  }
+                }
+              }
+            }
+          ],
+          "options": {
+            "horizontal": true
+          }
+        }
+      ]
     }
   ]
 }

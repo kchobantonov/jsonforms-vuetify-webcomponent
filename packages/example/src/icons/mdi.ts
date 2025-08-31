@@ -9,7 +9,8 @@ const aliases: ExampleIconAliases = {
   palette: 'mdi-palette',
   settings: 'mdi-cog',
   formatText: 'mdi-format-text',
-  formOnly: 'mdi-dock-window',
+  iconFormWrapperShow: 'mdi-fullscreen-exit',
+  iconFormWrapperHide: 'mdi-fullscreen',
   reload: 'mdi-reload',
   save: 'mdi-content-save',
 };

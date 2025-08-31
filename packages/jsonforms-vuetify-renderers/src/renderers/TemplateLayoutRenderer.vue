@@ -71,10 +71,9 @@ import DynamicElement from '../components/DynamicElement.vue';
 import VPane from '../components/VPane.vue';
 import VSplitpanes from '../components/VSplitpanes.vue';
 
-const VMonacoEditor = defineAsyncComponent(
-  () => import('../components/VMonacoEditor.vue'),
+const VMonacoEditor = defineAsyncComponent(() =>
+  import('../components/VMonacoEditor').then((m) => m.VMonacoEditor),
 );
-
 export interface TemplateLayout extends Layout {
   type: 'TemplateLayout';
   /**

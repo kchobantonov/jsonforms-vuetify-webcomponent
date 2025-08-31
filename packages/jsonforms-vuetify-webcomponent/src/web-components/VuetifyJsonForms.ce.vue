@@ -228,7 +228,6 @@ export default defineComponent({
     },
     customStyle: {
       type: String,
-      default: '.v-application__wrap { min-height: 0px; }',
     },
   },
   setup(props, { emit }) {

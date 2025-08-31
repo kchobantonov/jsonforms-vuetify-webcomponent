@@ -19,6 +19,9 @@
     "VTextarea": {
       "variant": "outlined"
     },
+    "VMonacoEditor": {
+      "variant": "outlined"
+    },
     "VNumberInput": {
       "variant": "outlined",
       "inset": true

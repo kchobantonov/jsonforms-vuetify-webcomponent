@@ -9,7 +9,8 @@ export interface ExampleIconAliases {
   palette: IconValue;
   settings: IconValue;
   formatText: IconValue;
-  formOnly: IconValue;
+  iconFormWrapperShow: IconValue;
+  iconFormWrapperHide: IconValue;
   reload: IconValue;
   save: IconValue;
 }
