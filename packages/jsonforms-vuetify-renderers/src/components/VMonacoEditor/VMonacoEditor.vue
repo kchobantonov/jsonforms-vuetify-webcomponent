@@ -88,7 +88,6 @@ import {
   computed,
   getCurrentInstance,
   nextTick,
-  onActivated,
   onBeforeUnmount,
   onMounted,
   ref,
@@ -117,7 +116,7 @@ interface MonacoEditorProps extends VInputProps, VFieldProps {
   rows?: number | string;
   maxRows?: number | string;
   suffix?: string;
-  modelValue: string | null;
+  modelValue: string | monaco.editor.ITextModel | null;
   language?: string;
   options?: Record<string, any>;
   initActions?: string[];
@@ -149,11 +148,23 @@ const emit = defineEmits([
   'validation',
 ]);
 
+function isMonacoModel(val: any): val is monaco.editor.ITextModel {
+  return (
+    val &&
+    typeof val.getValue === 'function' &&
+    typeof val.setValue === 'function'
+  );
+}
+
 const model = useProxiedModel(props, 'modelValue');
 const counterValue = computed(() => {
   return typeof props.counterValue === 'function'
-    ? props.counterValue(model.value)
-    : (model.value || '').toString().length;
+    ? props.counterValue(
+        isMonacoModel(model.value) ? model.value.getValue() : model.value,
+      )
+    : isMonacoModel(model.value)
+      ? model.value.getValueLength()
+      : (model.value || '').toString().length;
 });
 const max = computed(() => {
   if (attrs.maxlength) return attrs.maxlength as string | number;
@@ -211,7 +222,11 @@ function onClear(e: MouseEvent) {
   e.stopPropagation();
   onFocus();
   nextTick(() => {
-    model.value = '';
+    if (isMonacoModel(model.value)) {
+      model.value.setValue('');
+    } else {
+      model.value = '';
+    }
     callEvent(props['onClick:clear'], e);
   });
 }
@@ -263,14 +278,11 @@ function calculateInputHeight(force = false) {
       newHeight = parseFloat(String(rows.value)) * lineHeight + padding;
     }
 
-    const newControlHeight = convertToUnit(newHeight);
-    if (newControlHeight !== controlHeight.value) {
-      controlHeight.value = newControlHeight;
-      if (editor.value) {
-        const { height, width } = editor.value?.getLayoutInfo();
-        if (newHeight - padding !== height) {
-          editor.value?.layout({ height: newHeight - padding, width });
-        }
+    controlHeight.value = convertToUnit(newHeight);
+    if (editor.value) {
+      const { height, width } = editor.value?.getLayoutInfo();
+      if (newHeight - padding !== height) {
+        editor.value.layout({ height: newHeight - padding, width });
       }
     }
   });
@@ -320,8 +332,15 @@ watch(model, () => {
 watch(
   () => model.externalValue,
   (newValue) => {
-    if (newValue !== editor.value?.getValue()) {
-      editor.value?.setValue(newValue ?? '');
+    if (isMonacoModel(newValue)) {
+      if (editor.value?.getModel() !== newValue) {
+        editor.value?.setModel(newValue);
+      }
+    } else {
+      const stringValue = newValue ?? '';
+      if (stringValue !== editor.value?.getValue()) {
+        editor.value?.setValue(stringValue);
+      }
     }
   },
 );
@@ -342,11 +361,11 @@ watch(rows, (val) => {
 });
 
 onBeforeUnmount(() => {
-  if (editor.value) {
-    const model = editor.value.getModel();
-    model?.dispose();
-    editor.value.dispose();
+  if (!isMonacoModel(model.externalValue)) {
+    // dispose the model only if it was created by this instance
+    editor.value?.getModel()?.dispose();
   }
+  editor.value?.dispose();
 });
 
 // Monaco setup
@@ -370,11 +389,12 @@ onMounted(() => {
     ...updateOptions,
     // props that should not be updated by options
     useShadowDOM: true,
-    value: model.value ?? undefined,
+    value: !isMonacoModel(model.value) ? (model.value ?? undefined) : undefined,
+    model: isMonacoModel(model.value) ? model.value : undefined,
     language: props.language,
     readOnly: props.disabled || props.readonly || undefined,
     automaticLayout: true,
-    fixedOverflowWidgets: true,
+    fixedOverflowWidgets: false,
     theme: props.useGlobalTheme
       ? selectedTheme.value.name
       : selectedTheme.value.dark
@@ -406,7 +426,11 @@ onMounted(() => {
   setupValidationListener(editor.value);
 
   editor.value.onDidChangeModelContent(() => {
-    model.value = editor.value!.getValue();
+    if (isMonacoModel(model.value)) {
+      model.value = editor.value!.getModel();
+    } else {
+      model.value = editor.value!.getValue();
+    }
   });
 
   editor.value.onDidFocusEditorWidget(() => {
@@ -661,9 +685,11 @@ watch(
 
     const {
       value,
+      model,
       language,
       readOnly,
       automaticLayout,
+      fixedOverflowWidgets,
       theme,
       useShadowDOM,
       extraEditorClassName,
@@ -678,10 +704,10 @@ watch(
 
 // setup validation listeners
 function setupValidationListener(editor: monaco.editor.IStandaloneCodeEditor) {
-  const model = editor.getModel();
-  if (!model) return;
-
   const disposable = monaco.editor.onDidChangeMarkers((uris) => {
+    const model = editor.getModel();
+    if (!model) return;
+
     if (!uris.find((uri) => uri.toString() === model.uri.toString())) return;
 
     const markers = monaco.editor.getModelMarkers({ resource: model.uri });
