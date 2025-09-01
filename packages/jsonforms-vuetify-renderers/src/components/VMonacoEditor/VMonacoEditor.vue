@@ -403,25 +403,7 @@ onMounted(() => {
     extraEditorClassName: `v-monaco-theme-${selectedTheme.value.name}`,
   });
 
-  // need to use a resize observer and watch for changes in the container size
-  // this helps with calculating the height under webcomponent that does not call onMounted each time when the element is inserted into the DOM
-  let observer: ResizeObserver | undefined;
-  watch(
-    containerRef,
-    (val) => {
-      observer?.disconnect();
-      if (val) {
-        observer = new ResizeObserver(() => calculateInputHeight(true));
-        observer.observe(containerRef.value!);
-      } else {
-        observer?.disconnect();
-      }
-    },
-    { immediate: true },
-  );
-  onBeforeUnmount(() => {
-    observer?.disconnect();
-  });
+  calculateInputHeight(true);
 
   setupValidationListener(editor.value);
 
