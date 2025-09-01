@@ -8,7 +8,6 @@
     :height="height"
     :class="play ? 'animate' : null"
   >
-    <title>WebComponent Logo</title>
     <g fill="none" fill-rule="evenodd">
       <path
         :fill="primaryDarkerColor"

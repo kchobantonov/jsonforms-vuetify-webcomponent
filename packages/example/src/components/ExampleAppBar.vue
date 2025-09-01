@@ -17,7 +17,19 @@ const appStore = useAppStore();
     <v-toolbar-title>
       <v-container fill-height fluid
         ><v-row align="center" justify="center" dense>
-          <JsonFormsLogo width="40" height="40"></JsonFormsLogo>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ props }">
+              <JsonFormsLogo
+                @click="appStore.exampleName = ''"
+                v-bind="props"
+                height="40"
+                width="40"
+              ></JsonFormsLogo>
+            </template>
+            <div class="text-center">
+              <div class="font-weight-medium">JSON Forms</div>
+            </div>
+          </v-tooltip>
           <v-col>JSON Forms </v-col>
         </v-row>
       </v-container>

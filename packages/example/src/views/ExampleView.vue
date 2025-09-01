@@ -620,6 +620,7 @@ const wrapperProps = computed(() => ({
                             <v-tooltip bottom>
                               <template v-slot:activator="{ props }">
                                 <WebComponentLogo
+                                  v-bind="props"
                                   height="24"
                                   width="24"
                                 ></WebComponentLogo>

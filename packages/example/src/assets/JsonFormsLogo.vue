@@ -6,8 +6,6 @@
     :height="height"
     preserveAspectRatio="xMidYMid meet"
   >
-    <title>JSONForms Logo</title>
-
     <g
       xmlns="http://www.w3.org/2000/svg"
       transform="translate(0.000000,95.000000) scale(0.100000,-0.100000)"

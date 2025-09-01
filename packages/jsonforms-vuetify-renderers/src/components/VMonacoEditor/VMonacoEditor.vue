@@ -246,6 +246,8 @@ function calculateInputHeight(force = false) {
   if (!containerRef.value || (!props.autoGrow && !force)) return;
 
   nextTick(() => {
+    if (!containerRef.value || !editor.value) return;
+
     const style = getComputedStyle(containerRef.value!);
 
     const padding =
