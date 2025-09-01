@@ -16,7 +16,7 @@ const appStore = useAppStore();
     />
     <v-toolbar-title>
       <v-container fill-height fluid
-        ><v-row align="center" justify="center" dense>
+        ><v-row align="center" justify="center">
           <v-tooltip bottom>
             <template v-slot:activator="{ props }">
               <JsonFormsLogo
@@ -35,22 +35,25 @@ const appStore = useAppStore();
       </v-container>
     </v-toolbar-title>
     <v-toolbar-items>
-      <v-container fill-height fluid justify-end
-        ><v-row dense>
-          <v-col>
+      <v-container fill-height fluid justify-end class="pa-0"
+        ><v-row align="center" no-gutters class="fill-height">
+          <v-col class="d-flex justify-center align-center">
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
                 <v-btn-toggle
-                  density="compact"
                   v-bind="props"
                   :model-value="appStore.formOnly"
                   v-if="appStore.exampleName"
+                  class="d-flex align-center"
                 >
                   <v-btn
                     :value="true"
+                    variant="text"
+                    rounded="circle"
+                    size="48"
                     @click="appStore.formOnly = !appStore.formOnly"
                   >
-                    <v-icon size="30" color="primary">{{
+                    <v-icon size="24" color="primary">{{
                       appStore.formOnly
                         ? '$iconFormWrapperShow'
                         : '$iconFormWrapperHide'
@@ -61,17 +64,20 @@ const appStore = useAppStore();
               {{ appStore.formOnly ? `Show full app` : `Show form only` }}
             </v-tooltip>
           </v-col>
-          <v-col>
+          <v-col class="d-flex justify-center align-center">
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
                 <v-btn-toggle
-                  density="compact"
                   v-bind="props"
                   :model-value="appStore.useWebComponentView"
                   v-if="appStore.exampleName"
+                  class="d-flex align-center"
                 >
                   <v-btn
                     :value="true"
+                    variant="text"
+                    rounded="circle"
+                    size="48"
                     @click="
                       appStore.useWebComponentView =
                         !appStore.useWebComponentView
@@ -88,20 +94,40 @@ const appStore = useAppStore();
               }}
             </v-tooltip>
           </v-col>
-          <v-col>
-            <theme-switcher></theme-switcher>
-          </v-col>
-          <v-col>
+          <v-col class="d-flex justify-center align-center">
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
                 <v-btn
-                  large
                   icon
-                  dark
+                  variant="text"
+                  rounded="circle"
+                  size="48"
+                  href="https://github.com/kchobantonov/jsonforms-vuetify-webcomponent"
+                  rel="noopener"
+                  target="_blank"
+                  v-bind="props"
+                >
+                  <v-icon color="primary">$github</v-icon>
+                </v-btn>
+              </template>
+              GitHub
+            </v-tooltip>
+          </v-col>
+          <v-col class="d-flex justify-center align-center">
+            <theme-switcher></theme-switcher>
+          </v-col>
+          <v-col class="d-flex justify-center align-center">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  icon
+                  variant="text"
+                  rounded="circle"
+                  size="48"
                   v-bind="props"
                   @click="appStore.settings = !appStore.settings"
                 >
-                  <v-icon size="30" color="primary">$settings</v-icon>
+                  <v-icon color="primary">$settings</v-icon>
                 </v-btn>
               </template>
               Settings

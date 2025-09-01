@@ -13,6 +13,7 @@ const aliases: ExampleIconAliases = {
   iconFormWrapperHide: 'mdi-fullscreen',
   reload: 'mdi-reload',
   save: 'mdi-content-save',
+  github: 'mdi-github',
 };
 
 export { aliases };

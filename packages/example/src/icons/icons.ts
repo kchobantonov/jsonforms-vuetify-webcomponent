@@ -13,4 +13,5 @@ export interface ExampleIconAliases {
   iconFormWrapperHide: IconValue;
   reload: IconValue;
   save: IconValue;
+  github: IconValue;
 }

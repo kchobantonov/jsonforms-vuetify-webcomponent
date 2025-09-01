@@ -13,6 +13,7 @@ const aliases: ExampleIconAliases = {
   iconFormWrapperHide: 'fas fa-expand',
   reload: 'fas fa-rotate-right',
   save: 'fas fa-floppy-disk',
+  github: 'fab fa-github',
 };
 
 export { aliases };

@@ -86,7 +86,7 @@ const darkModeValue = computed({
       <v-toolbar-title>Settings</v-toolbar-title>
       <v-spacer />
       <v-toolbar-items>
-        <v-btn icon @click="appStore.settings = false">
+        <v-btn icon variant="text" @click="appStore.settings = false">
           <v-icon>$close</v-icon>
         </v-btn>
       </v-toolbar-items>

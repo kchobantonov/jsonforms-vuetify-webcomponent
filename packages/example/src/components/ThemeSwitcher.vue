@@ -59,16 +59,17 @@ function switchTheme(themeName: string) {
       <v-tooltip bottom>
         <template v-slot:activator="{ props: tooltipProps }">
           <v-btn
-            large
             icon
-            dark
+            variant="text"
+            rounded="circle"
+            size="48"
             v-bind="{ ...menuProps, ...tooltipProps }"
             :model-value="appStore.dark"
           >
-            <v-icon size="30" color="primary">$palette</v-icon>
+            <v-icon color="primary">$palette</v-icon>
           </v-btn>
         </template>
-        {{ 'Change Theme' }} {{ appStore.dark }}
+        {{ 'Change Theme' }}
       </v-tooltip>
     </template>
 
