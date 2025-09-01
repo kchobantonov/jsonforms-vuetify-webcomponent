@@ -1,17 +1,50 @@
 // VMonacoEditor.sass
 @use 'sass:math'
 @use 'sass:selector'
-@use 'vuetify/settings'
+@use 'vuetify/settings';
 @use 'vuetify/tools'
 
 @include tools.layer('components')
   .v-monaco-editor
     .v-field
       --v-monaco-editor-control-height: var(--v-input-control-height)
+    
+      &--variant-plain,
+      &--variant-underlined
+        .v-field__input
+          // override to allow monaco to be resized to the default min size and compute the min size base on $field-control-underlined-height for plain and underlined variants
+          min-height: max(
+            min(var(--v-input-control-height, settings.$field-control-underlined-height), settings.$field-control-underlined-height),
+            calc(settings.$input-font-size * settings.$input-line-height + var(--v-field-input-padding-top) + var(--v-field-input-padding-bottom))
+          )
+          $root: &
+          @include tools.density('v-input', settings.$input-density) using ($modifier)
+            @at-root #{selector.nest(&, $root)}
+              min-height: max(
+                min(var(--v-input-control-height, settings.$field-control-underlined-height + $modifier), settings.$field-control-underlined-height + $modifier),
+                calc(settings.$input-font-size * settings.$input-line-height + var(--v-field-input-padding-top) + var(--v-field-input-padding-bottom))
+              )
+
+    .v-field__field
+      --v-input-control-height: var(--v-monaco-editor-control-height)
 
     .v-field__input
       flex: 1 1 auto
       outline: none
+      height: var(--v-monaco-editor-control-height)
+
+      // override to allow monaco to be resized to the default min size
+      min-height: max(
+        min(var(--v-input-control-height, settings.$input-control-height), settings.$input-control-height),
+        calc(settings.$input-font-size * settings.$input-line-height + var(--v-field-input-padding-top) + var(--v-field-input-padding-bottom))
+      )
+      $root: &
+      @include tools.density('v-input', settings.$input-density) using ($modifier)
+        @at-root #{selector.nest(&, $root)}
+          min-height: max(
+            min(var(--v-input-control-height, settings.$input-control-height + $modifier), settings.$input-control-height + $modifier),
+            calc(settings.$input-font-size * settings.$input-line-height + var(--v-field-input-padding-top) + var(--v-field-input-padding-bottom))
+          )
 
       overflow: auto
       resize: vertical
