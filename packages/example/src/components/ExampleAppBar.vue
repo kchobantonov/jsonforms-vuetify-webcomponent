@@ -24,6 +24,7 @@ const appStore = useAppStore();
                 v-bind="props"
                 height="40"
                 width="40"
+                style="outline: none; cursor: pointer"
               ></JsonFormsLogo>
             </template>
             <div class="text-center">
