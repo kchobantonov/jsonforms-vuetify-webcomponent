@@ -532,7 +532,6 @@ const vuetifyConfig = computed<VuetifyConfig>(() => ({
 }));
 
 const wrapperProps = computed(() => ({
-  customStyle: `.v-application__wrap { min-height: 0px; }`,
   data: state.data,
   schema: state.schema,
   uischema: state.uischema,

@@ -1,18 +1,40 @@
 <script lang="ts">
+import { useScriptTag } from '@vueuse/core';
 import {
   defineComponent,
-  ref,
   h,
+  isRef,
+  nextTick,
+  ref,
+  toRaw,
+  unref,
   useAttrs,
   watch,
-  nextTick,
-  computed,
-  isRef,
-  unref,
-  toRaw,
 } from 'vue';
 import { VProgressLinear } from 'vuetify/components';
-import { useScriptTag } from '@vueuse/core';
+
+const simpleProps = [
+  'readonly',
+  'validationMode',
+  'locale',
+  'dark',
+  'rtl',
+  'customStyle',
+  'schemaUrl',
+];
+const complexProps = [
+  'data',
+  'schema',
+  'uischema',
+  'config',
+  'uischemas',
+  'translations',
+  'additionalErrors',
+  'uidata',
+  'vuetifyOptions',
+  'onChange',
+  'onHandleAction',
+];
 
 export default defineComponent({
   name: 'VuetifyJsonFormsWrapper',
@@ -54,15 +76,25 @@ export default defineComponent({
       { type: 'module' },
     );
 
-    // Watch for prop changes and update the web component dynamically
-    watch(
-      () => ({ ...attrs }),
-      (newAttrs) => {
-        if (!elRef.value) return;
-        assignProps(elRef.value, newAttrs);
-      },
-      { deep: true },
-    );
+    [...simpleProps, ...complexProps].forEach((propKey) => {
+      watch(
+        () => (attrs as any)[propKey],
+        (newVal) => {
+          if (!elRef.value) return;
+
+          let raw = normalize(newVal);
+          if (raw && complexProps.includes(propKey)) {
+            if (Array.isArray(raw)) {
+              raw = [...raw];
+            } else if (typeof raw === 'object') {
+              raw = { ...raw };
+            }
+          }
+          (elRef.value as any)[propKey] = raw;
+        },
+        { deep: true },
+      );
+    });
 
     return () => {
       if (loading.value) {

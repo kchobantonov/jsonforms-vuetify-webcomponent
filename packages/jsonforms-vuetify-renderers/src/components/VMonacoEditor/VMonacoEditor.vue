@@ -88,6 +88,7 @@ import {
   computed,
   getCurrentInstance,
   nextTick,
+  onActivated,
   onBeforeUnmount,
   onMounted,
   ref,
@@ -437,6 +438,10 @@ onMounted(() => {
 
   const vm = getCurrentInstance();
   setupVuetifyMonacoThemes(vm?.proxy?.$el.getRootNode());
+});
+
+onActivated(() => {
+  calculateInputHeight(true);
 });
 
 function setupVuetifyMonacoThemes(rootNode?: Element) {
