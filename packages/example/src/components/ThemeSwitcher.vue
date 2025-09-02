@@ -26,7 +26,7 @@ const availableThemes = computed<ThemeInfo[]>(() => {
       return {
         name,
         displayName: name.charAt(0).toUpperCase() + name.slice(1),
-        colorPreview: [colors.primary, colors.secondary, colors.success].filter(
+        colorPreview: [colors.primary, colors.secondary, colors.accent].filter(
           Boolean,
         ),
       };
@@ -88,15 +88,15 @@ function switchTheme(themeName: string) {
             class="d-flex"
           >
             <v-btn :value="'light'" size="small">
-              <v-icon>mdi-weather-sunny</v-icon>
+              <v-icon>$light</v-icon>
               <span class="ml-1 d-none d-sm-inline">{{ 'Light' }}</span>
             </v-btn>
             <v-btn :value="'dark'" size="small">
-              <v-icon>mdi-weather-night</v-icon>
+              <v-icon>$dark</v-icon>
               <span class="ml-1 d-none d-sm-inline">{{ 'Dark' }}</span>
             </v-btn>
             <v-btn :value="'system'" size="small">
-              <v-icon>mdi-theme-light-dark</v-icon>
+              <v-icon>$lightdark</v-icon>
               <span class="ml-1 d-none d-sm-inline">{{ 'System' }}</span>
             </v-btn>
           </v-btn-toggle>
@@ -146,10 +146,12 @@ function switchTheme(themeName: string) {
 
 <style scoped>
 .theme-preview-dot {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  margin-right: 4px;
+  margin-right: 3px;
   display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.12); /* Better contrast */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle depth */
 }
 </style>

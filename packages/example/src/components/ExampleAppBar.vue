@@ -4,8 +4,10 @@ import JsonFormsLogo from '../assets/JsonFormsLogo.vue';
 import WebComponentLogo from '../assets/WebComponentLogo.vue';
 
 import ThemeSwitcher from './ThemeSwitcher.vue';
+import { useDisplay } from 'vuetify';
 
 const appStore = useAppStore();
+const { smAndUp } = useDisplay();
 </script>
 
 <template>
@@ -15,7 +17,7 @@ const appStore = useAppStore();
       @click="appStore.drawer = !appStore.drawer"
     />
     <v-toolbar-title>
-      <v-container fill-height fluid
+      <v-container fill-height fluid class="py-0 pr-0"
         ><v-row align="center" justify="center">
           <v-tooltip bottom>
             <template v-slot:activator="{ props }">
@@ -38,14 +40,13 @@ const appStore = useAppStore();
     <v-toolbar-items>
       <v-container fill-height fluid justify-end class="pa-0"
         ><v-row align="center" no-gutters class="fill-height">
-          <v-col class="d-flex justify-center align-center">
+          <v-col class="d-flex justify-center align-center" v-if="smAndUp">
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
                 <v-btn-toggle
                   v-bind="props"
                   :model-value="appStore.formOnly"
                   v-if="appStore.exampleName"
-                  class="d-flex align-center"
                 >
                   <v-btn
                     :value="true"
@@ -65,14 +66,13 @@ const appStore = useAppStore();
               {{ appStore.formOnly ? `Show full app` : `Show form only` }}
             </v-tooltip>
           </v-col>
-          <v-col class="d-flex justify-center align-center">
+          <v-col class="d-flex justify-center align-center" v-if="smAndUp">
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
                 <v-btn-toggle
                   v-bind="props"
                   :model-value="appStore.useWebComponentView"
                   v-if="appStore.exampleName"
-                  class="d-flex align-center"
                 >
                   <v-btn
                     :value="true"
@@ -95,6 +95,12 @@ const appStore = useAppStore();
               }}
             </v-tooltip>
           </v-col>
+          <v-divider
+            vertical
+            class="mx-2 my-auto"
+            style="height: 16px"
+            v-if="smAndUp"
+          ></v-divider>
           <v-col class="d-flex justify-center align-center">
             <v-tooltip bottom>
               <template v-slot:activator="{ props }">
