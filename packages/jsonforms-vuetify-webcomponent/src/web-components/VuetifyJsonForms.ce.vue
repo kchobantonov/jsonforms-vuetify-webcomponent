@@ -13,9 +13,6 @@
       <dynamic-element tag="style" type="text/css" :nonce="stylesheetNonce">
         {{ customStyleToUse }}
       </dynamic-element>
-      <dynamic-element tag="slot" name="form-header">
-        <!-- Place custom content inside <div slot="form-header"></div> within <vuetify-json-forms> to fill this slot -->
-      </dynamic-element>
 
       <v-locale-provider :rtl="appStore.rtl" :locale="appStore.locale">
         <v-theme-provider :theme="theme">
@@ -33,20 +30,25 @@
                 </v-row>
               </v-container>
 
-              <resolved-json-forms
-                v-else
-                :state="state as JsonFormsProps"
-                :vuetify-config="vuetifyConfig"
-                @change="onChange"
-              ></resolved-json-forms>
+              <template v-else>
+                <dynamic-element tag="slot" name="form-header">
+                  <!-- Place custom content inside <div slot="form-header"></div> within <vuetify-json-forms> to fill this slot -->
+                </dynamic-element>
+
+                <resolved-json-forms
+                  :state="state as JsonFormsProps"
+                  :vuetify-config="vuetifyConfig"
+                  @change="onChange"
+                ></resolved-json-forms>
+
+                <dynamic-element tag="slot" name="form-footer">
+                  <!-- Place custom content inside <div slot="form-footer"></div> within <vuetify-json-forms> to fill this slot -->
+                </dynamic-element>
+              </template>
             </v-sheet>
           </v-defaults-provider>
         </v-theme-provider>
       </v-locale-provider>
-
-      <dynamic-element tag="slot" name="form-footer">
-        <!-- Place custom content inside <div slot="form-footer"></div> within <vuetify-json-forms> to fill this slot -->
-      </dynamic-element>
     </div>
   </Suspense>
 </template>
