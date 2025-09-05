@@ -67,7 +67,7 @@ import { useFormContext } from '../util';
 
 import { VDefaultsProvider } from 'vuetify/components/VDefaultsProvider';
 import * as defaultDirectives from 'vuetify/directives';
-import DynamicElement from '../components/DynamicElement.vue';
+import SlotElement from '../components/SlotElement.vue';
 import VPane from '../components/VPane.vue';
 import VSplitpanes from '../components/VSplitpanes.vue';
 
@@ -206,7 +206,7 @@ const controlRenderer = defineComponent({
         ...this.defaultComponents,
         VMonacoEditor,
         ValidationIcon,
-        DynamicElement,
+        SlotElement,
         VSplitpanes,
         VPane,
         ...(override ? override : {}),

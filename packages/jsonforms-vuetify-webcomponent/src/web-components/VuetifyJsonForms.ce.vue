@@ -10,7 +10,7 @@
         {{ vuetifyThemeCss }}
       </dynamic-element>
 
-      <dynamic-element tag="slot" name="styles"> </dynamic-element>
+      <slot-element name="styles"></slot-element>
 
       <dynamic-element tag="style" type="text/css" :nonce="stylesheetNonce">
         {{ customStyleToUse }}
@@ -33,9 +33,9 @@
               </v-container>
 
               <template v-else>
-                <dynamic-element tag="slot" name="form-header">
+                <slot-element name="form-header">
                   <!-- Place custom content inside <div slot="form-header"></div> within <vuetify-json-forms> to fill this slot -->
-                </dynamic-element>
+                </slot-element>
 
                 <resolved-json-forms
                   part="json-forms"
@@ -44,9 +44,9 @@
                   @change="onChange"
                 ></resolved-json-forms>
 
-                <dynamic-element tag="slot" name="form-footer">
+                <slot-element name="form-footer">
                   <!-- Place custom content inside <div slot="form-footer"></div> within <vuetify-json-forms> to fill this slot -->
-                </dynamic-element>
+                </slot-element>
               </template>
             </v-sheet>
           </v-defaults-provider>
@@ -63,6 +63,7 @@ import { useAppStore } from '@/store';
 import {
   createTranslator,
   DynamicElement,
+  SlotElement,
   extraVuetifyRenderers,
   type FormContext,
   FormContextKey,
@@ -160,6 +161,7 @@ export default defineComponent({
     VCol,
     VSheet,
     DynamicElement,
+    SlotElement,
   },
   emits: ['change', 'handle-action'],
   props: {
