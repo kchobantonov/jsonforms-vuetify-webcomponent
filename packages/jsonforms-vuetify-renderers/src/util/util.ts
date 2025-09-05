@@ -86,7 +86,7 @@ export const parseAndTransformUISchemaRegistryEntries = (
 
   return uischemasMap
     .map((elem, index) => {
-      if (elem.tester) {
+      if (typeof elem.tester === 'string') {
         const action: UISchemaTester = (jsonSchema, schemaPath, path) => {
           try {
             const tester = new Function(
