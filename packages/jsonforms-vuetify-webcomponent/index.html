@@ -116,6 +116,8 @@
   </head>
   <body>
     <vuetify-json-forms>
+      <style id="input-style" slot="styles"></style>
+      <style slot="styles"></style>
       <div class="example-selector" slot="form-footer">
         <div class="example-icon" id="exampleIcon">
           <svg viewBox="0 0 24 24">
@@ -132,6 +134,9 @@
       import { examples } from './src/examples/index.js';
 
       let currentExampleId = null;
+      let currentHandleChange = null;
+      let currentHandleAction = null;
+
       const form = document.querySelector('vuetify-json-forms');
       const exampleIcon = document.getElementById('exampleIcon');
       const exampleList = document.getElementById('exampleList');
@@ -167,23 +172,27 @@
           form.uischema = input.uischema;
           form.uischemas = input.uischemas;
           form.config = input.config;
-          form.customStyle = input.style;
+
+          document.getElementById('input-style').textContent =
+            input.style || '';
+          // the old form form.customStyle that could be deprecated in favor of style slots
+          //form.customStyle = input.style;
+
           form.translations = input.i18n;
           form.uidata = input.uidata;
           form.vuetifyOptions = input.preset;
 
           // Remove existing event listeners and add new ones
-          form.removeEventListener('change', handleChange);
-          form.removeEventListener('handle-action', handleAction);
+          form.removeEventListener('change', currentHandleChange);
+          form.removeEventListener('handle-action', currentHandleAction);
 
           if (input.actions?.onChange) {
-            form.addEventListener('change', input.actions.onChange);
+            currentHandleChange = input.actions.onChange;
+            form.addEventListener('change', currentHandleChange);
           }
           if (input.actions?.onHandleAction) {
-            form.addEventListener(
-              'handle-action',
-              input.actions.onHandleAction,
-            );
+            currentHandleAction = input.actions.onHandleAction;
+            form.addEventListener('handle-action', currentHandleAction);
           }
         }
 

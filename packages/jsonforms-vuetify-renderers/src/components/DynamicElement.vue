@@ -1,7 +1,7 @@
 <script lang="ts">
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, type PropType } from 'vue';
 
-const allowedTags = new Set([
+const allowedTags = [
   'div',
   'span',
   'p',
@@ -21,23 +21,32 @@ const allowedTags = new Set([
   'small',
   'label',
   'slot',
-  'link',
-]);
+  'style',
+] as const;
+
+type AllowedTag = (typeof allowedTags)[number];
+function isAllowedTag(value: any): value is AllowedTag {
+  return allowedTags.includes(
+    (typeof value === 'string' ? value.toLowerCase() : value) as AllowedTag,
+  );
+}
 
 export default defineComponent({
   name: 'dynamic-element',
   inheritAttrs: false,
   props: {
     tag: {
-      type: String,
+      type: String as PropType<AllowedTag>,
       required: true,
+      validator: (value: any) => isAllowedTag(value),
     },
   },
   setup(props, { attrs, slots }) {
     return () => {
-      const tag = props.tag.toLowerCase();
+      const tag =
+        typeof props.tag === 'string' ? props.tag.toLowerCase() : props.tag;
 
-      if (!allowedTags.has(tag)) {
+      if (!isAllowedTag(tag)) {
         if (import.meta.env.DEV) {
           console.warn(
             `[DynamicElement] Invalid tag "${props.tag}" was blocked.`,

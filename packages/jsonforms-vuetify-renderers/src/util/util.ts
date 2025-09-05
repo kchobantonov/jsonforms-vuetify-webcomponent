@@ -72,12 +72,12 @@ export const parseAndTransformUISchemaRegistryEntries = (
   uischemaRegistryEntries?:
     | string
     | {
-        tester: string;
+        tester: string | Function;
         uischema: UISchemaElement;
       }[],
 ): JsonFormsUISchemaRegistryEntry[] => {
   const uischemasMap: {
-    tester: string;
+    tester: string | Function;
     uischema: UISchemaElement;
   }[] =
     typeof uischemaRegistryEntries === 'string'
@@ -107,6 +107,11 @@ export const parseAndTransformUISchemaRegistryEntries = (
         };
         return {
           tester: action,
+          uischema: elem.uischema,
+        };
+      } else if (typeof elem.tester === 'function') {
+        return {
+          tester: elem.tester as UISchemaTester,
           uischema: elem.uischema,
         };
       }

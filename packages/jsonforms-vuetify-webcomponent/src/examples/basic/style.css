@@ -1,3 +1,4 @@
-.v-application__wrap {
-  min-height: 0px;
+vuetify-json-forms::part(json-forms) {
+  font-family: var(--v-body-font-family);
+  font-size: var(--v-font-size);
 }

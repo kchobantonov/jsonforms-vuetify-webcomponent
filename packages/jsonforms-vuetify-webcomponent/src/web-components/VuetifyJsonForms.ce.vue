@@ -10,6 +10,8 @@
         {{ vuetifyThemeCss }}
       </dynamic-element>
 
+      <dynamic-element tag="slot" name="styles"> </dynamic-element>
+
       <dynamic-element tag="style" type="text/css" :nonce="stylesheetNonce">
         {{ customStyleToUse }}
       </dynamic-element>
@@ -36,6 +38,7 @@
                 </dynamic-element>
 
                 <resolved-json-forms
+                  part="json-forms"
                   :state="state as JsonFormsProps"
                   :vuetify-config="vuetifyConfig"
                   @change="onChange"
@@ -104,7 +107,34 @@ import {
 } from 'vuetify/components';
 import { extractAndInjectFonts } from '../util/inject-fonts';
 
-const ThemeSymbol = Symbol.for('vuetify:theme');
+const DANGEROUS_TAGS = [
+  'SCRIPT',
+  'IFRAME',
+  'OBJECT',
+  'EMBED',
+  'APPLET',
+  'CANVAS', // Can be used for fingerprinting/malicious drawing
+  'META', // Can redirect or change document behavior
+  'BASE', // Can redirect or change document behavior
+];
+
+type SlotRules = {
+  readonly [K in 'styles' | 'form-header' | 'form-footer']: {
+    readonly allow?: readonly string[];
+    readonly deny?: readonly string[];
+  };
+};
+const slotRules: SlotRules = {
+  styles: {
+    allow: ['STYLE', 'LINK'],
+  },
+  'form-header': {
+    deny: ['STYLE', 'LINK'],
+  },
+  'form-footer': {
+    deny: ['STYLE', 'LINK'],
+  },
+};
 
 const toBoolean = (val: any): boolean | undefined => {
   if (typeof val === 'string') {
@@ -503,10 +533,46 @@ export default defineComponent({
     onMounted(() => {
       const vm = getCurrentInstance();
 
-      injectFontsStyle(vm?.proxy?.$el.getRootNode());
+      const shadowRoot = vm?.vnode?.el?.getRootNode();
+
+      injectFontsStyle(shadowRoot);
       if (customStyleToUse.value) {
         injectCustomFontsStyle(customStyleToUse.value);
       }
+
+      shadowRoot.addEventListener('slotchange', (e: Event) => {
+        const slot = e.target;
+
+        if (slot instanceof HTMLSlotElement && slot.name in slotRules) {
+          const rules = slotRules[slot.name as keyof SlotRules];
+          slot.assignedElements().forEach((el) => {
+            if (DANGEROUS_TAGS.includes(el.tagName)) {
+              console.error(
+                `Security violation: <${el.tagName.toLowerCase()}> is not allowed in any slot. Element removed.`,
+              );
+              el.remove();
+              return; // Skip further validation for this element
+            }
+
+            // Deny list check (highest priority)
+            if (rules.deny && rules.deny.includes(el.tagName)) {
+              console.error(
+                `Denied: <${el.tagName.toLowerCase()}> removed from "${slot.name}".`,
+              );
+              el.remove();
+              return;
+            }
+
+            if (rules.allow && !rules.allow.includes(el.tagName)) {
+              console.error(
+                `Consider using ${rules.allow.join(', ')} tags for ${slot.name} slot`,
+              );
+              el.remove();
+              return;
+            }
+          });
+        }
+      });
     });
 
     watch(customStyleToUse, (newCss) => {
