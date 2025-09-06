@@ -693,7 +693,30 @@ const wrapperProps = computed(() => ({
                   <vuetify-json-forms-wrapper
                     v-if="appStore.useWebComponentView"
                     v-bind="wrapperProps"
-                  ></vuetify-json-forms-wrapper>
+                  >
+                    <v-row slot="form-header" justify="end" class="pr-4 mt-1">
+                      <v-col cols="auto">
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ props }">
+                            <WebComponentLogo
+                              v-bind="props"
+                              height="24"
+                              width="24"
+                            ></WebComponentLogo>
+                          </template>
+                          <div class="text-center">
+                            <div class="font-weight-medium">
+                              WebComponent View
+                            </div>
+                            <div class="text-caption">
+                              Icon rendered via webcomponent slot<br />
+                              <em>(form-header)</em>
+                            </div>
+                          </div>
+                        </v-tooltip>
+                      </v-col>
+                    </v-row></vuetify-json-forms-wrapper
+                  >
                   <resolved-json-forms
                     v-else
                     :state="state as JsonFormsProps"
