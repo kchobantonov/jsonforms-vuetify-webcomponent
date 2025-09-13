@@ -18,6 +18,8 @@ import { aliases as appFaAliases } from '../icons/fa';
 import { aliases as appMdiAliases } from '../icons/mdi';
 import { useAppStore } from '../store';
 import { themes } from './themes';
+import { getLightDarkTheme } from '@chobantonov/jsonforms-vuetify-renderers';
+import { useMediaQuery } from '@vueuse/core';
 
 function toIconSetAliases(iconset: string) {
   // we can add vue-vuetify icons setoverrides here if needed or use the default provided base on the iconset
@@ -94,9 +96,19 @@ function createVuetifyInstance(appStore: ReturnType<typeof useAppStore>) {
   if (!themeNames.includes(defaultTheme)) {
     defaultTheme =
       appStore.dark === undefined ? 'system' : appStore.dark ? 'dark' : 'light';
-  }
 
-  appStore.theme = defaultTheme;
+    if (defaultTheme === 'system') {
+      const isPreferredDark = useMediaQuery('(prefers-color-scheme: dark)');
+
+      appStore.theme = getLightDarkTheme(
+        appStore.dark ?? isPreferredDark.value,
+        appStore.theme,
+        (theme) => themeNames.includes(theme),
+      );
+    } else {
+      appStore.theme = defaultTheme;
+    }
+  }
 
   return createVuetify({
     components,
