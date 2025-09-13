@@ -100,10 +100,10 @@ const templateCompiler = defineComponent({
 
   computed: {
     componentProps() {
-      const data = [
-        this.parentData,
-        this.parentProps,
-        (this.parentComponent as any)._provided,
+      const data: any[] = [
+        //this.parentData,
+        //this.parentProps,
+        //(this.parentComponent as any)._provided,
       ];
       const computed: any = this.componentComputed || {};
       const directives: any = this.componentDirectives || {};
