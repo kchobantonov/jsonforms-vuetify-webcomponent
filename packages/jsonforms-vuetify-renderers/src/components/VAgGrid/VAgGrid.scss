@@ -1,0 +1,6 @@
+@use 'vuetify/tools' as tools;
+@use './themes/quartz/_index' as quartz;
+
+@include tools.layer('components') {
+  @include quartz.quartz-theme('.v-ag-grid');
+}

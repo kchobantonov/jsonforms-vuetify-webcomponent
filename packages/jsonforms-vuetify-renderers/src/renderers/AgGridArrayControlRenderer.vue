@@ -78,38 +78,28 @@
     </v-card-title>
 
     <v-card-text v-bind="vuetifyProps('v-card-text')">
-      <Suspense>
-        <template #default>
-          <ag-grid-vue
-            :data-ag-theme-mode="dark ? 'dark' : 'light'"
-            :rowData="control.data"
-            v-bind="gridOptions"
-            :components="components"
-            :theme="agTheme"
-            :enableRtl="rtl.isRtl.value"
-            :rowSelection="rowSelection"
-            @grid-ready="onGridReady"
-            @selection-changed="onSelectionChanged"
-            @filter-changed="onFilterChanged"
-            @sort-changed="onSortChanged"
-            @row-drag-end="onRowDragEnd"
-            :style="{
-              width: appliedOptions.gridWidth || '100%',
-              height: appliedOptions.gridHeight || '400px',
-            }"
-          />
-        </template>
-        <template #fallback>
-          <div class="d-flex align-center justify-center" style="height: 400px">
-            <v-progress-circular indeterminate color="primary" size="48" />
-          </div>
-        </template>
-      </Suspense>
+      <v-ag-grid
+        :rowData="control.data"
+        v-bind="gridOptions"
+        :components="components"
+        :rowSelection="rowSelection"
+        @grid-ready="onGridReady"
+        @selection-changed="onSelectionChanged"
+        @filter-changed="onFilterChanged"
+        @sort-changed="onSortChanged"
+        @row-drag-end="onRowDragEnd"
+        :style="{
+          width: appliedOptions.gridWidth || '100%',
+          height: appliedOptions.gridHeight || '400px',
+        }"
+      >
+      </v-ag-grid>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
+import VAgGrid from '@/components/VAgGrid/VAgGrid.vue';
 import { useIcons } from '@/icons';
 import {
   composePaths,
@@ -138,13 +128,11 @@ import type {
   RowSelectionOptions,
   SelectionChangedEvent,
   SortChangedEvent,
-  Theme,
 } from 'ag-grid-community';
 import startCase from 'lodash/startCase';
 import uniqueId from 'lodash/uniqueId';
 import {
   computed,
-  defineAsyncComponent,
   defineComponent,
   h,
   nextTick,
@@ -153,7 +141,6 @@ import {
   watch,
   type PropType,
 } from 'vue';
-import { useRtl, useTheme } from 'vuetify';
 import {
   VBtn,
   VCard,
@@ -166,53 +153,6 @@ import {
   VToolbarTitle,
   VTooltip,
 } from 'vuetify/components';
-
-const agTheme = ref<Theme | undefined>(undefined);
-
-const AgGridVue = defineAsyncComponent(() =>
-  Promise.all([import('ag-grid-vue3'), import('ag-grid-community')]).then(
-    ([vueModule, gridModule]) => {
-      const {
-        ClientSideRowModelModule,
-        ColumnApiModule,
-        DateEditorModule,
-        DateFilterModule,
-        NumberEditorModule,
-        NumberFilterModule,
-        RowAutoHeightModule,
-        RowDragModule,
-        RowSelectionModule,
-        TextEditorModule,
-        TextFilterModule,
-        TooltipModule,
-        ValidationModule,
-        ModuleRegistry,
-        themeQuartz,
-        colorSchemeVariable,
-      } = gridModule;
-
-      ModuleRegistry.registerModules([
-        ClientSideRowModelModule,
-        ColumnApiModule,
-        DateEditorModule,
-        DateFilterModule,
-        NumberEditorModule,
-        NumberFilterModule,
-        RowAutoHeightModule,
-        RowDragModule,
-        RowSelectionModule,
-        TextEditorModule,
-        TextFilterModule,
-        TooltipModule,
-        ValidationModule,
-      ]);
-
-      agTheme.value = themeQuartz.withPart(colorSchemeVariable);
-
-      return vueModule.AgGridVue;
-    },
-  ),
-);
 
 function isColDef(col: ColDef | ColGroupDef): col is ColDef {
   return !('children' in col);
@@ -280,7 +220,6 @@ const components = {
 const AgGridArrayControlRenderer = defineComponent({
   name: 'AgGridArrayControlRenderer',
   components: {
-    AgGridVue,
     VBtn,
     VCard,
     VCardText,
@@ -292,6 +231,7 @@ const AgGridArrayControlRenderer = defineComponent({
     VToolbarTitle,
     VTooltip,
     ValidationIcon,
+    VAgGrid,
   },
   props: {
     ...rendererProps<ControlElement>(),
@@ -300,19 +240,7 @@ const AgGridArrayControlRenderer = defineComponent({
     const icons = useIcons();
     const input = useVuetifyArrayControl(useJsonFormsArrayControl(props));
 
-    const theme = useTheme();
-    const rtl = useRtl();
-
     const gridApi = shallowRef<GridApi | null>(null);
-
-    const dark = ref(theme.current.value.dark);
-
-    watch(
-      () => theme.current.value.dark,
-      (isDark) => {
-        dark.value = isDark;
-      },
-    );
 
     const suppressRowDrag = ref(!input.control.value.enabled);
 
@@ -428,6 +356,13 @@ const AgGridArrayControlRenderer = defineComponent({
       return {
         ...baseOptions,
         columnDefs: [...schemaColumnDefsControls, ...schemaColumnDefs],
+        selectionColumnDef: {
+          cellStyle: {
+            display: 'flex',
+            alignItems: 'center',
+          },
+          ...(baseOptions.selectionColumnDef ?? {}),
+        },
         defaultColDef: {
           sortable: true,
           filter: true,
@@ -491,21 +426,18 @@ const AgGridArrayControlRenderer = defineComponent({
 
     const rowSelection = ref<RowSelectionOptions | 'single' | 'multiple'>({
       mode: 'multiRow',
-      checkboxes: input.control.value.enabled,
-      headerCheckbox: input.control.value.enabled,
+      checkboxes: enabled.value,
+      headerCheckbox: enabled.value,
     });
 
     return {
       ...input,
-      rtl,
-      dark,
       onGridReady,
       gridApi,
       dataLength,
       icons,
       gridOptions,
       components,
-      agTheme,
       selectedIndexes,
       rowSelection,
       onSelectionChanged,

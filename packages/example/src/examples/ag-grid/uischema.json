@@ -11,7 +11,9 @@
             { "field": "date", "rowDrag": true },
             { "field": "message", "flex": 1 },
             { "field": "enum", "resizable": false }
-          ]
+          ],
+          "pagination": false,
+          "paginationPageSize": 4
         }
       }
     }
