@@ -38,7 +38,7 @@
             {
               "type": "Control",
               "scope": "#/properties/comments",
-              "label": "Comments (default theme)",
+              "label": "Comments (light theme)",
               "options": {
                 "variant": "ag-grid",
                 "agGridOptions": {
