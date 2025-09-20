@@ -353,8 +353,11 @@ const AgGridArrayControlRenderer = defineComponent({
         };
       }
 
+      const vuetifyProps = input.vuetifyProps('v-ag-grid') ?? {};
+
       return {
         ...baseOptions,
+        ...vuetifyProps,
         columnDefs: [...schemaColumnDefsControls, ...schemaColumnDefs],
         selectionColumnDef: {
           cellStyle: {

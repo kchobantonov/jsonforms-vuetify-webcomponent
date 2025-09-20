@@ -16,6 +16,7 @@ import { getProps } from './utils';
 
 import 'ag-grid-community/styles/ag-grid.css';
 import './VAgGrid.scss';
+import { getLightDarkTheme } from '@/util';
 
 type StyleValue =
   | string
@@ -23,14 +24,25 @@ type StyleValue =
   | Array<string | CSSProperties>
   | undefined;
 
-const attrs = useAttrs();
-const props = withDefaults(defineProps<Props<TData>>(), { ...getProps() });
-const style = (attrs.style as StyleValue) || {};
-const theme = useTheme();
+type PropsWithVuetifyTheme<TData> = Omit<Props<TData>, 'theme'> & {
+  theme?: string;
+};
 
-const themeClass = computed(() =>
-  theme.current.value.dark ? 'ag-theme-quartz-dark' : 'ag-theme-quartz',
-);
+const attrs = useAttrs();
+const props = withDefaults(defineProps<PropsWithVuetifyTheme<TData>>(), {
+  ...getProps(),
+});
+const style = (attrs.style as StyleValue) || {};
+const vuetifyTheme = useTheme();
+
+const themeClasses = computed(() => {
+  const classes = ['v-ag-grid'];
+  classes.push(
+    selectedTheme.value.dark ? 'ag-theme-quartz-dark' : 'ag-theme-quartz',
+  );
+  classes.push(`v-theme--${selectedTheme.value.name}`);
+  return classes;
+});
 
 // RTL support
 const rtl = useRtl();
@@ -65,6 +77,39 @@ onMounted(() => {
     }
   });
 });
+
+const selectedTheme = computed(() => {
+  const themeName = props.theme;
+  let theme = vuetifyTheme.current.value;
+
+  if (themeName && vuetifyTheme.themes.value[themeName]) {
+    const computedTheme = getLightDarkTheme(
+      vuetifyTheme.current.value.dark,
+      themeName,
+      (themeName) => vuetifyTheme.themes.value[themeName] !== undefined,
+    );
+    theme = vuetifyTheme.themes.value[computedTheme];
+    return { name: computedTheme, ...theme };
+  } else {
+    // Try to find a matching theme by reference
+    const matchingEntry = Object.entries(vuetifyTheme.themes.value).find(
+      ([, t]) => t === theme,
+    );
+    if (matchingEntry) {
+      const [name] = matchingEntry;
+      return { name, ...theme };
+    }
+  }
+
+  // Fallback name
+  const fallbackName = theme.dark ? 'dark' : 'light';
+  return { name: fallbackName, ...theme };
+});
+
+const propsWithoutTheme = computed(() => {
+  const { theme, ...rest } = props;
+  return rest;
+});
 </script>
 
 <template>
@@ -72,9 +117,8 @@ onMounted(() => {
     <template #default>
       <ag-grid-vue
         ref="gridRef"
-        v-bind="{ ...props, ...attrs }"
-        class="v-ag-grid"
-        :class="themeClass"
+        v-bind="{ ...propsWithoutTheme, ...attrs }"
+        :class="themeClasses"
         :enableRtl="rtl.isRtl.value"
         theme="legacy"
       />

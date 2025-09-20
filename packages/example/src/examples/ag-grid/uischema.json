@@ -1,21 +1,104 @@
 {
-  "type": "VerticalLayout",
+  "type": "Categorization",
   "elements": [
     {
-      "type": "Control",
-      "scope": "#/properties/comments",
-      "options": {
-        "variant": "ag-grid",
-        "agGridOptions": {
-          "columnDefs": [
-            { "field": "date", "rowDrag": true },
-            { "field": "message", "flex": 1 },
-            { "field": "enum", "resizable": false }
-          ],
-          "pagination": false,
-          "paginationPageSize": 4
+      "type": "Category",
+      "label": "AG Grid Basics",
+      "elements": [
+        {
+          "type": "VerticalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/comments",
+              "options": {
+                "variant": "ag-grid",
+                "agGridOptions": {
+                  "columnDefs": [
+                    { "field": "date", "rowDrag": true },
+                    { "field": "message", "flex": 1 },
+                    { "field": "enum", "resizable": false }
+                  ],
+                  "pagination": false,
+                  "paginationPageSize": 4
+                }
+              }
+            }
+          ]
         }
-      }
+      ]
+    },
+    {
+      "type": "Category",
+      "label": "AG Grid Themes",
+      "elements": [
+        {
+          "type": "SplitLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/comments",
+              "label": "Comments (default theme)",
+              "options": {
+                "variant": "ag-grid",
+                "agGridOptions": {
+                  "columnDefs": [
+                    { "field": "date", "rowDrag": true },
+                    { "field": "message", "flex": 1 },
+                    { "field": "enum", "resizable": false }
+                  ],
+                  "pagination": false,
+                  "paginationPageSize": 4
+                },
+                "vuetify": {
+                  "v-card": {
+                    "theme": "light"
+                  }
+                }
+              }
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/comments",
+              "label": "Comments (current theme)",
+              "options": {
+                "variant": "ag-grid",
+                "agGridOptions": {
+                  "columnDefs": [
+                    { "field": "date", "rowDrag": true },
+                    { "field": "message", "flex": 1 },
+                    { "field": "enum", "resizable": false }
+                  ],
+                  "pagination": false,
+                  "paginationPageSize": 4
+                }
+              }
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/comments",
+              "label": "Comments (basil theme)",
+              "options": {
+                "variant": "ag-grid",
+                "agGridOptions": {
+                  "columnDefs": [
+                    { "field": "date", "rowDrag": true },
+                    { "field": "message", "flex": 1 },
+                    { "field": "enum", "resizable": false }
+                  ],
+                  "pagination": false,
+                  "paginationPageSize": 4
+                },
+                "vuetify": {
+                  "v-card": {
+                    "theme": "basil"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }
