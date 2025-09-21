@@ -99,7 +99,7 @@ import {
   watchEffect,
 } from 'vue';
 import { useTheme } from 'vuetify';
-import { VField, VInput } from 'vuetify/components';
+import { VField, VInput, VCounter } from 'vuetify/components';
 
 import { callEvent, type VFieldProps, type VInputProps } from '../common';
 import('../../util/monaco-setup');
@@ -384,7 +384,11 @@ onMounted(() => {
   editor.value = monaco.editor.create(containerRef.value, {
     // default props
     fontFamily: updateOptions.fontFamily ?? parentStyle?.fontFamily,
-    fontSize: updateOptions.fontFamily ?? parentStyle?.fontSize,
+    fontSize:
+      (updateOptions.fontSize ??
+      (parentStyle?.fontSize && !isNaN(parseFloat(parentStyle.fontSize))))
+        ? parseFloat(parentStyle!.fontSize)
+        : undefined,
     lineHeight: updateOptions.lineHeight ?? parentStyle?.lineHeight,
     letterSpacing: updateOptions.letterSpacing ?? parentStyle?.letterSpacing,
     minimap: { enabled: false },
