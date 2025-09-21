@@ -144,24 +144,6 @@ const onHandleAction = (event: ActionEvent): void => {
   }
 };
 
-const onWebComponentChange = (customEvent: CustomEvent): void => {
-  const details = customEvent.detail as any[];
-  if (details && details.length > 0) {
-    const event: JsonFormsChangeEvent = details[0];
-
-    onChange(event);
-  }
-};
-
-const onWebComponentHandleAction = (customEvent: CustomEvent): void => {
-  const details = customEvent.detail as any[];
-  if (details && details.length > 0) {
-    const event: ActionEvent = details[0];
-
-    onHandleAction(event);
-  }
-};
-
 const reloadMonacoSchema = () => {
   const example = find(
     appStore.examples,
@@ -541,12 +523,12 @@ const wrapperProps = computed(() => ({
   validationMode: state.validationMode,
   readonly: state.readonly,
   locale: state.i18n?.locale ?? 'en',
-  rtl: String(appStore.rtl),
-  dark: appStore.dark === undefined ? undefined : String(appStore.dark),
+  rtl: appStore.rtl,
+  dark: appStore.dark,
   translations: state.i18n?.translations,
-  vuetifyOptions,
-  onChange: onWebComponentChange,
-  onHandleAction: onWebComponentHandleAction,
+  vuetifyOptions: vuetifyOptions.value,
+  onChange: onChange,
+  onHandleAction: onHandleAction,
 }));
 </script>
 

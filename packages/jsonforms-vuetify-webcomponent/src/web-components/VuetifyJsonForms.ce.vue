@@ -57,7 +57,11 @@
 </template>
 
 <script lang="ts">
-import { isValidVuetifyOptions, type VuetifyOptions } from '@/plugins/options';
+import {
+  defaultVuetifyOptions,
+  isValidVuetifyOptions,
+  type VuetifyOptions,
+} from '@/plugins/options';
 import buildVuetify from '@/plugins/vuetify';
 import { useAppStore } from '@/store';
 import {
@@ -107,6 +111,7 @@ import {
   VThemeProvider,
 } from 'vuetify/components';
 import { extractAndInjectFonts } from '../util/inject-fonts';
+import { createTheme } from 'vuetify/lib/composables/theme.mjs';
 
 const DANGEROUS_TAGS = [
   'SCRIPT',
@@ -165,7 +170,7 @@ export default defineComponent({
   },
   emits: ['change', 'handle-action'],
   props: {
-    data: { type: [Object, String, Number, Boolean, Array, null] as any },
+    data: { type: [Object, String, Number, Array, null] as any }, // remove Boolean since it is a specially treated by the webcomponent
     schema: {
       type: [Object, String] as any,
       validator: (value: any) => {
@@ -391,16 +396,18 @@ export default defineComponent({
       return getLightDarkTheme(dark, defaultTheme, exists);
     });
 
-    const stylesheetId =
+    const stylesheetId = computed(() =>
       typeof appStore.vuetifyOptions.theme === 'object'
         ? (appStore.vuetifyOptions.theme.stylesheetId ??
           'vuetify-theme-stylesheet')
-        : 'vuetify-theme-stylesheet';
+        : 'vuetify-theme-stylesheet',
+    );
 
-    const stylesheetNonce =
+    const stylesheetNonce = computed(() =>
       typeof appStore.vuetifyOptions.theme === 'object'
         ? appStore.vuetifyOptions.theme.cspNonce
-        : undefined;
+        : undefined,
+    );
 
     const customStyleToUse = computed(() => props.customStyle);
     const vuetifyThemeCss = computed(() => {
@@ -519,6 +526,18 @@ export default defineComponent({
           } else if (colorSchema === 'light') {
             appStore.dark = false;
           }
+        }
+
+        appStore.vuetifyOptions = {
+          ...defaultVuetifyOptions,
+          ...vuetifyOptions,
+        };
+
+        if (vuetifyOptions.theme) {
+          const newThemeInstance = createTheme(appStore.vuetifyOptions.theme);
+
+          themeInstance.themes.value = newThemeInstance.themes.value;
+          themeInstance.global.name.value = theme.value;
         }
       },
       { deep: true },
