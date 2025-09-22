@@ -59,6 +59,15 @@
             <span class="v-text-field__suffix">{{ props.suffix }}</span>
           </template>
         </template>
+
+        <template
+          v-for="(_, name) in Object.fromEntries(
+            Object.entries(slots).filter(([n]) => !['default'].includes(n)),
+          )"
+          v-slot:[name]="slotProps"
+        >
+          <slot :name="name" v-bind="slotProps" />
+        </template>
       </VField>
     </template>
     <template v-if="hasDetails" #details="slotProps">
@@ -78,6 +87,18 @@
           </template>
         </VCounter>
       </template>
+    </template>
+
+    <!-- Forward all slots except `default` and `details` -->
+    <template
+      v-for="(_, name) in Object.fromEntries(
+        Object.entries(slots).filter(
+          ([n]) => !['default', 'details'].includes(n),
+        ),
+      )"
+      v-slot:[name]="slotProps"
+    >
+      <slot :name="name" v-bind="slotProps" />
     </template>
   </VInput>
 </template>
@@ -246,7 +267,7 @@ function calculateInputHeight(force = false) {
   if (!containerRef.value || (!props.autoGrow && !force)) return;
 
   nextTick(() => {
-    if (!containerRef.value || !editor.value) return;
+    if (!containerRef.value || !editor.value || !vFieldRef.value) return;
 
     const style = getComputedStyle(containerRef.value!);
 
@@ -260,11 +281,10 @@ function calculateInputHeight(force = false) {
 
     let newHeight: number;
 
+    const fieldStyle = getComputedStyle(vFieldRef.value.$el);
+    const fieldHeight = parseFloat(fieldStyle.getPropertyValue('height'));
+
     if (props.autoGrow) {
-      if (!vFieldRef.value) return;
-
-      const fieldStyle = getComputedStyle(vFieldRef.value.$el);
-
       const lineCount = editor.value?.getModel()?.getLineCount() || 1;
       const minHeight = Math.max(
         parseFloat(props.rows as any) * lineHeight + padding,
@@ -279,6 +299,10 @@ function calculateInputHeight(force = false) {
       rows.value = Math.floor((newHeight - padding) / lineHeight);
     } else {
       newHeight = parseFloat(String(rows.value)) * lineHeight + padding;
+    }
+
+    if (newHeight < fieldHeight) {
+      newHeight = fieldHeight;
     }
 
     controlHeight.value = convertToUnit(newHeight);
