@@ -51,9 +51,17 @@ export const mapStateToButtonProps = (
 ) => {
   const rootData = getData(state);
   const { uischema } = ownProps;
+  const config = getConfig(state);
+
   const visible: boolean =
     ownProps.visible === undefined || hasShowRule(uischema)
-      ? isVisible(ownProps.uischema, rootData, ownProps.path!, getAjv(state))
+      ? isVisible(
+          ownProps.uischema,
+          rootData,
+          ownProps.path!,
+          getAjv(state),
+          config,
+        )
       : ownProps.visible;
   const label = uischema.label;
   const icon = uischema.icon;
@@ -66,7 +74,6 @@ export const mapStateToButtonProps = (
   const i18nKey = i18nKeyPrefix ? `${i18nKeyPrefix}.label` : (label ?? '');
   const i18nText = t(i18nKey, label, { uischema });
 
-  const config = getConfig(state);
   const enabled: boolean = isInherentlyEnabled(
     state,
     ownProps,
