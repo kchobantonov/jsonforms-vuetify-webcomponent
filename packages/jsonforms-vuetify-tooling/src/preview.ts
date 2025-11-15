@@ -130,8 +130,8 @@ const showWebview = async (
   const pathPrefix = schemaPath.endsWith(normalize("/schema.json")) // no prefix if the file is called schema.json
     ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
     : schemaPath.endsWith(".schema.json")
-    ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
-    : schemaPath.substring(0, schemaPath.length - "json".length);
+      ? schemaPath.substring(0, schemaPath.length - "schema.json".length)
+      : schemaPath.substring(0, schemaPath.length - "json".length);
 
   const uischemaPath = pathPrefix + "uischema.json";
   const uischemasPath = pathPrefix + "uischemas.json";
@@ -359,30 +359,14 @@ const getPreviewHTML = (webcomponentScriptPath: any, files: Files) => {
     if (style) {
       form.setAttribute('custom-style', style);
     }
-    if (data) {
-      form.setAttribute('data', data);
-    }
-    if (schema) {
-      form.setAttribute('schema', schema);
-    }
-    if (uischema) {
-      form.setAttribute('uischema', uischema);
-    }
-    if (uischemas) {
-      form.setAttribute('uischemas', uischemas);
-    }
-    if (uidata) {
-      form.setAttribute('uidata', uidata);
-    }
-    if (config) {
-      form.setAttribute('config', config);
-    }
-    if (i18n) {
-      form.setAttribute('translations', i18n);
-    }
-    if (preset) {
-      form.setAttribute('vuetify-options', preset);
-    }
+    form.data = data;
+    form.schema = schema;
+    form.uischema = uischema;
+    form.uischemas = uischemas;
+    form.uidata = uidata;
+    form.config = config;
+    form.translations = i18n;
+    form.vuetifyOptions = preset;
       
     ${
       files.actions && files.actions.data ? files.actions.data : "// no actions"
