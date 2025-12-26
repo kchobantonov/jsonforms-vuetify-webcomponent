@@ -31,10 +31,13 @@ jobs:
       # Setup Node.js and pnpm
       # -----------------------------
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
+          registry-url: https://registry.npmjs.org
+          always-auth: true
+          scope: "@chobantonov"
 
       # -----------------------------
       # Install dependencies
