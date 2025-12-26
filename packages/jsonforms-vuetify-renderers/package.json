@@ -64,7 +64,7 @@
     "monaco-editor": "^0.49.0",
     "splitpanes": "^3.2.0",
     "vue": "^3.5.0",
-    "vuetify": "^3.9.0"
+    "vuetify": "^3.11.0"
   },
   "devDependencies": {
     "@jsonforms/core": "catalog:",
@@ -90,6 +90,6 @@
     "resize-observer-polyfill": "^1.5.1",
     "splitpanes": "^3.2.0",
     "vue": "^3.5.0",
-    "vuetify": "^3.9.0"
+    "vuetify": "^3.11.0"
   }
 }

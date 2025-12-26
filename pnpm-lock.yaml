@@ -219,7 +219,7 @@ importers:
         version: 3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
         specifier: 'catalog:'
-        version: 3.7.0(@jsonforms/core@3.7.0)(@jsonforms/vue@3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
+        version: 3.7.0(@jsonforms/core@3.7.0)(@jsonforms/vue@3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.11.5)
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -281,8 +281,8 @@ importers:
         specifier: ^3.5.0
         version: 3.5.13(typescript@5.4.5)
       vuetify:
-        specifier: ^3.9.0
-        version: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: ^3.11.0
+        version: 3.11.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
 
   packages/jsonforms-vuetify-tooling:
     dependencies:
@@ -358,7 +358,7 @@ importers:
         version: 3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5))
       '@jsonforms/vue-vuetify':
         specifier: 'catalog:'
-        version: 3.7.0(@jsonforms/core@3.7.0)(@jsonforms/vue@3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
+        version: 3.7.0(@jsonforms/core@3.7.0)(@jsonforms/vue@3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.11.5)
       '@mdi/font':
         specifier: ^7.4.47
         version: 7.4.47
@@ -402,8 +402,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       vuetify:
-        specifier: ^3.9.0
-        version: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
+        specifier: ^3.11.0
+        version: 3.11.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
     devDependencies:
       '@types/lodash':
         specifier: ^4.17.20
@@ -5431,22 +5431,6 @@ packages:
       webpack-plugin-vuetify:
         optional: true
 
-  vuetify@3.9.5:
-    resolution: {integrity: sha512-rJBSo1FeKcJJaqTfVHbOdpFXCmgeEIGzrh6HBEMGjSflan6voPIMSiK2dTCUU4t9JeghwvJtoAE5eBuqYIkFVA==}
-    engines: {node: ^12.20 || >=14.13}
-    peerDependencies:
-      typescript: '>=4.7'
-      vite-plugin-vuetify: '>=2.1.0'
-      vue: ^3.5.0
-      webpack-plugin-vuetify: '>=3.1.0'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-      vite-plugin-vuetify:
-        optional: true
-      webpack-plugin-vuetify:
-        optional: true
-
   w3c-xmlserializer@5.0.0:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
     engines: {node: '>=18'}
@@ -6165,17 +6149,6 @@ snapshots:
       maska: 2.1.11
       vue: 3.5.13(typescript@5.4.5)
       vuetify: 3.11.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
-
-  '@jsonforms/vue-vuetify@3.7.0(@jsonforms/core@3.7.0)(@jsonforms/vue@3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5)))(ajv@8.17.1)(dayjs@1.11.13)(lodash@4.17.21)(maska@2.1.11)(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)':
-    dependencies:
-      '@jsonforms/core': 3.7.0
-      '@jsonforms/vue': 3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5))
-      ajv: 8.17.1
-      dayjs: 1.11.13
-      lodash: 4.17.21
-      maska: 2.1.11
-      vue: 3.5.13(typescript@5.4.5)
-      vuetify: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
 
   '@jsonforms/vue@3.7.0(@jsonforms/core@3.7.0)(vue@3.5.13(typescript@5.4.5))':
     dependencies:
@@ -6935,13 +6908,6 @@ snapshots:
       upath: 2.0.1
       vue: 3.5.13(typescript@5.4.5)
       vuetify: 3.11.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
-
-  '@vuetify/loader-shared@2.1.0(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)':
-    dependencies:
-      upath: 2.0.1
-      vue: 3.5.13(typescript@5.4.5)
-      vuetify: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
-    optional: true
 
   '@vueuse/core@10.11.1(vue@3.5.13(typescript@5.4.5))':
     dependencies:
@@ -11177,18 +11143,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-vuetify@2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5):
-    dependencies:
-      '@vuetify/loader-shared': 2.1.0(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
-      debug: 4.4.1(supports-color@8.1.1)
-      upath: 2.0.1
-      vite: 5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0)
-      vue: 3.5.13(typescript@5.4.5)
-      vuetify: 3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5))
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
   vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0):
     dependencies:
       esbuild: 0.21.5
@@ -11315,13 +11269,6 @@ snapshots:
     optionalDependencies:
       typescript: 5.4.5
       vite-plugin-vuetify: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.11.5)
-
-  vuetify@3.9.5(typescript@5.4.5)(vite-plugin-vuetify@2.1.1)(vue@3.5.13(typescript@5.4.5)):
-    dependencies:
-      vue: 3.5.13(typescript@5.4.5)
-    optionalDependencies:
-      typescript: 5.4.5
-      vite-plugin-vuetify: 2.1.1(vite@5.4.19(@types/node@20.17.47)(sass@1.88.0)(stylus@0.57.0))(vue@3.5.13(typescript@5.4.5))(vuetify@3.9.5)
 
   w3c-xmlserializer@5.0.0:
     dependencies:
