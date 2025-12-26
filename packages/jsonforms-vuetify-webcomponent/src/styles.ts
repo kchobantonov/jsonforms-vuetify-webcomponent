@@ -1,9 +1,10 @@
-import jsonFormsVuetifyStyles from '@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.css?url';
-import jsonFormsVueVuetifyStyles from '@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css?url';
+import jsonFormsVuetifyStyles from '@chobantonov/jsonforms-vuetify-renderers/lib/jsonforms-vuetify-renderers.css?inline';
+import jsonFormsVueVuetifyStyles from '@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css?inline';
+import vuetifyStyles from 'vuetify/dist/vuetify.min.css?inline';
+import vuetifyLabsStyles from 'vuetify/dist/vuetify-labs.min.css?inline';
+
 import materialDesignIconsStyles from '@mdi/font/css/materialdesignicons.css?url';
 import fontAwesomeStyles from '@fortawesome/fontawesome-free/css/all.css?url';
-import vuetifyStyles from 'vuetify/dist/vuetify.css?url';
-import vuetifyLabsStyles from 'vuetify/dist/vuetify-labs.css?url';
 import monacoEditorStylesUrl from 'monaco-editor/min/vs/editor/editor.main.css?url';
 
 const vuetifyResetStyles = `
@@ -51,13 +52,13 @@ const vuetifyResetStyles = `
 
 export const styles = [
   vuetifyResetStyles,
+  vuetifyStyles,
+  vuetifyLabsStyles,
+  jsonFormsVuetifyStyles,
+  jsonFormsVueVuetifyStyles,
   `
   @import url(${materialDesignIconsStyles});
   @import url(${fontAwesomeStyles});
-  @import url(${vuetifyStyles});
-  @import url(${vuetifyLabsStyles});
-  @import url(${jsonFormsVuetifyStyles});
-  @import url(${jsonFormsVueVuetifyStyles});
   @import url('${monacoEditorStylesUrl}');
   `,
 ];
