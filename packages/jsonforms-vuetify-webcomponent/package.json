@@ -1,6 +1,6 @@
 {
   "name": "@chobantonov/jsonforms-vuetify-webcomponent",
-  "version": "3.7.0-alpha.3",
+  "version": "3.7.0",
   "repository": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent",
   "bugs": "https://github.com/kchobantonov/jsonforms-vuetify-webcomponent/issues",
   "license": "MIT",
