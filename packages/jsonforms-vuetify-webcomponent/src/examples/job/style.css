@@ -9,7 +9,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
 
-vuetify-json-forms::part(main-form) {
+vuetify-json-forms::part(json-forms) {
   font-family: var(--v-body-font-family);
   font-size: var(--v-font-size);
 }
