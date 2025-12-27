@@ -62,7 +62,10 @@ For example if we use version `3.6.0` of the webcomponent then using the below H
 ```html
 <html>
   <body>
-    <vuetify-json-forms id="vuetify-json-forms"></vuetify-json-forms>
+    <vuetify-json-forms
+      id="vuetify-json-forms"
+      dark="false"
+    ></vuetify-json-forms>
 
     <script type="text/javascript">
       let data = {
@@ -102,15 +105,48 @@ For example if we use version `3.6.0` of the webcomponent then using the below H
         }
       };
 
-      var form = document.getElementById("vuetify-json-forms");
-      form.setAttribute("data", JSON.stringify(data));
-      form.setAttribute("schema", JSON.stringify(schema));
+      const vuetifyOptions = {
+        defaults: {
+          VField: {
+            variant: "outlined",
+          },
+          VTextField: {
+            variant: "outlined",
+          },
+          VCombobox: {
+            variant: "outlined",
+          },
+          VSelect: {
+            variant: "outlined",
+          },
+          VAutocomplete: {
+            variant: "outlined",
+          },
+          VTextarea: {
+            variant: "outlined",
+          },
+          VNumberInput: {
+            variant: "outlined",
+            inset: true,
+          },
+          VDateInput: {
+            variant: "outlined",
+          },
+          VCheckbox: { color: "primary" },
+        },
+      };
+
+      const form = document.getElementById("vuetify-json-forms");
+      form.data = data;
+      form.schema = schema;
+      form.vuetifyOptions = vuetifyOptions;
+
       form.addEventListener("change", onChange);
     </script>
 
     <script
       type="module"
-      src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.6.0/dist/vuetify-json-forms.min.js"
+      src="https://cdn.jsdelivr.net/npm/@chobantonov/jsonforms-vuetify-webcomponent@3.7.0/dist/vuetify-json-forms.min.js"
     ></script>
   </body>
 </html>
