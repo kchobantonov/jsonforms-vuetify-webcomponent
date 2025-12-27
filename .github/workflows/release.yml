@@ -79,6 +79,6 @@ jobs:
         if: env.TOOLING == 'true'
         run: |
           cd packages/jsonforms-vuetify-tooling
-          npx vsce publish --no-git-tag-version
+          npx vsce publish --no-git-tag-version --no-dependencies
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
