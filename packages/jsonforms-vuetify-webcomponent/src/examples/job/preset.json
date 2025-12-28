@@ -64,7 +64,7 @@
         },
         "variables": {
           "body-font-family": "\"Montserrat\", \"Lekton\", sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#356859",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -112,7 +112,7 @@
         },
         "variables": {
           "body-font-family": "\"Montserrat\", \"Lekton\", sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#B9E4C9",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -160,7 +160,7 @@
         },
         "variables": {
           "body-font-family": "Raleway, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#5D1049",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -208,7 +208,7 @@
         },
         "variables": {
           "body-font-family": "Raleway, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#7B1FA2",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -256,7 +256,7 @@
         },
         "variables": {
           "body-font-family": "\"Libre Franklin\", sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#6B38FB",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -304,7 +304,7 @@
         },
         "variables": {
           "body-font-family": "\"Libre Franklin\", sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#8B5CF6",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -352,7 +352,7 @@
         },
         "variables": {
           "body-font-family": "Rubik, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#FFDE03",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -400,7 +400,7 @@
         },
         "variables": {
           "body-font-family": "Rubik, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#FFE54C",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -451,7 +451,7 @@
         },
         "variables": {
           "body-font-family": "\"Eczar\", \"Roboto Condensed\", sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#045D56",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -502,7 +502,7 @@
         },
         "variables": {
           "body-font-family": "\"Eczar\", \"Roboto Condensed\", sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#33333d",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -550,7 +550,7 @@
         },
         "variables": {
           "body-font-family": "Work Sans, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#344955",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -598,7 +598,7 @@
         },
         "variables": {
           "body-font-family": "Work Sans, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#4A6572",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -645,7 +645,7 @@
         },
         "variables": {
           "body-font-family": "Rubik, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#442C2E",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,
@@ -693,7 +693,7 @@
         },
         "variables": {
           "body-font-family": "Rubik, sans-serif",
-          "font-size": 16,
+          "font-size-root": 16,
           "border-color": "#F4A79D",
           "border-opacity": 0.12,
           "high-emphasis-opacity": 0.87,

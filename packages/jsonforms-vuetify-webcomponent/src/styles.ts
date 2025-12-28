@@ -2,6 +2,7 @@ import jsonFormsVuetifyStyles from '@chobantonov/jsonforms-vuetify-renderers/lib
 import jsonFormsVueVuetifyStyles from '@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.css?inline';
 import vuetifyStyles from 'vuetify/dist/vuetify.min.css?inline';
 import vuetifyLabsStyles from 'vuetify/dist/vuetify-labs.min.css?inline';
+import customVuetifyStyles from './styles/vuetify.scss?inline';
 
 import materialDesignIconsStyles from '@mdi/font/css/materialdesignicons.css?url';
 import fontAwesomeStyles from '@fortawesome/fontawesome-free/css/all.css?url';
@@ -48,6 +49,9 @@ const vuetifyResetStyles = `
   --v-theme-on-surface: #000;
   --v-theme-overlay-multiplier: 1;
   --v-scrollbar-offset: 0px;
+
+  font-family: var(--v-body-font-family, 'Roboto', sans-serif);
+  font-size: var(--v-font-size-root, '1rem');
 }`;
 
 export const styles = [
@@ -56,6 +60,7 @@ export const styles = [
   vuetifyLabsStyles,
   jsonFormsVuetifyStyles,
   jsonFormsVueVuetifyStyles,
+  customVuetifyStyles,
   `
   @import url(${materialDesignIconsStyles});
   @import url(${fontAwesomeStyles});

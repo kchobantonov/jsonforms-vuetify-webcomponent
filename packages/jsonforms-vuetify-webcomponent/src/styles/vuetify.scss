@@ -1,0 +1,8 @@
+@use 'vuetify/settings' with (
+  $body-font-family: var(--v-body-font-family, 'Roboto', sans-serif),
+  $font-size-root: var(--v-font-size-root, '1rem'),
+  $line-height-root: var(--v-line-height-root, 1.5),
+  $heading-font-family: var(--v-heading-font-family, var(--v-body-font-family, 'Roboto', sans-serif))
+);
+
+@use 'vuetify/styles';
