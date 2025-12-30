@@ -9,7 +9,7 @@ import {
   type UISchemaElement,
 } from '@jsonforms/core';
 
-import templateLayoutRenderer from './TemplateLayoutRenderer.vue';
+import vueTemplateLayoutRenderer from './VueTemplateLayoutRenderer.vue';
 export const langIs =
   (expected: string): Tester =>
   (
@@ -20,13 +20,12 @@ export const langIs =
     return (
       uischema.lang === expected ||
       (uischema.lang === undefined &&
-        (!context.config ||
-          context.config.defaultTemplateLang === expected ||
-          context.config.defaultTemplateLang === undefined))
+        context.config &&
+        context.config.defaultTemplateLang === expected)
     );
   };
 
 export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: templateLayoutRenderer,
-  tester: rankWith(2, and(uiTypeIs('TemplateLayout'), langIs('ractive'))),
+  renderer: vueTemplateLayoutRenderer,
+  tester: rankWith(2, and(uiTypeIs('TemplateLayout'), langIs('vue'))),
 };

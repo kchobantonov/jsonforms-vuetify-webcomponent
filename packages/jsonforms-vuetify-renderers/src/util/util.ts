@@ -1,5 +1,6 @@
 import {
   type JsonFormsUISchemaRegistryEntry,
+  type Layout,
   type UISchemaElement,
   type UISchemaTester,
   type ValidateFunctionContext,
@@ -176,3 +177,16 @@ export const getLightDarkTheme = (
 
   return newTheme;
 };
+
+export interface TemplateLayout extends Layout {
+  type: 'TemplateLayout';
+  /**
+   * The template string.
+   */
+  template: string;
+
+  /**
+   * The template language.
+   */
+  lang: string;
+}
