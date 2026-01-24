@@ -37,7 +37,7 @@
       </v-monaco-editor>
 
       <!-- Fullscreen dialog -->
-      <v-dialog v-model="isMaximized" fullscreen hide-overlay persistent>
+      <v-dialog v-model="isMaximized" fullscreen :scrim="false" persistent>
         <v-card class="fill-height">
           <v-toolbar flat>
             <v-btn icon @click="isMaximized = false">

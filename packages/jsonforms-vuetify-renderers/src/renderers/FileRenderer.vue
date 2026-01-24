@@ -25,7 +25,7 @@
       @focus="handleFocus"
       @blur="handleBlur"
     ></v-file-input>
-    <v-dialog v-model="dialog" hide-overlay persistent width="300">
+    <v-dialog v-model="dialog" :scrim="false" persistent width="300">
       <v-card>
         <v-toolbar dense flat>
           <v-toolbar-title>{{ standby }}</v-toolbar-title>
@@ -375,6 +375,11 @@ const controlRenderer = defineComponent({
           } catch (e) {
             // clear the selected file when there is an error converting the file into base64
             this.currentFile = undefined;
+            this.currentFileValidationErrors = this.t(
+              'error.fileConversion',
+              'Failed to process file',
+            );
+            console.error('File conversion error:', e);
           } finally {
             this.reset();
           }
