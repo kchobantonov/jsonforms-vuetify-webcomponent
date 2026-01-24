@@ -5,6 +5,7 @@ import {
   schemaMatches,
   uiTypeIs,
   type JsonFormsRendererRegistryEntry,
+  type JsonSchema,
 } from '@jsonforms/core';
 
 import fileRenderer from './FileRenderer.vue';
@@ -12,13 +13,17 @@ import fileRenderer from './FileRenderer.vue';
 export const isBase64String = and(
   uiTypeIs('Control'),
   isStringControl,
-  schemaMatches(
-    (schema) =>
-      (Object.prototype.hasOwnProperty.call(schema, 'contentEncoding') &&
-        (schema as any).contentEncoding == 'base64') ||
-      schema.format === 'binary' ||
-      schema.format === 'byte',
-  ),
+  schemaMatches((schema) => {
+    const s = schema as JsonSchema & {
+      contentEncoding?: string;
+    };
+
+    return (
+      s.contentEncoding === 'base64' ||
+      s.format === 'binary' ||
+      s.format === 'byte'
+    );
+  }),
 );
 
 export const entry: JsonFormsRendererRegistryEntry = {
