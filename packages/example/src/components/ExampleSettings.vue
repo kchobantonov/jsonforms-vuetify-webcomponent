@@ -278,7 +278,7 @@ const darkModeValue = computed({
       <v-row><v-col>Options</v-col></v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.hideRequiredAsterisk"
@@ -292,7 +292,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.showUnfocusedDescription"
@@ -306,7 +306,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.restrict"
@@ -321,7 +321,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.readonly"
@@ -335,7 +335,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.collapseNewItems"
@@ -349,7 +349,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.hideArraySummaryValidation"
@@ -363,7 +363,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.initCollapsed"
@@ -377,7 +377,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.hideAvatar"
@@ -391,7 +391,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="

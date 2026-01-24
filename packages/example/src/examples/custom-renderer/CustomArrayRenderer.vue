@@ -1,7 +1,7 @@
 <template>
   <array-layout-renderer v-bind="$props">
     <template v-slot:toolbar-elements="actionsProps">
-      <v-tooltip bottom>
+      <v-tooltip location="bottom">
         <template v-slot:activator="{ props }">
           <v-btn
             color="primary"

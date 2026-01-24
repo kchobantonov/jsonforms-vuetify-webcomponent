@@ -19,7 +19,7 @@ const { smAndUp } = useDisplay();
     <v-toolbar-title>
       <v-container fill-height fluid class="py-0 pr-0"
         ><v-row align="center" justify="center">
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <JsonFormsLogo
                 @click="appStore.exampleName = ''"
@@ -41,7 +41,7 @@ const { smAndUp } = useDisplay();
       <v-container fill-height fluid justify-end class="pa-0"
         ><v-row align="center" no-gutters class="fill-height">
           <v-col class="d-flex justify-center align-center" v-if="smAndUp">
-            <v-tooltip bottom>
+            <v-tooltip location="bottom">
               <template v-slot:activator="{ props }">
                 <v-btn-toggle
                   v-bind="props"
@@ -67,7 +67,7 @@ const { smAndUp } = useDisplay();
             </v-tooltip>
           </v-col>
           <v-col class="d-flex justify-center align-center" v-if="smAndUp">
-            <v-tooltip bottom>
+            <v-tooltip location="bottom">
               <template v-slot:activator="{ props }">
                 <v-btn-toggle
                   v-bind="props"
@@ -102,7 +102,7 @@ const { smAndUp } = useDisplay();
             v-if="smAndUp"
           ></v-divider>
           <v-col class="d-flex justify-center align-center">
-            <v-tooltip bottom>
+            <v-tooltip location="bottom">
               <template v-slot:activator="{ props }">
                 <v-btn
                   icon
@@ -124,7 +124,7 @@ const { smAndUp } = useDisplay();
             <theme-switcher></theme-switcher>
           </v-col>
           <v-col class="d-flex justify-center align-center">
-            <v-tooltip bottom>
+            <v-tooltip location="bottom">
               <template v-slot:activator="{ props }">
                 <v-btn
                   icon
