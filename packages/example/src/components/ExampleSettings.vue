@@ -278,7 +278,7 @@ const darkModeValue = computed({
       <v-row><v-col>Options</v-col></v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.hideRequiredAsterisk"
@@ -292,7 +292,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.showUnfocusedDescription"
@@ -306,7 +306,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.restrict"
@@ -321,7 +321,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.readonly"
@@ -335,7 +335,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.collapseNewItems"
@@ -349,7 +349,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.hideArraySummaryValidation"
@@ -363,7 +363,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.initCollapsed"
@@ -377,7 +377,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="appStore.jsonforms.config.hideAvatar"
@@ -391,7 +391,7 @@ const darkModeValue = computed({
       </v-row>
       <v-row>
         <v-col>
-          <v-tooltip bottom>
+          <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
               <v-switch
                 v-model="
@@ -402,6 +402,45 @@ const darkModeValue = computed({
               ></v-switch>
             </template>
             Whether the errors will be displayed for not touched controls
+          </v-tooltip>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-tooltip location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-combobox
+                v-model="
+                  appStore.jsonforms.config.filterErrorKeywordsBeforeTouch
+                "
+                label="Filter Error Keywords Before Touch"
+                placeholder="e.g., required, minLength, pattern"
+                chips
+                closable-chips
+                multiple
+                clearable
+                v-bind="props"
+              ></v-combobox>
+            </template>
+            Hide specific AJV error keywords until the control is touched.
+            Requires "Enable Filter Errors Before Touch".
+          </v-tooltip>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-tooltip location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-switch
+                v-model="
+                  appStore.jsonforms.config.allowAdditionalPropertiesIfMissing
+                "
+                label="Allow Additional Properties By Default"
+                v-bind="props"
+              ></v-switch>
+            </template>
+            Allow adding additional properties when the schema does not specify
+            explicitly the addtionalProperties
           </v-tooltip>
         </v-col>
       </v-row>

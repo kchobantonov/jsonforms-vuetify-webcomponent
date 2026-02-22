@@ -599,7 +599,7 @@ const wrapperProps = computed(() => ({
                           class="pr-4 mt-1"
                         >
                           <v-col cols="auto">
-                            <v-tooltip bottom>
+                            <v-tooltip location="bottom">
                               <template v-slot:activator="{ props }">
                                 <WebComponentLogo
                                   v-bind="props"
@@ -635,7 +635,7 @@ const wrapperProps = computed(() => ({
                         <v-toolbar flat>
                           <v-toolbar-title>Data</v-toolbar-title>
                           <v-spacer></v-spacer>
-                          <v-tooltip bottom>
+                          <v-tooltip location="bottom">
                             <template v-slot:activator="{ props }">
                               <v-btn
                                 icon
@@ -647,7 +647,7 @@ const wrapperProps = computed(() => ({
                             </template>
                             {{ `Reload Example Data` }}
                           </v-tooltip>
-                          <v-tooltip bottom>
+                          <v-tooltip location="bottom">
                             <template v-slot:activator="{ props }">
                               <v-btn
                                 icon
@@ -678,7 +678,7 @@ const wrapperProps = computed(() => ({
                   >
                     <v-row slot="form-header" justify="end" class="pr-4 mt-1">
                       <v-col cols="auto">
-                        <v-tooltip bottom>
+                        <v-tooltip location="bottom">
                           <template v-slot:activator="{ props }">
                             <WebComponentLogo
                               v-bind="props"
@@ -716,7 +716,7 @@ const wrapperProps = computed(() => ({
                 <v-toolbar flat>
                   <v-toolbar-title>Schema</v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="reloadMonacoSchema" v-bind="props">
                         <v-icon>$reload</v-icon>
@@ -724,7 +724,7 @@ const wrapperProps = computed(() => ({
                     </template>
                     {{ `Reload Example Schema` }}
                   </v-tooltip>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="saveMonacoSchema" v-bind="props">
                         <v-icon>$save</v-icon>
@@ -749,7 +749,7 @@ const wrapperProps = computed(() => ({
                 <v-toolbar flat>
                   <v-toolbar-title>UI Schema</v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="reloadMonacoUiSchema" v-bind="props">
                         <v-icon>$reload</v-icon>
@@ -757,7 +757,7 @@ const wrapperProps = computed(() => ({
                     </template>
                     {{ `Reload Example UI Schema` }}
                   </v-tooltip>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="saveMonacoUiSchema" v-bind="props">
                         <v-icon>$save</v-icon>
@@ -782,7 +782,7 @@ const wrapperProps = computed(() => ({
                 <v-toolbar flat>
                   <v-toolbar-title>UI Schemas</v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="reloadMonacoUiSchemas" v-bind="props">
                         <v-icon>$reload</v-icon>
@@ -790,7 +790,7 @@ const wrapperProps = computed(() => ({
                     </template>
                     {{ `Reload Example UI Schemas` }}
                   </v-tooltip>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="saveMonacoUiSchemas" v-bind="props">
                         <v-icon>$save</v-icon>
@@ -815,7 +815,7 @@ const wrapperProps = computed(() => ({
                 <v-toolbar flat>
                   <v-toolbar-title>Internationalization</v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="reloadMonacoI18N" v-bind="props">
                         <v-icon>$reload</v-icon>
@@ -823,7 +823,7 @@ const wrapperProps = computed(() => ({
                     </template>
                     {{ `Reload Example Internationalization` }}
                   </v-tooltip>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="saveMonacoI18N" v-bind="props">
                         <v-icon>$save</v-icon>
@@ -848,7 +848,7 @@ const wrapperProps = computed(() => ({
                 <v-toolbar flat>
                   <v-toolbar-title>Config</v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="reloadMonacoConfig" v-bind="props">
                         <v-icon>$reload</v-icon>
@@ -856,7 +856,7 @@ const wrapperProps = computed(() => ({
                     </template>
                     {{ `Reload Example Config` }}
                   </v-tooltip>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="saveMonacoConfig" v-bind="props">
                         <v-icon>$save</v-icon>
@@ -881,7 +881,7 @@ const wrapperProps = computed(() => ({
                 <v-toolbar flat>
                   <v-toolbar-title>Data</v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="reloadMonacoData" v-bind="props">
                         <v-icon>$reload</v-icon>
@@ -889,7 +889,7 @@ const wrapperProps = computed(() => ({
                     </template>
                     {{ `Reload Example Data` }}
                   </v-tooltip>
-                  <v-tooltip bottom>
+                  <v-tooltip location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn icon @click="saveMonacoData" v-bind="props">
                         <v-icon>$save</v-icon>

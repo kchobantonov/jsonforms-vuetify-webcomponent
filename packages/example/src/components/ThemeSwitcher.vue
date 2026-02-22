@@ -56,7 +56,7 @@ function switchTheme(themeName: string) {
 <template>
   <v-menu offset-y>
     <template v-slot:activator="{ props: menuProps }">
-      <v-tooltip bottom>
+      <v-tooltip location="bottom">
         <template v-slot:activator="{ props: tooltipProps }">
           <v-btn
             icon
