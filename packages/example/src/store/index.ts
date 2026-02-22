@@ -68,6 +68,8 @@ const appstore = reactive({
       hideAvatar: false,
       hideArraySummaryValidation: false,
       enableFilterErrorsBeforeTouch: false,
+      filterErrorKeywordsBeforeTouch: ['required'],
+      allowAdditionalPropertiesIfMissing: false,
     },
     locale: useLocalStorage('vuetify-example-locale', 'en'),
   },

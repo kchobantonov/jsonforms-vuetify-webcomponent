@@ -405,6 +405,45 @@ const darkModeValue = computed({
           </v-tooltip>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col>
+          <v-tooltip location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-combobox
+                v-model="
+                  appStore.jsonforms.config.filterErrorKeywordsBeforeTouch
+                "
+                label="Filter Error Keywords Before Touch"
+                placeholder="e.g., required, minLength, pattern"
+                chips
+                closable-chips
+                multiple
+                clearable
+                v-bind="props"
+              ></v-combobox>
+            </template>
+            Hide specific AJV error keywords until the control is touched.
+            Requires "Enable Filter Errors Before Touch".
+          </v-tooltip>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-tooltip location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-switch
+                v-model="
+                  appStore.jsonforms.config.allowAdditionalPropertiesIfMissing
+                "
+                label="Allow Additional Properties By Default"
+                v-bind="props"
+              ></v-switch>
+            </template>
+            Allow adding additional properties when the schema does not specify
+            explicitly the addtionalProperties
+          </v-tooltip>
+        </v-col>
+      </v-row>
     </v-container>
 
     <v-divider />
