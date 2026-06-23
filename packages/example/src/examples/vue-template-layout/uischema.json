@@ -1,0 +1,121 @@
+{
+  "type": "TemplateLayout",
+  "template": "<v-card class=\"mx-auto my-12\" flat><slot name=\"header\"></slot><slot name=\"title\"></slot><div v-for=\"element in elements\" :key=\"element.name\"><slot v-if=\"element.name != 'header' && element.name != 'title'\" :name=\"element.name\"></slot><v-divider class=\"mx-6\"></v-divider></div></v-card>",
+  "lang": "vue",
+  "elements": [
+    {
+      "type": "TemplateLayout",
+      "template": "<v-card-title class=\"d-flex align-center\"><span>{{translate('Custom TemplateLayout with JSONForms and Vuetify', 'Custom TemplateLayout with JSONForms and Vuetify')}}</span><v-spacer /><slot v-for=\"element in elements\" :key=\"element.name\" :name=\"element.name\"></slot></v-card-title>",
+      "lang": "vue",
+      "name": "title",
+      "elements": [
+        {
+          "type": "Button",
+          "label": "EN",
+          "action": "changeLang",
+          "params": {
+            "lang": "en"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        },
+        {
+          "type": "Button",
+          "label": "BG",
+          "action": "changeLang",
+          "params": {
+            "lang": "bg"
+          },
+          "options": {
+            "vuetify": {
+              "v-btn": {
+                "small": true,
+                "fab": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "TemplateLayout",
+      "template": "<v-toolbar><v-row align=\"center\" justify=\"center\" no-gutters><v-col><v-img src=\"https://jsonforms.io/img/logo.svg\" max-width=\"50px\" max-height=\"50px\" style=\"filter: invert(1); margin-left: 20px;\"></v-img></v-col><v-spacer></v-spacer><v-col class=\"d-flex justify-end\"><v-img src=\"https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-dark-text.svg\" max-width=\"200px\" max-height=\"200px\" style=\"margin-right: 20px;\"></v-img></v-col></v-row></v-toolbar>",
+      "lang": "vue",
+      "name": "header"
+    },
+    {
+      "type": "VerticalLayout",
+      "elements": [
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/name"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/personalData/properties/age"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/birthDate"
+            }
+          ]
+        },
+        {
+          "type": "TemplateLayout",
+          "template": "<div>{{translate('Additional Information For', 'Additional Information For')}} <strong>{{ data.name }}</strong></div>",
+          "lang": "ractive"
+        },
+        {
+          "type": "HorizontalLayout",
+          "elements": [
+            {
+              "type": "Control",
+              "scope": "#/properties/personalData/properties/height"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/nationality"
+            },
+            {
+              "type": "Control",
+              "scope": "#/properties/occupation",
+              "options": {
+                "suggestion": [
+                  "Accountant",
+                  "Engineer",
+                  "Freelancer",
+                  "Journalism",
+                  "Physician",
+                  "Student",
+                  "Teacher",
+                  "Other"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TemplateLayout",
+      "template": "<v-card-text><v-card-title><div style='display: flex; gap: 1rem;'><span>JSON Data</span><validation-icon v-if='errors' :errors='errors'></validation-icon></div></v-card-title><slot name=\"0\"></slot></v-card-text>",
+      "lang": "vue",
+      "elements": [
+        {
+          "type": "TemplateLayout",
+          "template": "<v-container fluid><v-row><v-col><v-monaco-editor language='json' readonly :model-value='JSON.stringify(data, null, 2)' :autoGrow='true' :maxRows='15' :options='{ minimap: { enabled: false } }'></v-monaco-editor></v-col></v-row></v-container>",
+          "lang": "vue"
+        }
+      ]
+    }
+  ]
+}

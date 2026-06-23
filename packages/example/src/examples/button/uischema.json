@@ -44,6 +44,7 @@
         {
           "type": "TemplateLayout",
           "template": "<v-container class='pa-0 ma-0'><v-btn-toggle density='compact' v-tooltip=\"context.uidata.alert ? 'Hide Alert' : 'Show Alert'\" v-model='context.uidata.alert'><v-btn :value='true' :icon='context.uidata.alert ? \"mdi-message-alert\" : \"mdi-message-outline\"'></v-btn></v-btn-toggle><slot name='button'></slot></v-container>",
+          "lang": "vue",
           "elements": [
             {
               "type": "Button",

@@ -176,6 +176,9 @@ importers:
       monaco-editor:
         specifier: ^0.49.0
         version: 0.49.0
+      ractive:
+        specifier: ^1.4.4
+        version: 1.4.4
       splitpanes:
         specifier: ^3.1.5
         version: 3.2.0(vue@3.5.13(typescript@5.4.5))
@@ -271,6 +274,9 @@ importers:
       monaco-editor:
         specifier: ^0.49.0
         version: 0.49.0
+      ractive:
+        specifier: ^1.4.4
+        version: 1.4.4
       resize-observer-polyfill:
         specifier: ^1.5.1
         version: 1.5.1
@@ -392,6 +398,9 @@ importers:
       monaco-editor:
         specifier: ^0.49.0
         version: 0.49.0
+      ractive:
+        specifier: ^1.4.4
+        version: 1.4.4
       shady-css-parser:
         specifier: ^0.1.0
         version: 0.1.0
@@ -4451,6 +4460,11 @@ packages:
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  ractive@1.4.4:
+    resolution: {integrity: sha512-FFKmPox5nJQeBNPWLl2dsVC47z44O0NNx2vtGwjWYTtICIyVDyoKex8AAV99Cv07j6njFm3O70Pi96QxVu5rzA==}
+    engines: {node: '>=4.0.0', npm: '>=2.14.2'}
+    hasBin: true
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -10159,6 +10173,8 @@ snapshots:
   querystringify@2.2.0: {}
 
   queue-microtask@1.2.3: {}
+
+  ractive@1.4.4: {}
 
   randombytes@2.1.0:
     dependencies:

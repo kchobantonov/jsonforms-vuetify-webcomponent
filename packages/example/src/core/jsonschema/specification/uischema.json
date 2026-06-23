@@ -364,6 +364,9 @@
         "template": {
           "type": "string"
         },
+        "lang": {
+          "type": "string"
+        },
         "elements": {
           "$ref": "#/definitions/elements"
         },

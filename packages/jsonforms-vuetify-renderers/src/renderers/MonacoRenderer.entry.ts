@@ -4,6 +4,7 @@ import {
   optionIs,
   or,
   rankWith,
+  uiTypeIs,
   type JsonFormsRendererRegistryEntry,
   type Tester,
   type UISchemaElement,
@@ -30,11 +31,24 @@ const hasStringValueOption =
 export const entry: JsonFormsRendererRegistryEntry = {
   renderer: monacoRenderer,
   tester: rankWith(
-    2,
+    3,
     and(
-      isStringControl,
       optionIs('format', 'code'),
-      or(hasStringValueOption('language'), hasStringValueOption(':language')),
+      or(
+        and(
+          isStringControl,
+          or(
+            hasStringValueOption('language'),
+            hasStringValueOption(':language'),
+          ),
+        ),
+        // if the language is set to 'json' we can use the monaco editor for any type
+        and(
+          and(uiTypeIs('Control')),
+          optionIs('language', 'json'),
+          optionIs('convertJson', true),
+        ),
+      ),
     ),
   ),
 };

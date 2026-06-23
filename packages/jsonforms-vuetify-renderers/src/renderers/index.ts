@@ -7,6 +7,7 @@ import { default as MonacoRenderer } from './MonacoRenderer.vue';
 import { default as NullControlRenderer } from './NullControlRenderer.vue';
 import { default as SlotRenderer } from './SlotRenderer.vue';
 import { default as TemplateLabelRenderer } from './TemplateLabelRenderer.vue';
+import { default as VueTemplateLayoutRenderer } from './VueTemplateLayoutRenderer.vue';
 import { default as TemplateLayoutRenderer } from './TemplateLayoutRenderer.vue';
 import { default as TemplateRenderer } from './TemplateRenderer.vue';
 import { default as SplitLayoutRenderer } from './SplitLayoutRenderer.vue';
@@ -21,6 +22,7 @@ import { entry as monacoRendererEntry } from './MonacoRenderer.entry';
 import { entry as nullControlRendererEntry } from './NullControlRenderer.entry';
 import { entry as slotRendererEntry } from './SlotRenderer.entry';
 import { entry as templateLabelRendererEntry } from './TemplateLabelRenderer.entry';
+import { entry as vueTemplateLayoutRendererEntry } from './VueTemplateLayoutRenderer.entry';
 import { entry as templateLayoutRendererEntry } from './TemplateLayoutRenderer.entry';
 import { entry as templateRendererEntry } from './TemplateRenderer.entry';
 import { entry as splitLayoutRendererEntry } from './SplitLayoutRenderer.entry';
@@ -36,6 +38,7 @@ export const extraVuetifyRenderers = [
   nullControlRendererEntry,
   slotRendererEntry,
   templateLabelRendererEntry,
+  vueTemplateLayoutRendererEntry,
   templateLayoutRendererEntry,
   templateRendererEntry,
   splitLayoutRendererEntry,
@@ -52,6 +55,7 @@ export {
   NullControlRenderer,
   SlotRenderer,
   TemplateLabelRenderer,
+  VueTemplateLayoutRenderer,
   TemplateLayoutRenderer,
   TemplateRenderer,
   SplitLayoutRenderer,

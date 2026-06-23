@@ -20,7 +20,7 @@
         :persistent-hint="persistentHint()"
         :required="control.required"
         :error-messages="control.errors"
-        :model-value="control.data"
+        :model-value="adaptModelToEditorValue(control.data)"
         v-bind="vuetifyProps('v-monaco-editor')"
         :language="language"
         @update:model-value="onChange"
@@ -55,7 +55,7 @@
               :placeholder="appliedOptions.placeholder"
               :required="control.required"
               :error-messages="control.errors"
-              :model-value="control.data"
+              :model-value="adaptModelToEditorValue(control.data)"
               v-bind="vuetifyProps('v-monaco-editor')"
               :language="language"
               @update:model-value="onChange"
@@ -87,6 +87,7 @@ import {
   useVuetifyControl,
 } from '@jsonforms/vue-vuetify';
 import { defineComponent, ref, nextTick, watch } from 'vue';
+import { computed } from 'vue';
 import { defineAsyncComponent } from 'vue';
 import {
   VBtn,
@@ -123,13 +124,49 @@ const controlRenderer = defineComponent({
     const editorRef = ref<any>(null);
 
     const clearValue = determineClearValue('');
-    const adaptValue = (value: any) => value || clearValue;
 
-    const vuetifyControl = useVuetifyControl(
-      useJsonFormsControl(props),
-      adaptValue,
-      300,
+    const control = useJsonFormsControl(props);
+    const language = computed(() => {
+      const langOption = control.control.value.uischema.options?.[':language'];
+      if (langOption) {
+        const rootData = jsonforms.core?.data;
+        return Resolve.data(rootData, langOption);
+      }
+      return control.control.value.uischema.options?.language;
+    });
+
+    const convertJson = computed(
+      () => control.control.value.uischema.options?.convertJson ?? false,
     );
+
+    const adaptModelToEditorValue = (value: any): string => {
+      if (language.value === 'json' && convertJson.value) {
+        return value != undefined ? JSON.stringify(value, null, 2) : '';
+      }
+
+      if (value === undefined || value === null) {
+        return '';
+      }
+
+      return typeof value === 'string' ? value : String(value);
+    };
+
+    const vuetifyControl = useVuetifyControl(control, (v) => v, 300);
+
+    const onChange = (value: string) => {
+      let model = value || clearValue;
+
+      if (language.value === 'json' && convertJson.value) {
+        try {
+          model = JSON.parse(value);
+        } catch {
+          // do not update the model if JSON is invalid
+          return;
+        }
+      }
+
+      vuetifyControl.onChange(model);
+    };
 
     const toggleMaximize = () => {
       isMaximized.value = !isMaximized.value;
@@ -148,22 +185,15 @@ const controlRenderer = defineComponent({
 
     return {
       ...vuetifyControl,
+      onChange,
       jsonforms,
       icons,
       isMaximized,
       editorRef,
       toggleMaximize,
+      language,
+      adaptModelToEditorValue,
     };
-  },
-  computed: {
-    language(): string | undefined {
-      const language = this.control.uischema.options?.[':language'];
-      if (language) {
-        const rootData = this.jsonforms.core?.data;
-        return Resolve.data(rootData, language);
-      }
-      return this.control.uischema.options?.language;
-    },
   },
 });
 

@@ -7,6 +7,7 @@ import { input as anyOfSimple } from './anyOf-simple';
 import { input as anyOfWithProps } from './anyOf-with-props';
 import { input as array } from './array';
 import { input as arrayRestrict } from './array-restrict';
+import { input as arrayType } from './array-type';
 import { input as arrayWithReorder } from './array-with-reorder';
 import { input as basic } from './basic';
 import { input as basicTypes } from './basic-types';
@@ -64,6 +65,7 @@ import { input as templateSlot } from './template-slot';
 import { input as time } from './time';
 import { input as verticalLayout } from './vertical-layout';
 import { input as verticalSplitLayout } from './vertical-split-layout';
+import { input as vueTemplateLayout } from './vue-template-layout';
 
 export * from './register';
 
@@ -77,6 +79,7 @@ export {
   anyOfWithProps,
   array,
   arrayRestrict,
+  arrayType,
   arrayWithReorder,
   basic,
   basicTypes,
@@ -134,4 +137,5 @@ export {
   time,
   verticalLayout,
   verticalSplitLayout,
+  vueTemplateLayout,
 };

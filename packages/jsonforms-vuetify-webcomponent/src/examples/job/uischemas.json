@@ -5,6 +5,7 @@
       "type": "TemplateLayout",
       "name": "applicant",
       "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+      "lang": "vue",
       "elements": [
         {
           "type": "HorizontalLayout",
@@ -12,6 +13,7 @@
             {
               "type": "TemplateLayout",
               "template": "<v-container class='align-stretch'><v-row><v-col><v-img :src='data.applicant.profilePicture' v-if='data.applicant && data.applicant.profilePicture'></v-img></v-col></v-row><v-row class='mt-auto'><v-col><slot name='upload'></slot></v-col></v-row></v-container>",
+              "lang": "vue",
               "elements": [
                 {
                   "type": "Control",
@@ -155,6 +157,7 @@
       "type": "TemplateLayout",
       "name": "jobDetails",
       "template": "<v-container><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
+      "lang": "vue",
       "elements": [
         {
           "type": "Control",

@@ -279,10 +279,13 @@ const createMiddlewareWrapper = (wrappedFunction: Middleware): Middleware => {
   };
 };
 
-const errorMessage = computed(() => {
+const errorTitle = computed(() => {
   const message = 'Error resolving schema';
   if (props.state.i18n?.translate) {
-    return props.state.i18n.translate(message, message);
+    return props.state.i18n.translate(
+      'ResolvedJsonForms.resolve_schema_error_title',
+      message,
+    );
   }
   return message;
 });
@@ -479,8 +482,11 @@ if (!handleActionEmitter) {
             justify="center"
           >
             <v-col class="text-subtitle-1 text-center" cols="12">
-              <v-alert color="red" dark>
-                {{ errorMessage }}: {{ resolvedSchema.error }}
+              <v-alert
+                :title="errorTitle"
+                :text="resolvedSchema.error"
+                type="error"
+              >
               </v-alert>
             </v-col>
           </v-row>

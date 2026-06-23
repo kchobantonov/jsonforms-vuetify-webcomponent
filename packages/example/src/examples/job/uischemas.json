@@ -3,6 +3,7 @@
     "tester": "(jsonSchema, schemaPath, path) => { return NOT_APPLICABLE; }",
     "uischema": {
       "type": "TemplateLayout",
+      "lang": "vue",
       "name": "applicant",
       "template": "<v-container style=\"pa-0\"><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
       "elements": [
@@ -12,6 +13,7 @@
             {
               "type": "TemplateLayout",
               "template": "<v-container class='align-stretch'><v-row><v-col><v-img :src='data.applicant.profilePicture' v-if='data.applicant && data.applicant.profilePicture'></v-img></v-col></v-row><v-row class='mt-auto'><v-col><slot name='upload'></slot></v-col></v-row></v-container>",
+              "lang": "vue",
               "elements": [
                 {
                   "type": "Control",
@@ -154,6 +156,7 @@
     "uischema": {
       "type": "TemplateLayout",
       "name": "jobDetails",
+      "lang": "vue",
       "template": "<v-container><v-row v-for=\"element in elements\" :key=\"element.name\"><v-col><slot :name=\"element.name\"></slot></v-col></v-row></v-container>",
       "elements": [
         {
