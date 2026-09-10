@@ -81,6 +81,7 @@ export interface FormContext {
     action: string,
     params: any,
     el: TypeEl,
+    element?: UISchemaElement,
   ) => Promise<void>;
 }
 
@@ -91,6 +92,8 @@ export type ActionEvent = {
   // the action parameters passes from the UI schema
   params: Record<string, any>;
   $el: Element;
+  /** The UI schema element that triggered the action or script. */
+  element?: UISchemaElement;
 };
 
 export type NamedUISchemaElement = UISchemaElement & {

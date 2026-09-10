@@ -5,6 +5,7 @@ import {
   type JsonFormsCore,
   type JsonSchema,
   type Middleware,
+  type UISchemaElement,
 } from '@jsonforms/core';
 import { JsonForms, type JsonFormsChangeEvent } from '@jsonforms/vue';
 import { normalizeId } from 'ajv/dist/compile/resolve';
@@ -327,6 +328,7 @@ const defaultContext: Ref<FormContext> = ref({
     action: string,
     params: any,
     el: TypeEl,
+    element?: UISchemaElement,
   ) => {
     const source: ActionEvent = {
       action: action,
@@ -334,6 +336,7 @@ const defaultContext: Ref<FormContext> = ref({
       // the action parameters passes from the UI schema
       params: params ? { ...params } : {},
       $el: el ?? currentInstance?.proxy?.$el,
+      element,
     };
 
     // fire event

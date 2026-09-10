@@ -59,6 +59,7 @@ const controlRenderer = defineComponent({
             this.button.action,
             this.button.params ? { ...this.button.params } : {},
             this.$el,
+            this.button.uischema,
           );
         } else if (this.button.script) {
           const source: ActionEvent = {
@@ -67,6 +68,7 @@ const controlRenderer = defineComponent({
             // the action parameters passes from the UI schema
             params: this.button.params ? { ...this.button.params } : {},
             $el: this.$el,
+            element: this.button.uischema,
           };
           await new AsyncFunction(this.button.script).call(source);
         }
